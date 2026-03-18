@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        .input-field {
+            transition: all 0.3s ease;
+        }
+        .input-field:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.15);
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 py-12 px-4 sm:px-6 lg:px-8">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="text-white font-bold text-lg tracking-tight">MemberTrack Pro</span>
+                        <p class="text-indigo-300 text-xs">Membership Management System</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <a href="REGFORM.html" class="nav-link px-4 py-2 rounded-lg text-white bg-white/20 font-medium text-sm flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                        </svg>
+                        New Member
+                    </a>
+                    <a href="MONITOR.html" class="nav-link px-4 py-2 rounded-lg text-white/70 hover:text-white font-medium text-sm flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Members List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Background Elements -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute -top-40 -right-40 w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+        <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10"></div>
+    </div>
+
+    <div class="relative max-w-5xl mx-auto pt-24">
+        <!-- Header -->
+        <div class="text-center mb-10 fade-in">
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-600 mb-6 shadow-xl shadow-indigo-500/30">
+                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                </svg>
+            </div>
+            <h1 class="text-4xl font-bold text-white mb-2 tracking-tight">New Member Registration</h1>
+            <p class="text-indigo-200 text-lg">Complete the form below to register a new member</p>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="glass-panel rounded-3xl shadow-2xl p-8 md:p-12 fade-in">
+            <form id="registrationForm" class="space-y-8">
+                
+                <!-- Personal Information Section -->
+                <div class="bg-slate-50/50 rounded-2xl p-6 border border-slate-100">
+                    <h2 class="text-xl font-semibold text-slate-800 mb-6 flex items-center">
+                        <span class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center mr-3 text-sm font-bold">01</span>
+                        Personal Information
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        
+                        <!-- Full Name -->
+                        <div class="lg:col-span-2">
+                            <label for="fullName" class="block text-sm font-medium text-slate-700 mb-2">Full Name <span class="text-rose-500">*</span></label>
+                            <input type="text" id="fullName" name="fullName" required
+                                class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white"
+                                placeholder="Enter complete name (First Middle Last)">
+                        </div>
+
+                        <!-- Sex -->
+                        <div>
+                            <label for="sex" class="block text-sm font-medium text-slate-700 mb-2">Sex <span class="text-rose-500">*</span></label>
+                            <select id="sex" name="sex" required
+                                class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white">
+                                <option value="" disabled selected>Select sex</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Birth Date -->
+                        <div>
+                            <label for="birthDate" class="block text-sm font-medium text-slate-700 mb-2">Birthday <span class="text-rose-500">*</span></label>
+                            <input type="date" id="birthDate" name="birthDate" required
+                                class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white">
+                        </div>
+
+                        <!-- Birth Place -->
+                        <div>
+                            <label for="birthPlace" class="block text-sm font-medium text-slate-700 mb-2">Birthplace <span class="text-rose-500">*</span></label>
+                            <input type="text" id="birthPlace" name="birthPlace" required
+                                class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white"
+                                placeholder="City, Province">
+                        </div>
+
+                        <!-- Age -->
+                        <div>
+                            <label for="age" class="block text-sm font-medium text-slate-700 mb-2">Age <span class="text-rose-500">*</span></label>
+                            <input type="number" id="age" name="age" min="1" max="120" required readonly
+                                class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-slate-100 cursor-not-allowed"
+                                placeholder="Auto-calculated">
+                        </div>
+
+                        <!-- Civil Status -->
+                        <div>
+                            <label for="civilStatus" class="block text-sm font-medium text-slate-700 mb-2">Civil Status <span class="text-rose-500">*</span></label>
+                            <select id="civilStatus" name="civilStatus" required
+                                class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white">
+                                <option value="" disabled selected>Select status</option>
+                                <option value="Single">Single</option>
+                                <option value="Married">Married</option>
+                                <option value="Widowed">Widowed</option>
+                                <option value="Separated">Separated</option>
+                                <option value="Divorced">Divorced</option>
+                            </select>
+                        </div>
+
+                        <!-- Blood Type -->
+                        <div>
+                            <label for="bloodType" class="block text-sm font-medium text-slate-700 mb-2">Blood Type</label>
+                            <select id="bloodType" name="bloodType"
+                                class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white">
+                                <option value="" disabled selected>Select blood type</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                                <option value="Unknown">Unknown</option>
+                            </select>
+                        </div>
+
+                        <!-- Religion -->
+                        <div>
+                            <label for="religion" class="block text-sm font-medium text-slate-700 mb-2">Religion</label>
+                            <input type="text" id="religion" name="religion"
+                                class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white"
+                                placeholder="Optional">
+                        </div>
+
+                        <!-- Nationality -->
+                        <div>
+                            <label for="nationality" class="block text-sm font-medium text-slate-700 mb-2">Nationality</label>
+                            <input type="text" id="nationality" name="nationality" value="Filipino"
+                                class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white"
+                                placeholder="Nationality">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact & Address Section -->
+                <div class="bg-slate-50/50 rounded-2xl p-6 border border-slate-100">
+                    <h2 class="text-xl font-semibold text-slate-800 mb-6 flex items-center">
+                        <span class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mr-3 text-sm font-bold">02</span>
+                        Contact & Address Information
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <!-- Address -->
+                        <div class="md:col-span-2">
+                            <label for="address" class="block text-sm font-medium text-slate-700 mb-2">Complete Address <span class="text-rose-500">*</span></label>
+                            <textarea id="address" name="address" rows="3" required
+                                class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white resize-none"
+                                placeholder="House/Street Number, Barangay, City/Municipality, Province, Zip Code"></textarea>
+                        </div>
+
+                        <!-- Email -->
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-slate-700 mb-2">Email Address <span class="text-rose-500">*</span></label>
+                            <input type="email" id="email" name="email" required
+                                class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white"
+                                placeholder="member@example.com">
+                        </div>
+
+                        <!-- Contact Number -->
+                        <div>
+                            <label for="contactNumber" class="block text-sm font-medium text-slate-700 mb-2">Contact Number <span class="text-rose-500">*</span></label>
+                            <input type="tel" id="contactNumber" name="contactNumber" required
+                                class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white"
+                                placeholder="+63 912 345 6789">
+                        </div>
+
+                        <!-- Facebook Profile -->
+                        <div>
+                            <label for="facebook" class="block text-sm font-medium text-slate-700 mb-2">Facebook Profile</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <svg class="h-5 w-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                    </svg>
+                                </div>
+                                <input type="text" id="facebook" name="facebook"
+                                    class="input-field w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white"
+                                    placeholder="facebook.com/username">
+                            </div>
+                        </div>
+
+                        <!-- Emergency Contact -->
+                        <div>
+                            <label for="emergencyContact" class="block text-sm font-medium text-slate-700 mb-2">Emergency Contact</label>
+                            <input type="text" id="emergencyContact" name="emergencyContact"
+                                class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white"
+                                placeholder="Name - Contact Number">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Professional Information -->
+                <div class="bg-slate-50/50 rounded-2xl p-6 border border-slate-100">
+                    <h2 class="text-xl font-semibold text-slate-800 mb-6 flex items-center">
+                        <span class="w-10 h-10 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center mr-3 text-sm font-bold">03</span>
+                        Professional & Membership Information
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        
+                        <!-- Occupation -->
+                        <div>
+                            <label for="occupation" class="block text-sm font-medium text-slate-700 mb-2">Occupation <span class="text-rose-500">*</span></label>
+                            <input type="text" id="occupation" name="occupation" required
+                                class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white"
+                                placeholder="Current job or profession">
+                        </div>
+
+                        <!-- Employer/School -->
+                        <div>
+                            <label for="employer" class="block text-sm font-medium text-slate-700 mb-2">Employer/School</label>
+                            <input type="text" id="employer" name="employer"
+                                class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white"
+                                placeholder="Company or School name">
+                        </div>
+
+                        <!-- Membership Type -->
+                        <div>
+                            <label for="membershipType" class="block text-sm font-medium text-slate-700 mb-2">Membership Type <span class="text-rose-500">*</span></label>
+                            <select id="membershipType" name="membershipType" required
+                                class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white">
+                                <option value="" disabled selected>Select type</option>
+                                <option value="Regular">Regular Member</option>
+                                <option value="Associate">Associate Member</option>
+                                <option value="Honorary">Honorary Member</option>
+                                <option value="Student">Student Member</option>
+                                <option value="Lifetime">Lifetime Member</option>
+                            </select>
+                        </div>
+
+                        <!-- Date Joined -->
+                        <div>
+                            <label for="dateJoined" class="block text-sm font-medium text-slate-700 mb-2">Date Joined <span class="text-rose-500">*</span></label>
+                            <input type="date" id="dateJoined" name="dateJoined" required
+                                class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white">
+                        </div>
+
+                        <!-- Referral Source -->
+                        <div class="md:col-span-2">
+                            <label for="referral" class="block text-sm font-medium text-slate-700 mb-2">How did you hear about us?</label>
+                            <select id="referral" name="referral"
+                                class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white">
+                                <option value="" disabled selected>Select source</option>
+                                <option value="Friend">Friend/Family</option>
+                                <option value="Social Media">Social Media</option>
+                                <option value="Website">Website</option>
+                                <option value="Event">Event/Seminar</option>
+                                <option value="Advertisement">Advertisement</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="md:col-span-3">
+                            <label for="notes" class="block text-sm font-medium text-slate-700 mb-2">Additional Notes</label>
+                            <textarea id="notes" name="notes" rows="2"
+                                class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white resize-none"
+                                placeholder="Any additional information..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                    <button type="submit" id="submitBtn"
+                        class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold py-4 px-8 rounded-xl hover:shadow-lg hover:shadow-indigo-500/30 transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Register Member</span>
+                    </button>
+                    <button type="button" onclick="clearForm()"
+                        class="px-8 py-4 rounded-xl border-2 border-slate-300 text-slate-600 font-semibold hover:bg-slate-50 hover:border-slate-400 transition-all duration-300 flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        Clear Form
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <p class="text-center text-indigo-200/60 text-sm mt-8 pb-8">
+            © 2026 MemberTrack Pro. All rights reserved. | Secure Member Management System
+        </p>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+        <div class="relative bg-white rounded-3xl p-8 max-w-md w-full text-center shadow-2xl transform scale-95 opacity-0 transition-all duration-300" id="modalContent">
+            <div class="w-20 h-20 bg-gradient-to-tr from-green-400 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-green-500/30">
+                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-slate-800 mb-2">Registration Successful!</h3>
+            <p class="text-slate-600 mb-6">Member has been successfully registered in the system.</p>
+            <div class="flex gap-3">
+                <button onclick="closeModal()" class="flex-1 bg-slate-100 text-slate-700 font-semibold py-3 px-6 rounded-xl hover:bg-slate-200 transition-colors">
+                    Register Another
+                </button>
+                <a href="MONITOR.html" class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold py-3 px-6 rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2">
+                    View Members
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ID Card Modal -->
+    <div id="idCardModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeIdCard()"></div>
+        <div class="relative bg-white rounded-3xl max-w-md w-full shadow-2xl transform scale-95 opacity-0 transition-all duration-300 overflow-hidden" id="idCardContent">
+            <!-- ID Card Design -->
+            <div class="bg-gradient-to-br from-indigo-600 to-purple-700 p-6 text-white">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h4 class="text-lg font-bold">MEMBER ID CARD</h4>
+                        <p class="text-indigo-200 text-sm">MemberTrack Pro</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="text-center py-4">
+                    <div class="w-24 h-24 bg-white rounded-full mx-auto mb-4 flex items-center justify-center text-3xl font-bold text-indigo-600" id="cardInitials">
+                        JD
+                    </div>
+                    <h3 class="text-2xl font-bold" id="cardName">John Doe</h3>
+                    <p class="text-indigo-200" id="cardType">Regular Member</p>
+                </div>
+            </div>
+            <div class="p-6 bg-white">
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">Member ID:</span>
+                        <span class="font-mono font-semibold text-slate-800" id="cardId">MEM-001</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">Date Joined:</span>
+                        <span class="text-slate-800" id="cardDate">2026-03-18</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">Blood Type:</span>
+                        <span class="text-slate-800" id="cardBlood">O+</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">Contact:</span>
+                        <span class="text-slate-800" id="cardContact">+63 912 345 6789</span>
+                    </div>
+                </div>
+                <div class="mt-6 pt-4 border-t">
+                    <button onclick="printIdCard()" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                        </svg>
+                        Print ID Card
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set default date to today
+        document.getElementById('dateJoined').valueAsDate = new Date();
+
+        // Auto-calculate age from birth date
+        document.getElementById('birthDate').addEventListener('change', function() {
+            const birthDate = new Date(this.value);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            const ageInput = document.getElementById('age');
+            if (age >= 0 && age <= 120) {
+                ageInput.value = age;
+                ageInput.classList.remove('bg-slate-100', 'cursor-not-allowed');
+                ageInput.classList.add('bg-green-50', 'text-green-700');
+                setTimeout(() => {
+                    ageInput.classList.remove('bg-green-50', 'text-green-700');
+                    ageInput.classList.add('bg-slate-100', 'cursor-not-allowed');
+                }, 1000);
+            }
+        });
+
+        // Generate unique Member ID
+        function generateMemberId() {
+            const year = new Date().getFullYear();
+            const random = Math.floor(1000 + Math.random() * 9000);
+            return `MEM-${year}-${random}`;
+        }
+
+        // Get initials from name
+        function getInitials(name) {
+            return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        // Form submission
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const originalContent = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<svg class="loading-spinner w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Processing...';
+
+            // Collect form data
+            const memberId = generateMemberId();
+            const formData = {
+                id: memberId,
+                fullName: document.getElementById('fullName').value.trim(),
+                birthDate: document.getElementById('birthDate').value,
+                birthPlace: document.getElementById('birthPlace').value.trim(),
+                age: parseInt(document.getElementById('age').value),
+                sex: document.getElementById('sex').value,
+                civilStatus: document.getElementById('civilStatus').value,
+                bloodType: document.getElementById('bloodType').value || 'Unknown',
+                religion: document.getElementById('religion').value.trim(),
+                nationality: document.getElementById('nationality').value.trim(),
+                address: document.getElementById('address').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                contactNumber: document.getElementById('contactNumber').value.trim(),
+                facebook: document.getElementById('facebook').value.trim(),
+                emergencyContact: document.getElementById('emergencyContact').value.trim(),
+                occupation: document.getElementById('occupation').value.trim(),
+                employer: document.getElementById('employer').value.trim(),
+                membershipType: document.getElementById('membershipType').value,
+                dateJoined: document.getElementById('dateJoined').value,
+                referral: document.getElementById('referral').value,
+                notes: document.getElementById('notes').value.trim(),
+                status: 'Active',
+                createdAt: new Date().toISOString(),
+                initials: getInitials(document.getElementById('fullName').value)
+            };
+
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(formData.email)) {
+                alert('Please enter a valid email address');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalContent;
+                return;
+            }
+
+            // Validate phone format (basic)
+            const phoneRegex = /^[\d\s\-\+\(\)]+$/;
+            if (!phoneRegex.test(formData.contactNumber)) {
+                alert('Please enter a valid contact number');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalContent;
+                return;
+            }
+
+            // Save to localStorage
+            try {
+                let members = JSON.parse(localStorage.getItem('members') || '[]');
+                
+                // Check for duplicate email
+                const existingEmail = members.find(m => m.email.toLowerCase() === formData.email.toLowerCase());
+                if (existingEmail) {
+                    alert('A member with this email already exists!');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalContent;
+                    return;
+                }
+
+                members.push(formData);
+                localStorage.setItem('members', JSON.stringify(members));
+
+                // Show ID Card preview
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalContent;
+                    showIdCard(formData);
+                }, 800);
+
+            } catch (error) {
+                console.error('Error saving member:', error);
+                alert('Error saving member data. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalContent;
+            }
+        });
+
+        // Show ID Card
+        function showIdCard(data) {
+            document.getElementById('cardInitials').textContent = data.initials;
+            document.getElementById('cardName').textContent = data.fullName;
+            document.getElementById('cardType').textContent = data.membershipType + ' Member';
+            document.getElementById('cardId').textContent = data.id;
+            document.getElementById('cardDate').textContent = formatDate(data.dateJoined);
+            document.getElementById('cardBlood').textContent = data.bloodType;
+            document.getElementById('cardContact').textContent = data.contactNumber;
+
+            const modal = document.getElementById('idCardModal');
+            const content = document.getElementById('idCardContent');
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeIdCard() {
+            const modal = document.getElementById('idCardModal');
+            const content = document.getElementById('idCardContent');
+            
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                showSuccessModal();
+            }, 300);
+        }
+
+        function showSuccessModal() {
+            const modal = document.getElementById('successModal');
+            const content = document.getElementById('modalContent');
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('successModal');
+            const content = document.getElementById('modalContent');
+            
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                clearForm();
+            }, 300);
+        }
+
+        function printIdCard() {
+            window.print();
+        }
+
+        // Clear form
+        function clearForm() {
+            document.getElementById('registrationForm').reset();
+            document.getElementById('dateJoined').valueAsDate = new Date();
+            document.getElementById('nationality').value = 'Filipino';
+            document.getElementById('age').value = '';
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + Enter to submit
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                document.getElementById('registrationForm').dispatchEvent(new Event('submit'));
+            }
+            // Escape to close modals
+            if (e.key === 'Escape') {
+                closeModal();
+                closeIdCard();
+            }
+        });
+    </script>
+</body>
+</html>
+
