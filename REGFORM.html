@@ -7,86 +7,115 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        * { font-family: 'Inter', sans-serif; }
         .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .input-field { transition: all 0.3s ease; }
+        .input-field:focus { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.15); }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 py-12 px-4">
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-white/10 p-4">
-        <div class="max-w-7xl mx-auto flex justify-between items-center text-white">
-            <span class="font-bold">MemberTrack Pro</span>
-            <div class="space-x-4">
-                <a href="REGFORM.html" class="bg-white/20 px-4 py-2 rounded">New Member</a>
-                <a href="MONITOR.html" class="text-white/70 hover:text-white">Members List</a>
+
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                </div>
+                <div>
+                    <span class="text-white font-bold text-lg">MemberTrack Pro</span>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <a href="REGFORM.html" class="text-white bg-white/20 px-4 py-2 rounded-lg text-sm">New Member</a>
+                <a href="MONITOR.html" class="text-white/70 hover:text-white px-4 py-2 rounded-lg text-sm">Members List</a>
             </div>
         </div>
     </nav>
 
-    <div class="relative max-w-4xl mx-auto pt-24">
-        <div class="glass-panel rounded-3xl p-8 shadow-2xl">
-            <h1 class="text-3xl font-bold mb-6 text-slate-800">Registration Form</h1>
-            <form id="registrationForm" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700">Full Name</label>
-                        <input type="text" id="fullName" required class="w-full p-3 border rounded-xl">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700">Sex</label>
-                        <select id="sex" required class="w-full p-3 border rounded-xl">
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700">Birthday</label>
-                        <input type="date" id="birthDate" required class="w-full p-3 border rounded-xl">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700">Age</label>
-                        <input type="number" id="age" readonly class="w-full p-3 border rounded-xl bg-slate-100">
+    <div class="relative max-w-5xl mx-auto pt-24">
+        <div class="text-center mb-10 fade-in">
+            <h1 class="text-4xl font-bold text-white mb-2">Member Registration</h1>
+            <p class="text-indigo-200">Fill out all fields to register the member</p>
+        </div>
+
+        <div class="glass-panel rounded-3xl shadow-2xl p-8 md:p-12 fade-in">
+            <form id="registrationForm" class="space-y-8">
+                <div class="bg-slate-50/50 rounded-2xl p-6 border border-slate-100">
+                    <h2 class="text-xl font-semibold text-slate-800 mb-6">Personal Information</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2">
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Full Name *</label>
+                            <input type="text" id="fullName" required class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 outline-none" placeholder="First Middle Last">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Sex *</label>
+                            <select id="sex" required class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 outline-none">
+                                <option value="">Select sex</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Birthday *</label>
+                            <input type="date" id="birthDate" required class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Age</label>
+                            <input type="number" id="age" readonly class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-100 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Civil Status *</label>
+                            <select id="civilStatus" required class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 outline-none">
+                                <option value="Single">Single</option>
+                                <option value="Married">Married</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-                <button type="submit" class="w-full bg-indigo-600 text-white p-4 rounded-xl font-bold hover:bg-indigo-700 transition">Register Member</button>
+
+                <div class="flex justify-end gap-4 pt-6">
+                    <button type="reset" class="px-8 py-4 bg-slate-200 text-slate-700 rounded-2xl font-bold hover:bg-slate-300 transition-all">Clear Form</button>
+                    <button type="submit" class="px-10 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-bold hover:shadow-lg hover:shadow-indigo-500/30 transition-all">Register Member</button>
+                </div>
             </form>
         </div>
     </div>
 
     <script>
-        // Automatic Age Calculation
+        // Auto-calculate Age
         document.getElementById('birthDate').addEventListener('change', function() {
             const birthDate = new Date(this.value);
             const today = new Date();
             let age = today.getFullYear() - birthDate.getFullYear();
             const m = today.getMonth() - birthDate.getMonth();
-            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { age--; }
             document.getElementById('age').value = age;
         });
 
-        // Form Submission Logic
+        // Form Submission
         document.getElementById('registrationForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const newMember = {
-                id: 'MEM-' + Date.now(),
+            const memberData = {
+                id: 'MEM-' + Date.now().toString().slice(-6),
                 fullName: document.getElementById('fullName').value,
                 sex: document.getElementById('sex').value,
                 birthDate: document.getElementById('birthDate').value,
                 age: document.getElementById('age').value,
+                civilStatus: document.getElementById('civilStatus').value,
                 dateJoined: new Date().toLocaleDateString(),
                 status: 'Active'
             };
 
-            // Get existing members or start new list
+            // Get existing members or empty array
             const members = JSON.parse(localStorage.getItem('members') || '[]');
-            members.push(newMember);
-            
-            // Save back to localStorage
+            members.push(memberData);
             localStorage.setItem('members', JSON.stringify(members));
-            
+
             alert('Member Registered Successfully!');
-            this.reset();
-            window.location.href = 'MONITOR.html'; // Talk to the other page
+            window.location.href = 'MONITOR.html';
         });
     </script>
 </body>
