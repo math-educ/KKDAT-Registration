@@ -602,83 +602,55 @@
             document.getElementById('cardContact').textContent = data.contactNumber;
 
             const modal = document.getElementById('idCardModal');
-            const content = document.getElementById('idCardContent');
-            
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            
-            setTimeout(() => {
-                content.classList.remove('scale-95', 'opacity-0');
-                content.classList.add('scale-100', 'opacity-100');
-            }, 10);
+<script>
+    // 1. Auto-calculate Age based on Birthday
+    document.getElementById('birthDate').addEventListener('change', function() {
+        const birthDate = new Date(this.value);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
         }
+        document.getElementById('age').value = age;
+    });
 
-        function closeIdCard() {
-            const modal = document.getElementById('idCardModal');
-            const content = document.getElementById('idCardContent');
-            
-            content.classList.remove('scale-100', 'opacity-100');
-            content.classList.add('scale-95', 'opacity-0');
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                showSuccessModal();
-            }, 300);
-        }
+    // 2. Handle Form Submission
+    document.getElementById('registrationForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Stop page from refreshing
 
-        function showSuccessModal() {
-            const modal = document.getElementById('successModal');
-            const content = document.getElementById('modalContent');
-            
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            
-            setTimeout(() => {
-                content.classList.remove('scale-95', 'opacity-0');
-                content.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
+        // Create the member object from form inputs
+        const newMember = {
+            id: 'MEM-' + Date.now(), // Unique ID using timestamp
+            fullName: document.getElementById('fullName').value,
+            sex: document.getElementById('sex').value,
+            birthDate: document.getElementById('birthDate').value,
+            age: document.getElementById('age').value,
+            status: 'Active', // Default status
+            dateJoined: new Date().toISOString().split('T')[0]
+        };
 
-        function closeModal() {
-            const modal = document.getElementById('successModal');
-            const content = document.getElementById('modalContent');
-            
-            content.classList.remove('scale-100', 'opacity-100');
-            content.classList.add('scale-95', 'opacity-0');
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                clearForm();
-            }, 300);
-        }
+        // SAVE LOGIC:
+        // Get existing list from localStorage, or an empty array if none exists
+        let members = JSON.parse(localStorage.getItem('kkdat_members') || '[]');
+        
+        // Add the new member to the list
+        members.push(newMember);
+        
+        // Save the updated list back to localStorage
+        localStorage.setItem('kkdat_members', JSON.stringify(members));
 
-        function printIdCard() {
-            window.print();
-        }
+        // Show success modal (as seen in your HTML)
+        showSuccessModal(newMember);
+    });
 
-        // Clear form
-        function clearForm() {
-            document.getElementById('registrationForm').reset();
-            document.getElementById('dateJoined').valueAsDate = new Date();
-            document.getElementById('nationality').value = 'Filipino';
-            document.getElementById('age').value = '';
-        }
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            // Ctrl/Cmd + Enter to submit
-            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                document.getElementById('registrationForm').dispatchEvent(new Event('submit'));
-            }
-            // Escape to close modals
-            if (e.key === 'Escape') {
-                closeModal();
-                closeIdCard();
-            }
-        });
-    </script>
+    function showSuccessModal(member) {
+        const modal = document.getElementById('successModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        // Logic to populate modal...
+    }
+</script>
 </body>
 </html>
 
