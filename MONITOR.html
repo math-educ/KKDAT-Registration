@@ -3,87 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Management Dashboard</title>
+    <title>Member Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
-<body class="min-h-screen bg-slate-50 pt-24 px-4">
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900 p-4">
-        <div class="max-w-7xl mx-auto flex justify-between items-center text-white">
-            <span class="font-bold">MemberTrack Pro</span>
-            <div class="space-x-4">
-                <a href="REGFORM.html" class="text-white/70 hover:text-white">New Member</a>
-                <a href="MONITOR.html" class="bg-white/20 px-4 py-2 rounded">Members List</a>
+<body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900">
+
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2"></path></svg>
+                </div>
+                <span class="text-white font-bold text-lg">MemberTrack Pro</span>
+            </div>
+            <div class="flex gap-4">
+                <a href="REGFORM.html" class="text-white/70 hover:text-white px-4 py-2 rounded-lg text-sm">New Member</a>
+                <a href="MONITOR.html" class="text-white bg-white/20 px-4 py-2 rounded-lg text-sm">Members List</a>
             </div>
         </div>
     </nav>
 
-    <div class="max-w-7xl mx-auto">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold">Registered Members</h1>
-            <input type="text" id="search" placeholder="Search members..." onkeyup="loadMembers()" class="p-2 border rounded-lg w-64">
+    <div class="relative max-w-7xl mx-auto pt-24 px-4">
+        <div class="flex flex-col md:flex-row justify-between mb-8 gap-4 fade-in">
+            <h1 class="text-3xl font-bold text-white">Member Dashboard</h1>
+            <input type="text" id="searchInput" placeholder="Search members..." class="px-4 py-2 rounded-lg w-full md:w-64 outline-none border border-slate-200" onkeyup="renderTable()">
         </div>
 
-        <div class="bg-white rounded-xl shadow overflow-hidden">
+        <div class="glass-panel rounded-2xl shadow-xl overflow-hidden border border-white/10 fade-in">
             <table class="w-full text-left">
-                <thead class="bg-slate-100">
+                <thead class="bg-slate-100 border-b border-slate-200">
                     <tr>
-                        <th class="p-4">ID</th>
-                        <th class="p-4">Name</th>
-                        <th class="p-4">Age</th>
-                        <th class="p-4">Joined</th>
-                        <th class="p-4">Status</th>
-                        <th class="p-4">Actions</th>
+                        <th class="px-6 py-4 text-xs font-semibold text-slate-600 uppercase">Member ID</th>
+                        <th class="px-6 py-4 text-xs font-semibold text-slate-600 uppercase">Name</th>
+                        <th class="px-6 py-4 text-xs font-semibold text-slate-600 uppercase">Age/Sex</th>
+                        <th class="px-6 py-4 text-xs font-semibold text-slate-600 uppercase">Joined</th>
+                        <th class="px-6 py-4 text-xs font-semibold text-slate-600 uppercase">Status</th>
+                        <th class="px-6 py-4 text-xs font-semibold text-slate-600 uppercase">Action</th>
                     </tr>
                 </thead>
-                <tbody id="memberTable">
+                <tbody id="tableBody" class="divide-y divide-slate-200">
                     </tbody>
             </table>
         </div>
     </div>
 
     <script>
-        function loadMembers() {
-            const tableBody = document.getElementById('memberTable');
-            const searchTerm = document.getElementById('search').value.toLowerCase();
+        function renderTable() {
             const members = JSON.parse(localStorage.getItem('members') || '[]');
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const tbody = document.getElementById('tableBody');
             
-            tableBody.innerHTML = '';
+            tbody.innerHTML = '';
 
-            const filteredMembers = members.filter(m => 
-                m.fullName.toLowerCase().includes(searchTerm) || m.id.toLowerCase().includes(searchTerm)
-            );
-
-            filteredMembers.forEach((member, index) => {
-                tableBody.innerHTML += `
-                    <tr class="border-t hover:bg-slate-50">
-                        <td class="p-4 text-sm">${member.id}</td>
-                        <td class="p-4 font-medium">${member.fullName}</td>
-                        <td class="p-4">${member.age}</td>
-                        <td class="p-4">${member.dateJoined}</td>
-                        <td class="p-4"><span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full text-xs">${member.status}</span></td>
-                        <td class="p-4">
-                            <button onclick="deleteMember('${member.id}')" class="text-rose-600 hover:underline">Delete</button>
+            members.filter(m => m.fullName.toLowerCase().includes(search)).forEach((m, index) => {
+                const row = `
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4 font-medium text-slate-900">${m.id}</td>
+                        <td class="px-6 py-4 text-slate-600">${m.fullName}</td>
+                        <td class="px-6 py-4 text-slate-600">${m.age} / ${m.sex}</td>
+                        <td class="px-6 py-4 text-slate-600">${m.dateJoined}</td>
+                        <td class="px-6 py-4"><span class="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold">${m.status}</span></td>
+                        <td class="px-6 py-4">
+                            <button onclick="deleteMember(${index})" class="text-rose-600 hover:text-rose-900 font-medium">Delete</button>
                         </td>
                     </tr>
                 `;
+                tbody.innerHTML += row;
             });
-
-            if (filteredMembers.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="6" class="p-10 text-center text-slate-400">No members found</td></tr>';
-            }
         }
 
-        function deleteMember(id) {
-            if(confirm('Are you sure you want to delete this member?')) {
-                let members = JSON.parse(localStorage.getItem('members') || '[]');
-                members = members.filter(m => m.id !== id);
+        function deleteMember(index) {
+            if(confirm('Delete this member?')) {
+                const members = JSON.parse(localStorage.getItem('members') || '[]');
+                members.splice(index, 1);
                 localStorage.setItem('members', JSON.stringify(members));
-                loadMembers();
+                renderTable();
             }
         }
 
-        // Initial Load
-        window.onload = loadMembers;
+        // Initial render
+        window.onload = renderTable;
     </script>
 </body>
 </html>
