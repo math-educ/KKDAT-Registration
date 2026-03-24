@@ -438,7 +438,29 @@
 
     <script>
         // Set default date to today
-        document.getElementById('dateJoined').valueAsDate = new Date();
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // 1. Get existing members from localStorage or start with an empty array
+    const members = JSON.parse(localStorage.getItem('members') || '[]');
+    
+    // 2. Create a new member object from form data
+    const newMember = {
+        id: 'MEM-' + Date.now(), // Unique ID
+        fullName: document.getElementById('fullName').value,
+        sex: document.getElementById('sex').value,
+        status: 'Active',
+        dateJoined: new Date().toISOString().split('T')[0]
+        // Add other fields as needed...
+    };
+    
+    // 3. Save back to localStorage
+    members.push(newMember);
+    localStorage.setItem('members', JSON.stringify(members));
+    
+    // 4. Show success and redirect or clear form
+    alert('Member Registered Successfully!');
+});
 
         // Auto-calculate age from birth date
         document.getElementById('birthDate').addEventListener('change', function() {
