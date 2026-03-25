@@ -15,6 +15,50 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
+    <script type="module">
+  // Import Firebase functions
+  import { initializeApp } from "https://www.gstatic.com";
+  import { getDatabase, ref, push, set } from "https://www.gstatic.com";
+
+  // TODO: Replace this with your actual config from the Firebase Console
+        
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    databaseURL: "https://YOUR_PROJECT.firebaseio.com",
+    projectId: "YOUR_PROJECT",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "...",
+    appId: "..."
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // Update your form submission
+  document.getElementById('registrationForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const memberData = {
+          fullName: document.getElementById('fullName').value,
+          sex: document.getElementById('sex').value,
+          birthDate: document.getElementById('birthDate').value,
+          age: document.getElementById('age').value,
+          address: document.getElementById('address').value,
+          dateJoined: new Date().toLocaleDateString(),
+          status: 'Active'
+      };
+
+      // Push to Firebase (this creates a unique ID automatically)
+      const membersRef = ref(db, 'members');
+      const newMemberRef = push(membersRef);
+      set(newMemberRef, memberData).then(() => {
+          alert('Saved to Cloud Successfully!');
+          window.location.href = 'MONITOR.html';
+      });
+  });
+</script>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 py-12 px-4">
 
     <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-white/10">
