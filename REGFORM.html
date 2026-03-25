@@ -9,8 +9,8 @@
     <style>
         * { font-family: 'Inter', sans-serif; }
         .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
-        .input-field { transition: all 0.3s ease; }
-        .input-field:focus { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.15); }
+        .input-field { transition: all 0.2s ease; border: 1px solid #e2e8f0; }
+        .input-field:focus { border-color: #6366f1; ring: 2px; ring-color: #6366f1; outline: none; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
         .fade-in { animation: fadeIn 0.5s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -23,13 +23,11 @@
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                 </div>
-                <div>
-                    <span class="text-white font-bold text-lg">MemberTrack Pro</span>
-                </div>
+                <span class="text-white font-bold text-lg">MemberTrack Pro</span>
             </div>
             <div class="flex gap-4">
-                <a href="REGFORM.html" class="text-white bg-white/20 px-4 py-2 rounded-lg text-sm">New Member</a>
-                <a href="MONITOR.html" class="text-white/70 hover:text-white px-4 py-2 rounded-lg text-sm">Members List</a>
+                <a href="REGFORM.html" class="text-white bg-white/20 px-4 py-2 rounded-lg text-sm font-medium">New Member</a>
+                <a href="MONITOR.html" class="text-white/70 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Members List</a>
             </div>
         </div>
     </nav>
@@ -37,21 +35,26 @@
     <div class="relative max-w-5xl mx-auto pt-24">
         <div class="text-center mb-10 fade-in">
             <h1 class="text-4xl font-bold text-white mb-2">Member Registration</h1>
-            <p class="text-indigo-200">Fill out all fields to register the member</p>
+            <p class="text-indigo-200">Complete the form below to register a new member</p>
         </div>
 
-        <div class="glass-panel rounded-3xl shadow-2xl p-8 md:p-12 fade-in">
+        <div class="glass-panel rounded-3xl shadow-2xl p-6 md:p-10 fade-in">
             <form id="registrationForm" class="space-y-8">
+                
+                <!-- Section 1: Personal Details -->
                 <div class="bg-slate-50/50 rounded-2xl p-6 border border-slate-100">
-                    <h2 class="text-xl font-semibold text-slate-800 mb-6">Personal Information</h2>
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="w-2 h-6 bg-indigo-600 rounded-full"></div>
+                        <h2 class="text-xl font-semibold text-slate-800">Personal Information</h2>
+                    </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div class="lg:col-span-2">
+                        <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-slate-700 mb-2">Full Name *</label>
-                            <input type="text" id="fullName" required class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 outline-none" placeholder="First Middle Last">
+                            <input type="text" id="fullName" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="Juan Dela Cruz">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Sex *</label>
-                            <select id="sex" required class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 outline-none">
+                            <select id="sex" required class="input-field w-full px-4 py-3 rounded-xl bg-white">
                                 <option value="">Select sex</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
@@ -59,23 +62,48 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Birthday *</label>
-                            <input type="date" id="birthDate" required class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 outline-none">
+                            <input type="date" id="birthDate" required class="input-field w-full px-4 py-3 rounded-xl">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Age</label>
-                            <input type="number" id="age" readonly class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-100 outline-none">
+                            <input type="number" id="age" readonly class="input-field w-full px-4 py-3 rounded-xl bg-slate-100 text-slate-500 font-semibold" placeholder="0">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Civil Status *</label>
-                            <select id="civilStatus" required class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 outline-none">
+                            <select id="civilStatus" required class="input-field w-full px-4 py-3 rounded-xl bg-white">
                                 <option value="Single">Single</option>
                                 <option value="Married">Married</option>
+                                <option value="Widowed">Widowed</option>
+                                <option value="Separated">Separated</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex justify-end gap-4 pt-6">
+                <!-- Section 2: Contact & Socials -->
+                <div class="bg-slate-50/50 rounded-2xl p-6 border border-slate-100">
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="w-2 h-6 bg-purple-600 rounded-full"></div>
+                        <h2 class="text-xl font-semibold text-slate-800">Contact & Social Media</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Complete Address *</label>
+                            <textarea id="address" required rows="2" class="input-field w-full px-4 py-3 rounded-xl" placeholder="Street, Barangay, City, Province"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Facebook Profile Link/Name</label>
+                            <input type="text" id="facebook" class="input-field w-full px-4 py-3 rounded-xl" placeholder="://facebook.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Contact Person (In case of emergency) *</label>
+                            <input type="text" id="contactPerson" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="Name of Relative/Friend">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row justify-end gap-4 pt-6">
                     <button type="reset" class="px-8 py-4 bg-slate-200 text-slate-700 rounded-2xl font-bold hover:bg-slate-300 transition-all">Clear Form</button>
                     <button type="submit" class="px-10 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-bold hover:shadow-lg hover:shadow-indigo-500/30 transition-all">Register Member</button>
                 </div>
@@ -84,17 +112,18 @@
     </div>
 
     <script>
-        // Auto-calculate Age
+        // Auto-calculate Age accurately
         document.getElementById('birthDate').addEventListener('change', function() {
+            if (!this.value) return;
             const birthDate = new Date(this.value);
             const today = new Date();
             let age = today.getFullYear() - birthDate.getFullYear();
             const m = today.getMonth() - birthDate.getMonth();
             if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { age--; }
-            document.getElementById('age').value = age;
+            document.getElementById('age').value = age >= 0 ? age : 0;
         });
 
-        // Form Submission
+        // Form Submission Logic
         document.getElementById('registrationForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -105,17 +134,25 @@
                 birthDate: document.getElementById('birthDate').value,
                 age: document.getElementById('age').value,
                 civilStatus: document.getElementById('civilStatus').value,
+                address: document.getElementById('address').value,
+                facebook: document.getElementById('facebook').value,
+                contactPerson: document.getElementById('contactPerson').value,
                 dateJoined: new Date().toLocaleDateString(),
                 status: 'Active'
             };
 
-            // Get existing members or empty array
-            const members = JSON.parse(localStorage.getItem('members') || '[]');
-            members.push(memberData);
-            localStorage.setItem('members', JSON.stringify(members));
-
-            alert('Member Registered Successfully!');
-            window.location.href = 'MONITOR.html';
+            // LocalStorage Persistence
+            try {
+                const members = JSON.parse(localStorage.getItem('members') || '[]');
+                members.push(memberData);
+                localStorage.setItem('members', JSON.stringify(members));
+                
+                alert('Member Registered Successfully!');
+                window.location.href = 'MONITOR.html';
+            } catch (error) {
+                console.error("Storage error:", error);
+                alert('An error occurred while saving. Please try again.');
+            }
         });
     </script>
 </body>
