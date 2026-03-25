@@ -156,28 +156,57 @@
             </form>
         </div>
     </div>
-  <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+    <script type="module">
+        // 2. IMPORT THE TOOLS
+        import { initializeApp } from "https://www.gstatic.com";
+        import { getDatabase, ref, push, set } from "https://www.gstatic.com";
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyC6CLOCEt_NMCrdFvEdsOYLNTu_BAQ662I",
-    authDomain: "kkdat-registration-76372.firebaseapp.com",
-    projectId: "kkdat-registration-76372",
-    storageBucket: "kkdat-registration-76372.firebasestorage.app",
-    messagingSenderId: "703952005000",
-    appId: "1:703952005000:web:71a024de1619eadda63c3d",
-    measurementId: "G-56LDKCCXFV"
-  };
+        // 3. YOUR CONFIG (Copy this from Firebase Console)
+        const firebaseConfig = {
+            apiKey: "AIza...",
+            authDomain: "your-project.firebaseapp.com",
+            databaseURL: "https://your-project.firebaseio.com",
+            projectId: "your-project",
+            storageBucket: "your-project.appspot.com",
+            messagingSenderId: "12345",
+            appId: "1:12345:web:abcde"
+        };
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
+        // 4. INITIALIZE
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // 5. THE SAVE LOGIC
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect data from your inputs
+            const memberData = {
+                fullName: document.getElementById('fullName').value,
+                sex: document.getElementById('sex').value,
+                birthDate: document.getElementById('birthDate').value,
+                age: document.getElementById('age').value,
+                civilStatus: document.getElementById('civilStatus').value,
+                address: document.getElementById('address').value,
+                facebook: document.getElementById('facebook').value,
+                contactPerson: document.getElementById('contactPerson').value,
+                dateJoined: new Date().toLocaleDateString(),
+                status: 'Active'
+            };
+
+            // PUSH & SET to the Cloud
+            const membersRef = ref(db, 'members');
+            const newMemberRef = push(membersRef); // Create unique ID
+            
+            set(newMemberRef, memberData) // Save the data
+                .then(() => {
+                    alert('Registration Successful! Data is now in the Cloud.');
+                    window.location.href = 'MONITOR.html';
+                })
+                .catch((error) => {
+                    alert('Error: ' + error.message);
+                });
+        });
+    </script>
 </body>
 </html>
