@@ -156,50 +156,28 @@
             </form>
         </div>
     </div>
+  <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
-    <script>
-        // Auto-calculate Age accurately
-        document.getElementById('birthDate').addEventListener('change', function() {
-            if (!this.value) return;
-            const birthDate = new Date(this.value);
-            const today = new Date();
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const m = today.getMonth() - birthDate.getMonth();
-            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { age--; }
-            document.getElementById('age').value = age >= 0 ? age : 0;
-        });
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyC6CLOCEt_NMCrdFvEdsOYLNTu_BAQ662I",
+    authDomain: "kkdat-registration-76372.firebaseapp.com",
+    projectId: "kkdat-registration-76372",
+    storageBucket: "kkdat-registration-76372.firebasestorage.app",
+    messagingSenderId: "703952005000",
+    appId: "1:703952005000:web:71a024de1619eadda63c3d",
+    measurementId: "G-56LDKCCXFV"
+  };
 
-        // Form Submission Logic
-        document.getElementById('registrationForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const memberData = {
-                id: 'MEM-' + Date.now().toString().slice(-6),
-                fullName: document.getElementById('fullName').value,
-                sex: document.getElementById('sex').value,
-                birthDate: document.getElementById('birthDate').value,
-                age: document.getElementById('age').value,
-                civilStatus: document.getElementById('civilStatus').value,
-                address: document.getElementById('address').value,
-                facebook: document.getElementById('facebook').value,
-                contactPerson: document.getElementById('contactPerson').value,
-                dateJoined: new Date().toLocaleDateString(),
-                status: 'Active'
-            };
-
-            // LocalStorage Persistence
-            try {
-                const members = JSON.parse(localStorage.getItem('members') || '[]');
-                members.push(memberData);
-                localStorage.setItem('members', JSON.stringify(members));
-                
-                alert('Member Registered Successfully!');
-                window.location.href = 'MONITOR.html';
-            } catch (error) {
-                console.error("Storage error:", error);
-                alert('An error occurred while saving. Please try again.');
-            }
-        });
-    </script>
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
 </body>
 </html>
