@@ -4,6 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Member Dashboard - Full View</title>
+    <script>
+    // Configuration
+    const ACCESS_PASSWORD = "Admin123"; // Change this to your desired password
+
+    function checkAccess() {
+        // Check if already authenticated for this session
+        if (sessionStorage.getItem('isAuthorized') !== 'true') {
+            const entry = prompt("Please enter the Admin Password to view the Registry:");
+            
+            if (entry === ACCESS_PASSWORD) {
+                sessionStorage.setItem('isAuthorized', 'true');
+            } else {
+                alert("Unauthorized access. Redirecting...");
+                window.location.href = "REGFORM.html"; // Redirect away
+            }
+        }
+    }
+
+    // Run immediately before page renders
+    checkAccess();
+</script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
