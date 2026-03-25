@@ -94,101 +94,27 @@
     </div>
 
     <script>
-        function renderTable() {
-            const members = JSON.parse(localStorage.getItem('members') || '[]');
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            const tbody = document.getElementById('tableBody');
-            const emptyState = document.getElementById('emptyState');
-            
-            tbody.innerHTML = '';
+import { getDatabase, ref, onValue } from "https://www.gstatic.com";
 
-            const filtered = members.filter(m => 
-                Object.values(m).some(val => String(val).toLowerCase().includes(search))
-            );
+const db = getDatabase();
+const membersRef = ref(db, 'members');
 
-            if (filtered.length === 0) {
-                emptyState.classList.remove('hidden');
-                return;
-            }
+// This "onValue" function automatically updates the table 
+// whenever a new member is added on ANY device!
+onValue(membersRef, (snapshot) => {
+    const data = snapshot.val();
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = '';
+    
+    if (data) {
+        Object.keys(data).forEach(key => {
+            const m = data[key];
+            const row = `<tr>...your table row HTML...</tr>`;
+            tbody.innerHTML += row;
+        });
+    }
+});
 
-            emptyState.classList.add('hidden');
-            filtered.reverse().forEach((m) => {
-                // Find actual index in original storage for deletion
-                const originalIndex = members.findIndex(item => item.id === m.id);
-                
-                const row = `
-                    <tr class="hover:bg-slate-50/80 transition-colors group">
-                        <!-- Profile Column -->
-                        <td class="px-6 py-6">
-                            <div class="flex flex-col">
-                                <span class="text-[10px] font-black text-indigo-500 mb-1 tracking-widest uppercase">${m.id}</span>
-                                <span class="font-bold text-slate-900 text-lg leading-tight">${m.fullName}</span>
-                                <span class="text-sm text-slate-500 mt-1 italic">Joined: ${m.dateJoined}</span>
-                            </div>
-                        </td>
-
-                        <!-- Birth & Status Column -->
-                        <td class="px-6 py-6">
-                            <div class="flex flex-col space-y-2">
-                                <div>
-                                    <p class="data-label">Age / Sex</p>
-                                    <p class="text-sm font-semibold text-slate-700">${m.age} yrs old • ${m.sex}</p>
-                                </div>
-                                <div>
-                                    <p class="data-label">Civil Status / B-Day</p>
-                                    <p class="text-sm text-slate-600">${m.civilStatus} • ${m.birthDate}</p>
-                                </div>
-                            </div>
-                        </td>
-
-                        <!-- Address Column -->
-                        <td class="px-6 py-6">
-                            <div class="max-w-xs">
-                                <p class="data-label">Residential Address</p>
-                                <p class="text-sm text-slate-600 leading-relaxed">${m.address || 'Not Provided'}</p>
-                            </div>
-                        </td>
-
-                        <!-- Social & Emergency Column -->
-                        <td class="px-6 py-6">
-                            <div class="flex flex-col space-y-3">
-                                <div>
-                                    <p class="data-label">Emergency Contact</p>
-                                    <p class="text-sm font-bold text-slate-800">${m.contactPerson || 'None'}</p>
-                                </div>
-                                ${m.facebook ? `
-                                    <a href="${m.facebook.startsWith('http') ? m.facebook : 'https://facebook.com' + m.facebook}" target="_blank" 
-                                       class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors">
-                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                                        <span class="text-xs font-bold border-b border-blue-200">View Facebook</span>
-                                    </a>
-                                ` : '<span class="text-[10px] text-slate-400">NO FB PROFILE</span>'}
-                            </div>
-                        </td>
-
-                        <!-- Action Column -->
-                        <td class="px-6 py-6 text-center">
-                            <button onclick="deleteMember(${originalIndex})" 
-                                class="p-3 text-slate-300 hover:text-rose-600 hover:bg-rose-50 rounded-2xl transition-all">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
-        }
-
-        function deleteMember(index) {
-            if(confirm('Are you sure? This will permanently delete all records for this member.')) {
-                const members = JSON.parse(localStorage.getItem('members') || '[]');
-                members.splice(index, 1);
-                localStorage.setItem('members', JSON.stringify(members));
-                renderTable();
-            }
-        }
-
-        window.onload = renderTable;
     </script>
 </body>
 </html>
