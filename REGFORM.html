@@ -157,25 +157,39 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymx5klDjX_yTn59_VVzE1nOA8dEHUlFPfQD3FfJDR1ZRp62k0Wx-_2Ph-4zLTYCho5/exec";
 
-        // --- Data Privacy Logic ---
-        window.onload = function() {
-            const privacyAccepted = sessionStorage.getItem('privacyAccepted');
-            const modal = document.getElementById('privacyModal');
-            const mainContent = document.getElementById('mainContent');
-            
-            if (privacyAccepted === 'true') {
-                modal.classList.add('hidden');
-                mainContent.classList.remove('blur-content');
-            }
-        };
+       // --- Data Privacy Logic ---
+window.onload = function() {
+    const privacyAccepted = sessionStorage.getItem('privacyAccepted');
+    const modal = document.getElementById('privacyModal');
+    const mainContent = document.getElementById('mainContent');
+    
+    if (privacyAccepted === 'true') {
+        // Force hide the modal
+        modal.style.display = 'none'; 
+        // Force remove the blur and enable clicking
+        mainContent.classList.remove('blur-content');
+    } else {
+        // Ensure the form is definitely locked if not accepted
+        mainContent.classList.add('blur-content');
+    }
+};
 
-        function acceptPrivacy() {
-            sessionStorage.setItem('privacyAccepted', 'true');
-            const modal = document.getElementById('privacyModal');
-            const mainContent = document.getElementById('mainContent');
-            
-            modal.style.opacity = '0';
-            modal.style.transition = 'opacity 0.5s ease';
+function acceptPrivacy() {
+    sessionStorage.setItem('privacyAccepted', 'true');
+    const modal = document.getElementById('privacyModal');
+    const mainContent = document.getElementById('mainContent');
+    
+    // Smooth transition out
+    modal.style.opacity = '0';
+    modal.style.pointerEvents = 'none'; // Prevents clicking modal buttons during fade
+    
+    // Unlock the form immediately
+    mainContent.classList.remove('blur-content');
+    
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 500);
+}
             
             // Unblur the background
             mainContent.classList.remove('blur-content');
