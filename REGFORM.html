@@ -158,21 +158,21 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymx5klDjX_yTn59_VVzE1nOA8dEHUlFPfQD3FfJDR1ZRp62k0Wx-_2Ph-4zLTYCho5/exec";
 
        // --- Data Privacy Logic ---
-window.onload = function() {
-    const privacyAccepted = sessionStorage.getItem('privacyAccepted');
-    const modal = document.getElementById('privacyModal');
-    const mainContent = document.getElementById('mainContent');
+        window.onload = function() {
+            const privacyAccepted = sessionStorage.getItem('privacyAccepted');
+            const modal = document.getElementById('privacyModal');
+            const mainContent = document.getElementById('mainContent');
     
-    if (privacyAccepted === 'true') {
+            if (privacyAccepted === 'true') {
         // Force hide the modal
         modal.style.display = 'none'; 
         // Force remove the blur and enable clicking
         mainContent.classList.remove('blur-content');
-    } else {
+            } else {
         // Ensure the form is definitely locked if not accepted
         mainContent.classList.add('blur-content');
-    }
-};
+            }
+        };
 
 function acceptPrivacy() {
     sessionStorage.setItem('privacyAccepted', 'true');
@@ -190,14 +190,7 @@ function acceptPrivacy() {
         modal.style.display = 'none';
     }, 500);
 }
-            
-            // Unblur the background
-            mainContent.classList.remove('blur-content');
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 500);
-        }
+
 
         // --- Auto-Calculate Age ---
         document.getElementById('birthDate').addEventListener('change', (e) => {
