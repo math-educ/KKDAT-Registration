@@ -6,7 +6,6 @@
     <title>KKDAT Member Registry - Full View</title>
     <script>
         const ACCESS_PASSWORD = "Admin123";
-        // Use your deployment URL here
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbycrb9021dIOx2e-9yhEgn0SHWByepvGRZjxQmtqGKyYX3QCNjCDANEvSMGvQpthT7n/exec";
 
         function checkAccess() {
@@ -54,7 +53,7 @@
                 <p class="text-indigo-200 text-sm">Real-time sync with Google Sheets</p>
             </div>
             <div class="relative w-full md:w-80">
-                <input type="text" id="searchInput" placeholder="Search by name, address, or status..." 
+                <input type="text" id="searchInput" placeholder="Search members..." 
                     class="pl-10 pr-4 py-3 rounded-xl w-full outline-none border-none shadow-xl focus:ring-2 focus:ring-indigo-500 transition-all" 
                     onkeyup="filterTable()">
                 <span class="absolute left-3 top-3.5 text-slate-400">
@@ -92,6 +91,15 @@
     <script>
         let allMembers = [];
 
+        // Helper to format FB links correctly
+        function formatFBLink(input) {
+            if (!input || input === '---' || input === 'No FB') return null;
+            let cleanInput = input.trim();
+            if (cleanInput.startsWith('http')) return cleanInput;
+            if (cleanInput.startsWith('facebook.com')) return `https://${cleanInput}`;
+            return `https://facebook.com/${cleanInput.replace('@', '')}`;
+        }
+
         async function fetchData() {
             try {
                 const response = await fetch(SCRIPT_URL);
@@ -100,7 +108,7 @@
             } catch (error) {
                 document.getElementById('tableBody').innerHTML = `
                     <tr><td colspan="7" class="px-6 py-20 text-center text-red-500 font-medium">
-                        Error: Could not connect to the database. Check your Script URL and Deployment settings.
+                        Error: Could not connect to the database.
                     </td></tr>`;
             }
         }
@@ -115,6 +123,14 @@
             }
 
             data.forEach(m => {
+                const fbUrl = formatFBLink(m.facebook);
+                const fbDisplay = fbUrl ? 
+                    `<a href="${fbUrl}" target="_blank" class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 font-medium hover:underline">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        View Profile
+                    </a>` : 
+                    '<span class="text-slate-400 italic text-xs">Not Provided</span>';
+
                 const row = `
                     <tr class="hover:bg-slate-50 transition-colors text-sm">
                         <td class="px-4 py-4">
@@ -132,7 +148,7 @@
                             <div class="max-w-[200px] text-slate-600 line-clamp-2">${m.address || '---'}</div>
                         </td>
                         <td class="px-4 py-4">
-                            <div class="text-blue-600 font-medium truncate max-w-[150px]">${m.facebook || 'No FB'}</div>
+                            ${fbDisplay}
                         </td>
                         <td class="px-4 py-4">
                             <div class="text-slate-700 font-semibold">${m.contactPerson || '---'}</div>
@@ -159,20 +175,15 @@
 
         async function deleteMember(rowId) {
             if (!confirm("Permanently delete this member from the spreadsheet?")) return;
-            
-            // Temporary loading UI
             document.getElementById('tableBody').innerHTML = '<tr><td colspan="7" class="text-center py-10">Deleting...</td></tr>';
-            
             await fetch(SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 body: JSON.stringify({ action: 'delete', rowId: rowId })
             });
-
             setTimeout(fetchData, 1500);
         }
 
-        // Auto-load data on page start
         fetchData();
     </script>
 </body>
