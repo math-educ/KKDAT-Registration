@@ -6,7 +6,8 @@
     <title>KKDAT Member Registry - Full View</title>
     <script>
         const ACCESS_PASSWORD = "Admin123";
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyV7PDLnIkT3llReKIF69sSOGJ5k86zn9O7L9Ify8TO4Zie3J_ht_g4ZHS_sxkYuJ5n/exec";
+        // PASTE YOUR NEW DEPLOYMENT URL HERE
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxZkFJL-fsBU8jLkAtLC0NP6dGiXLPWOJ9L6qFz3GnOGvrYN53iAES_PCrLw7Xy2BdN/exec";
 
         function checkAccess() {
             if (sessionStorage.getItem('isAuthorized') !== 'true') {
@@ -27,11 +28,17 @@
         * { font-family: 'Inter', sans-serif; }
         .glass-panel { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); }
         .table-container { scrollbar-width: thin; scrollbar-color: #6366f1 transparent; }
+        
+        @media print {
+            nav, .no-print, .del-col { display: none !important; }
+            body { background: white; color: black; }
+            .glass-panel { border: none; box-shadow: none; }
+        }
     </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 pb-12">
 
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-white/10">
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-white/10 no-print">
         <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-lg overflow-hidden">
@@ -41,6 +48,7 @@
             </div>
             <div class="flex gap-4">
                 <button onclick="fetchData()" class="text-indigo-300 hover:text-white text-sm font-medium transition-colors">Refresh</button>
+                <button onclick="window.print()" class="text-white bg-slate-700 px-3 py-1 rounded text-sm font-medium">Print</button>
                 <a href="REGFORM.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium">Add Member</a>
             </div>
         </div>
@@ -50,9 +58,9 @@
         <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4 px-2">
             <div>
                 <h1 class="text-3xl font-bold text-white">KKDAT Full Member Database</h1>
-                <p class="text-indigo-200 text-sm">Real-time sync with KKDAT database</p>
+                <p class="text-indigo-200 text-sm">Official Records - Synchronized with Google Sheets</p>
             </div>
-            <div class="relative w-full md:w-80">
+            <div class="relative w-full md:w-80 no-print">
                 <input type="text" id="searchInput" placeholder="Search members..." 
                     class="pl-10 pr-4 py-3 rounded-xl w-full outline-none border-none shadow-xl focus:ring-2 focus:ring-indigo-500 transition-all" 
                     onkeyup="filterTable()">
@@ -72,8 +80,8 @@
                             <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase">Contact Info</th>
                             <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase">Address</th>
                             <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase">Social Media</th>
-                            <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase">Emergency Contact</th>
-                            <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase text-center">Del</th>
+                            <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase">Emergency</th>
+                            <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase text-center del-col">Del</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody" class="divide-y divide-slate-100 bg-white">
@@ -105,9 +113,10 @@
                 allMembers = await response.json();
                 renderTable(allMembers);
             } catch (error) {
+                console.error("Fetch Error:", error);
                 document.getElementById('tableBody').innerHTML = `
                     <tr><td colspan="7" class="px-6 py-20 text-center text-red-500 font-medium">
-                        Error: Could not connect to the database.
+                        Error: Data could not be loaded. Please check SCRIPT_URL.
                     </td></tr>`;
             }
         }
@@ -117,18 +126,15 @@
             tbody.innerHTML = '';
             
             if (!data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-20 text-center text-slate-400 text-lg">No member records found.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-20 text-center text-slate-400 text-lg">No records found.</td></tr>';
                 return;
             }
 
             data.forEach(m => {
                 const fbUrl = formatFBLink(m.facebook);
                 const fbDisplay = fbUrl ? 
-                    `<a href="${fbUrl}" target="_blank" class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 font-medium hover:underline">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                        View FB
-                    </a>` : 
-                    '<span class="text-slate-400 italic text-xs">None</span>';
+                    `<a href="${fbUrl}" target="_blank" class="text-blue-600 font-medium hover:underline">View FB</a>` : 
+                    '<span class="text-slate-400 text-xs italic">None</span>';
 
                 const row = `
                     <tr class="hover:bg-slate-50 transition-colors text-sm">
@@ -153,8 +159,8 @@
                         <td class="px-4 py-4">
                             <div class="text-slate-700 font-semibold text-xs">${m.contactPerson || '---'}</div>
                         </td>
-                        <td class="px-4 py-4 text-center">
-                            <button onclick="deleteMember(${m.rowId})" class="text-slate-300 hover:text-red-500 transition-colors">
+                        <td class="px-4 py-4 text-center del-col">
+                            <button onclick="deleteMember(${m.rowId})" class="text-slate-300 hover:text-red-500 transition-colors no-print">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                             </button>
                         </td>
@@ -168,21 +174,31 @@
             const filtered = allMembers.filter(m => 
                 (m.fullName && m.fullName.toLowerCase().includes(query)) || 
                 (m.address && m.address.toLowerCase().includes(query)) ||
-                (m.email && m.email.toLowerCase().includes(query)) ||
-                (m.mobileNumber && m.mobileNumber.includes(query))
+                (m.email && m.email.toLowerCase().includes(query))
             );
             renderTable(filtered);
         }
 
         async function deleteMember(rowId) {
-            if (!confirm("Permanently delete this member from the spreadsheet?")) return;
-            document.getElementById('tableBody').innerHTML = '<tr><td colspan="7" class="text-center py-10">Deleting...</td></tr>';
-            await fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify({ action: 'delete', rowId: rowId })
-            });
-            setTimeout(fetchData, 1500);
+            if (!confirm("Delete this entry permanently?")) return;
+            
+            // Show loading state
+            document.getElementById('tableBody').innerHTML = '<tr><td colspan="7" class="text-center py-10 font-bold text-red-500 animate-pulse">Deleting from Sheet...</td></tr>';
+            
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Essential for Google Apps Script
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'delete', rowId: rowId })
+                });
+
+                // Wait for the sheet to update before refreshing
+                setTimeout(fetchData, 2000);
+            } catch (error) {
+                alert("Error during deletion.");
+                fetchData();
+            }
         }
 
         fetchData();
