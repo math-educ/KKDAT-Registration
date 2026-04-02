@@ -9,8 +9,8 @@
     <style>
         * { font-family: 'Inter', sans-serif; }
         .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
-        .input-field { transition: all 0.3s ease; }
-        .input-field:focus { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.15); }
+        .input-field { transition: all 0.3s ease; border: 1px solid #e2e8f0; }
+        .input-field:focus { transform: translateY(-2px); border-color: #6366f1; box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.15); outline: none; }
         .fade-in { animation: fadeIn 0.5s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -27,7 +27,7 @@
             </div>
             <div class="flex gap-4">
                 <a href="REGFORM.html" class="text-white bg-white/20 px-4 py-2 rounded-lg text-sm font-medium">New Member</a>
-                <a href="LOGIN.html" class="text-white/70 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Members List</a>
+                <a href="MONITOR.html" class="text-white/70 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Members List</a>
             </div>
         </div>
     </nav>
@@ -35,7 +35,7 @@
     <div class="relative max-w-5xl mx-auto pt-24">
         <div class="text-center mb-10 fade-in">
             <h1 class="text-4xl font-bold text-white mb-2">KKDAT Member Registration</h1>
-            <p class="text-indigo-200">Complete the form below to register a new member to the cloud</p>
+            <p class="text-indigo-200">Data will be saved directly to the Google Sheets database</p>
         </div>
 
         <div class="glass-panel rounded-3xl shadow-2xl p-8 md:p-10 fade-in">
@@ -49,11 +49,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-slate-700 mb-2">Full Name *</label>
-                            <input type="text" id="fullName" required class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 outline-none" placeholder="Juan Dela Cruz">
+                            <input type="text" id="fullName" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="Juan Dela Cruz">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Sex *</label>
-                            <select id="sex" required class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 bg-white">
+                            <select id="sex" required class="input-field w-full px-4 py-3 rounded-xl bg-white">
                                 <option value="">Select sex</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
@@ -61,15 +61,15 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Birthday *</label>
-                            <input type="date" id="birthDate" required class="input-field w-full px-4 py-3 rounded-xl border border-slate-200">
+                            <input type="date" id="birthDate" required class="input-field w-full px-4 py-3 rounded-xl">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Age</label>
-                            <input type="number" id="age" readonly class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-100 font-bold text-indigo-600" placeholder="0">
+                            <input type="number" id="age" readonly class="input-field w-full px-4 py-3 rounded-xl bg-slate-100 font-bold text-indigo-600" placeholder="0">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Civil Status *</label>
-                            <select id="civilStatus" required class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 bg-white">
+                            <select id="civilStatus" required class="input-field w-full px-4 py-3 rounded-xl bg-white">
                                 <option value="Single">Single</option>
                                 <option value="Married">Married</option>
                                 <option value="Widowed">Widowed</option>
@@ -87,90 +87,85 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-slate-700 mb-2">Complete Address *</label>
-                            <textarea id="address" required rows="2" class="input-field w-full px-4 py-3 rounded-xl border border-slate-200" placeholder="Barangay, City, Province"></textarea>
+                            <textarea id="address" required rows="2" class="input-field w-full px-4 py-3 rounded-xl" placeholder="Barangay, City, Province"></textarea>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Facebook Profile</label>
-                            <input type="text" id="facebook" class="input-field w-full px-4 py-3 rounded-xl border border-slate-200" placeholder="facebook.com/username">
+                            <input type="text" id="facebook" class="input-field w-full px-4 py-3 rounded-xl" placeholder="facebook.com/username">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Emergency Contact *</label>
-                            <input type="text" id="contactPerson" required class="input-field w-full px-4 py-3 rounded-xl border border-slate-200" placeholder="Name & Number">
+                            <input type="text" id="contactPerson" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="Name & Number">
                         </div>
                     </div>
                 </div>
 
                 <div class="flex flex-col sm:flex-row justify-end gap-4">
                     <button type="reset" class="px-8 py-4 bg-slate-200 text-slate-700 rounded-2xl font-bold hover:bg-slate-300 transition-all">Clear Form</button>
-                    <button type="submit" class="px-10 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-bold hover:shadow-lg transition-all">Register Member</button>
+                    <button type="submit" id="submitBtn" class="px-10 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-bold hover:shadow-lg transition-all">Register Member</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    <script>
+        // Replace with YOUR Web App URL from Step 1
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxg-Cwaa23wgAdqAxsc72gCCMah-rsYu9UirS3OQwiuva6D8tokK8GqsV4R1AnOeuQv/exec";
 
-    // Your specific Firebase configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyDJhkFeWXnXHBSH5Algaa5BC8qv3ojT2Nc",
-        authDomain: "kkdat-regform.firebaseapp.com",
-        projectId: "kkdat-regform",
-        storageBucket: "kkdat-regform.firebasestorage.app",
-        messagingSenderId: "307124599850",
-        appId: "1:307124599850:web:5c339ca1552e49ec26d753",
-        measurementId: "G-YETCF41C2V"
-    };
+        // --- Auto-Calculate Age ---
+        document.getElementById('birthDate').addEventListener('change', (e) => {
+            const birthDate = new Date(e.target.value);
+            const today = new Date();
+            if (isNaN(birthDate.getTime())) return;
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+            document.getElementById('age').value = age >= 0 ? age : 0;
+        });
 
-    // --- Auto-Calculate Age ---
-    document.getElementById('birthDate').addEventListener('change', (e) => {
-        const birthDate = new Date(e.target.value);
-        const today = new Date();
-        if (isNaN(birthDate.getTime())) return;
+        // --- Submit to Google Sheets ---
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Saving to Google Sheets...";
+            
+            const memberData = {
+                fullName: document.getElementById('fullName').value,
+                sex: document.getElementById('sex').value,
+                birthDate: document.getElementById('birthDate').value,
+                age: document.getElementById('age').value,
+                civilStatus: document.getElementById('civilStatus').value,
+                address: document.getElementById('address').value,
+                facebook: document.getElementById('facebook').value,
+                contactPerson: document.getElementById('contactPerson').value,
+                dateRegistered: new Date().toLocaleString()
+            };
 
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
-        document.getElementById('age').value = age >= 0 ? age : 0;
-    });
-
-    // --- Submit to Cloud ---
-    document.getElementById('registrationForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const submitBtn = e.target.querySelector('button[type="submit"]');
-        submitBtn.disabled = true;
-        submitBtn.innerText = "Saving to Cloud...";
-        
-        const memberData = {
-            fullName: document.getElementById('fullName').value,
-            sex: document.getElementById('sex').value,
-            birthDate: document.getElementById('birthDate').value,
-            age: document.getElementById('age').value,
-            civilStatus: document.getElementById('civilStatus').value,
-            address: document.getElementById('address').value,
-            facebook: document.getElementById('facebook').value,
-            contactPerson: document.getElementById('contactPerson').value,
-            dateRegistered: new Date().toISOString()
-        };
-
-        const membersRef = ref(db, 'members');
-        const newMemberRef = push(membersRef); // Auto-generates unique ID
-        
-        set(newMemberRef, memberData)
+            // Using fetch with 'no-cors' mode is common for Google Apps Script 
+            // but the JSON response might not be readable. 
+            // The standard 'cors' works best with the proper Apps Script return.
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Essential for Google Script redirection
+                cache: 'no-cache',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(memberData)
+            })
             .then(() => {
-                alert('Success! Member added to KKDAT Database.');
-                window.location.href = 'MONITOR.html';
+                alert('Success! Member added to the Google Sheet.');
+                document.getElementById('registrationForm').reset();
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Register Member";
             })
             .catch((error) => {
-                alert('Cloud Error: ' + error.message);
+                alert('Error: ' + error.message);
                 submitBtn.disabled = false;
                 submitBtn.innerText = "Register Member";
             });
-    });
-</script>
+        });
+    </script>
 </body>
 </html>
