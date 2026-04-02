@@ -6,10 +6,10 @@
     <title>KKDAT Member Registry - Full View</title>
     <script>
         const ACCESS_PASSWORD = "Admin123";
-        // PASTE YOUR DEPLOYMENT URL HERE
+        // PASTE YOUR NEW DEPLOYMENT URL HERE
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxZkFJL-fsBU8jLkAtLC0NP6dGiXLPWOJ9L6qFz3GnOGvrYN53iAES_PCrLw7Xy2BdN/exec";
         // PASTE YOUR GOOGLE SHEET LINK HERE
-        const SHEET_URL = "https://docs.google.com/spreadsheets/d/1NFPsNXgObQUxNmPQkmzl_OSJGVwFvSF7pVlZxp1ASoQ/edit?usp=sharing";
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_HERE/edit";
 
         function checkAccess() {
             if (sessionStorage.getItem('isAuthorized') !== 'true') {
@@ -29,70 +29,79 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         * { font-family: 'Inter', sans-serif; }
         .glass-panel { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); }
-        .table-container { scrollbar-width: thin; scrollbar-color: #6366f1 transparent; }
+        
+        /* Custom scrollbar for the horizontal table */
+        .table-container::-webkit-scrollbar { height: 6px; }
+        .table-container::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
+        
+        @media print {
+            nav, .no-print, .del-col { display: none !important; }
+            body { background: white; color: black; }
+        }
     </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 pb-12">
 
     <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-white/10 no-print">
         <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-lg overflow-hidden">
+            <div class="flex items-center gap-2 sm:gap-3">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white flex items-center justify-center shadow-lg overflow-hidden">
                     <img src="CURRIMAO.PNG" alt="Logo" class="w-full h-full object-cover">
                 </div>
-                <span class="text-white font-bold text-lg">KKDAT II Currimao Registry</span>
+                <span class="text-white font-bold text-sm sm:text-lg truncate max-w-[120px] sm:max-w-none">KKDAT Registry</span>
             </div>
-            <div class="flex gap-4">
-                <button onclick="fetchData()" class="text-indigo-300 hover:text-white text-sm font-medium transition-colors">Refresh</button>
-                <a href="javascript:void(0)" onclick="window.open(SHEET_URL, '_blank')" class="text-white bg-emerald-600 hover:bg-emerald-700 px-3 py-1 rounded text-sm font-medium flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2zM19 20H6V4h7v4h6v12zM8 12h8v2H8v-2zm0 4h8v2H8v-2zm0-8h5v2H8V8z"/></svg>
-                    View Sheets
+            <div class="flex gap-2 sm:gap-4">
+                <button onclick="fetchData()" class="text-indigo-300 hover:text-white text-xs font-medium transition-colors">Refresh</button>
+                <a href="javascript:void(0)" onclick="window.open(SHEET_URL, '_blank')" class="text-white bg-emerald-600 hover:bg-emerald-700 px-3 py-1 rounded text-xs font-medium flex items-center gap-2">
+                    <span class="hidden md:inline">View Sheets</span>
+                    <span class="md:hidden">Sheet</span>
                 </a>
-                <a href="REGFORM.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium">Add Member</a>
+                <a href="REGFORM.html" class="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium">Add</a>
             </div>
         </div>
     </nav>
 
-    <div class="relative max-w-[98%] mx-auto pt-24 px-2">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4 px-2">
+    <div class="relative max-w-[98%] mx-auto pt-24 px-2 sm:px-4">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4 px-2">
             <div>
-                <h1 class="text-3xl font-bold text-white">KKDAT Full Member Database</h1>
-                <p class="text-indigo-200 text-sm">Official Records - Synchronized with KKDAT II Currimao database</p>
+                <h1 class="text-2xl sm:text-3xl font-bold text-white uppercase tracking-tight">Member Database</h1>
+                <p class="text-indigo-200 text-xs sm:text-sm">Official Records - Synchronized with Google Sheets</p>
             </div>
             <div class="relative w-full md:w-80 no-print">
                 <input type="text" id="searchInput" placeholder="Search members..." 
-                    class="pl-10 pr-4 py-3 rounded-xl w-full outline-none border-none shadow-xl focus:ring-2 focus:ring-indigo-500 transition-all" 
+                    class="pl-10 pr-4 py-2 sm:py-3 rounded-xl w-full outline-none border-none shadow-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm" 
                     onkeyup="filterTable()">
-                <span class="absolute left-3 top-3.5 text-slate-400">
+                <span class="absolute left-3 top-2.5 sm:top-3.5 text-slate-400">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="2"></path></svg>
                 </span>
             </div>
         </div>
 
-        <div class="glass-panel rounded-3xl shadow-2xl overflow-hidden border border-white/10">
+        <div class="glass-panel rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border border-white/10">
             <div class="overflow-x-auto table-container">
-                <table class="w-full text-left border-collapse">
+                <table class="w-full text-left border-collapse min-w-[900px]">
                     <thead>
                         <tr class="bg-slate-50 border-b border-slate-200">
-                            <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase">Name & Sex</th>
-                            <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase">Birth & Age</th>
-                            <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase">Contact Info</th>
-                            <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase">Address</th>
-                            <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase">Social Media</th>
-                            <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase">Emergency</th>
-                            <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase text-center del-col">Del</th>
+                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Name & Sex</th>
+                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Birth & Age</th>
+                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Contact Info</th>
+                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Address</th>
+                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Social Media</th>
+                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Emergency</th>
+                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase text-center del-col">Del</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody" class="divide-y divide-slate-100 bg-white">
                         <tr>
                             <td colspan="7" class="px-6 py-20 text-center">
-                                <p class="text-slate-500 animate-pulse text-lg">Fetching data from KKDAT database...</p>
+                                <p class="text-slate-500 animate-pulse text-lg font-medium">Fetching data from KKDAT database...</p>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+        <p class="text-white/40 text-[10px] text-center mt-4 md:hidden">← Swipe left/right to view more info →</p>
     </div>
 
     <script>
@@ -125,7 +134,7 @@
             tbody.innerHTML = '';
             
             if (!data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-20 text-center text-slate-400 text-lg">No records found.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-20 text-center text-slate-400 text-lg font-medium">No records found.</td></tr>';
                 return;
             }
 
@@ -136,30 +145,30 @@
                     '<span class="text-slate-400 text-xs italic">None</span>';
 
                 const row = `
-                    <tr class="hover:bg-slate-50 transition-colors text-sm">
+                    <tr class="hover:bg-slate-50 transition-colors text-xs sm:text-sm">
                         <td class="px-4 py-4">
-                            <div class="font-bold text-slate-800">${m.fullName || '---'}</div>
-                            <div class="text-[10px] text-slate-400 uppercase font-bold">${m.sex || '---'} | ${m.civilStatus || 'Single'}</div>
+                            <div class="font-bold text-slate-800 uppercase">${m.fullName || '---'}</div>
+                            <div class="text-[9px] text-slate-400 uppercase font-bold">${m.sex || '---'} | ${m.civilStatus || 'Single'}</div>
                         </td>
                         <td class="px-4 py-4">
-                            <div class="text-slate-600 text-xs">${m.birthDate || '---'}</div>
-                            <span class="text-[10px] font-bold px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-full">${m.age || '0'} YRS</span>
+                            <div class="text-slate-600 text-[11px]">${m.birthDate || '---'}</div>
+                            <span class="text-[9px] font-bold px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-full">${m.age || '0'} YRS</span>
                         </td>
                         <td class="px-4 py-4">
-                            <div class="text-slate-800 font-medium text-xs">${m.mobileNumber || 'No Phone'}</div>
-                            <div class="text-slate-500 text-[11px] truncate max-w-[150px]">${m.email || 'No Email'}</div>
+                            <div class="text-slate-800 font-medium text-[11px]">${m.mobileNumber || 'No Phone'}</div>
+                            <div class="text-slate-500 text-[10px] truncate max-w-[120px]">${m.email || 'No Email'}</div>
                         </td>
                         <td class="px-4 py-4">
-                            <div class="max-w-[180px] text-slate-600 text-xs line-clamp-2">${m.address || '---'}</div>
+                            <div class="max-w-[180px] text-slate-600 text-[11px] line-clamp-2 uppercase">${m.address || '---'}</div>
                         </td>
                         <td class="px-4 py-4">
                             ${fbDisplay}
                         </td>
                         <td class="px-4 py-4">
-                            <div class="text-slate-700 font-semibold text-xs">${m.contactPerson || '---'}</div>
+                            <div class="text-slate-700 font-semibold text-[11px]">${m.contactPerson || '---'}</div>
                         </td>
                         <td class="px-4 py-4 text-center del-col">
-                            <button onclick="deleteMember(${m.rowId})" class="text-slate-300 hover:text-red-500 transition-colors no-print">
+                            <button onclick="deleteMember(${m.rowId})" class="text-slate-300 hover:text-red-500 transition-colors no-print p-2">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                             </button>
                         </td>
@@ -180,9 +189,7 @@
 
         async function deleteMember(rowId) {
             if (!confirm("Delete this entry permanently?")) return;
-            
             document.getElementById('tableBody').innerHTML = '<tr><td colspan="7" class="text-center py-10 font-bold text-red-500 animate-pulse">Deleting from Sheet...</td></tr>';
-            
             try {
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
@@ -190,7 +197,6 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'delete', rowId: rowId })
                 });
-
                 setTimeout(fetchData, 2000);
             } catch (error) {
                 alert("Error during deletion.");
