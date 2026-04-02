@@ -6,7 +6,7 @@
     <title>KKDAT Member Registry - Full View</title>
     <script>
         const ACCESS_PASSWORD = "Admin123";
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbycrb9021dIOx2e-9yhEgn0SHWByepvGRZjxQmtqGKyYX3QCNjCDANEvSMGvQpthT7n/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwfyHVqqmy4ZrpW_CkQ6MU9iCQAQ4MMP6W9fwuGClXEnPR9-fUDRLT6av4WDA7TJHFX/exec";
 
         function checkAccess() {
             if (sessionStorage.getItem('isAuthorized') !== 'true') {
@@ -37,7 +37,7 @@
                 <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-lg overflow-hidden">
                     <img src="CURRIMAO.PNG" alt="Logo" class="w-full h-full object-cover">
                 </div>
-                <span class="text-white font-bold text-lg">KKDAT Registry</span>
+                <span class="text-white font-bold text-lg">KKDAT II Currimao Registry</span>
             </div>
             <div class="flex gap-4">
                 <button onclick="fetchData()" class="text-indigo-300 hover:text-white text-sm font-medium transition-colors">Refresh</button>
@@ -49,8 +49,8 @@
     <div class="relative max-w-[98%] mx-auto pt-24 px-2">
         <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4 px-2">
             <div>
-                <h1 class="text-3xl font-bold text-white">Full Member Database</h1>
-                <p class="text-indigo-200 text-sm">Real-time sync with Google Sheets</p>
+                <h1 class="text-3xl font-bold text-white">KKDAT Full Member Database</h1>
+                <p class="text-indigo-200 text-sm">Real-time sync with KKDAT database</p>
             </div>
             <div class="relative w-full md:w-80">
                 <input type="text" id="searchInput" placeholder="Search members..." 
