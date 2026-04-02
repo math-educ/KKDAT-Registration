@@ -6,8 +6,10 @@
     <title>KKDAT Member Registry - Full View</title>
     <script>
         const ACCESS_PASSWORD = "Admin123";
-        // PASTE YOUR NEW DEPLOYMENT URL HERE
+        // PASTE YOUR DEPLOYMENT URL HERE
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxZkFJL-fsBU8jLkAtLC0NP6dGiXLPWOJ9L6qFz3GnOGvrYN53iAES_PCrLw7Xy2BdN/exec";
+        // PASTE YOUR GOOGLE SHEET LINK HERE
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/1NFPsNXgObQUxNmPQkmzl_OSJGVwFvSF7pVlZxp1ASoQ/edit?usp=sharing";
 
         function checkAccess() {
             if (sessionStorage.getItem('isAuthorized') !== 'true') {
@@ -28,12 +30,6 @@
         * { font-family: 'Inter', sans-serif; }
         .glass-panel { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); }
         .table-container { scrollbar-width: thin; scrollbar-color: #6366f1 transparent; }
-        
-        @media print {
-            nav, .no-print, .del-col { display: none !important; }
-            body { background: white; color: black; }
-            .glass-panel { border: none; box-shadow: none; }
-        }
     </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 pb-12">
@@ -48,7 +44,10 @@
             </div>
             <div class="flex gap-4">
                 <button onclick="fetchData()" class="text-indigo-300 hover:text-white text-sm font-medium transition-colors">Refresh</button>
-                <button onclick="window.print()" class="text-white bg-slate-700 px-3 py-1 rounded text-sm font-medium">Print</button>
+                <a href="javascript:void(0)" onclick="window.open(SHEET_URL, '_blank')" class="text-white bg-emerald-600 hover:bg-emerald-700 px-3 py-1 rounded text-sm font-medium flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2zM19 20H6V4h7v4h6v12zM8 12h8v2H8v-2zm0 4h8v2H8v-2zm0-8h5v2H8V8z"/></svg>
+                    View Sheets
+                </a>
                 <a href="REGFORM.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium">Add Member</a>
             </div>
         </div>
@@ -58,7 +57,7 @@
         <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4 px-2">
             <div>
                 <h1 class="text-3xl font-bold text-white">KKDAT Full Member Database</h1>
-                <p class="text-indigo-200 text-sm">Official Records - Synchronized with Google Sheets</p>
+                <p class="text-indigo-200 text-sm">Official Records - Synchronized with KKDAT II Currimao database</p>
             </div>
             <div class="relative w-full md:w-80 no-print">
                 <input type="text" id="searchInput" placeholder="Search members..." 
@@ -182,18 +181,16 @@
         async function deleteMember(rowId) {
             if (!confirm("Delete this entry permanently?")) return;
             
-            // Show loading state
             document.getElementById('tableBody').innerHTML = '<tr><td colspan="7" class="text-center py-10 font-bold text-red-500 animate-pulse">Deleting from Sheet...</td></tr>';
             
             try {
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // Essential for Google Apps Script
+                    mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'delete', rowId: rowId })
                 });
 
-                // Wait for the sheet to update before refreshing
                 setTimeout(fetchData, 2000);
             } catch (error) {
                 alert("Error during deletion.");
