@@ -3,58 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KKDAT Member Registration</title>
+    <title>Member Registration - KKDAT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Inter', sans-serif; }
         .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
-        .input-field { transition: all 0.2s ease; border: 1px solid #e2e8f0; }
-        .input-field:focus { border-color: #6366f1; outline: none; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+        .input-field { transition: all 0.3s ease; }
+        .input-field:focus { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.15); }
         .fade-in { animation: fadeIn 0.5s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 py-12 px-4">
 
     <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-white/10">
         <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-lg overflow-hidden bg-white flex items-center justify-center shadow-lg">
+                <div class="w-10 h-10 rounded-xl overflow-hidden bg-white flex items-center justify-center shadow-lg">
                     <img src="CURRIMAO.PNG" alt="Logo" class="w-full h-full object-cover">
                 </div>
                 <span class="text-white font-bold text-lg tracking-tight">KKDAT Ilocandia Inc. Currimao</span>
             </div>
             <div class="flex gap-4">
                 <a href="REGFORM.html" class="text-white bg-white/20 px-4 py-2 rounded-lg text-sm font-medium">New Member</a>
-                <a href="MONITOR.html" class="text-white/70 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Members List</a>
+                <a href="LOGIN.html" class="text-white/70 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Members List</a>
             </div>
         </div>
     </nav>
 
     <div class="relative max-w-5xl mx-auto pt-24">
         <div class="text-center mb-10 fade-in">
-            <h1 class="text-4xl font-bold text-white mb-2">KKDAT II Currimao Registration</h1>
-            <p class="text-indigo-200">Complete the form below to register as a new member</p>
+            <h1 class="text-4xl font-bold text-white mb-2">KKDAT Member Registration</h1>
+            <p class="text-indigo-200">Complete the form below to register a new member to the cloud</p>
         </div>
 
-        <div class="glass-panel rounded-3xl shadow-2xl p-6 md:p-10 fade-in">
+        <div class="glass-panel rounded-3xl shadow-2xl p-8 md:p-10 fade-in">
             <form id="registrationForm" class="space-y-8">
                 
                 <div class="bg-slate-50/50 rounded-2xl p-6 border border-slate-100">
-                    <div class="flex items-center gap-2 mb-6">
-                        <div class="w-2 h-6 bg-indigo-600 rounded-full"></div>
-                        <h2 class="text-xl font-semibold text-slate-800">Personal Information</h2>
-                    </div>
+                    <h2 class="text-xl font-semibold text-slate-800 mb-6 flex items-center">
+                        <span class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center mr-3 text-sm">1</span>
+                        Personal Information
+                    </h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-slate-700 mb-2">Full Name *</label>
-                            <input type="text" id="fullName" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="Juan Dela Cruz">
+                            <input type="text" id="fullName" required class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 outline-none" placeholder="Juan Dela Cruz">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Sex *</label>
-                            <select id="sex" required class="input-field w-full px-4 py-3 rounded-xl bg-white">
+                            <select id="sex" required class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 bg-white">
                                 <option value="">Select sex</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
@@ -62,15 +61,15 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Birthday *</label>
-                            <input type="date" id="birthDate" required class="input-field w-full px-4 py-3 rounded-xl">
+                            <input type="date" id="birthDate" required class="input-field w-full px-4 py-3 rounded-xl border border-slate-200">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Age</label>
-                            <input type="number" id="age" readonly class="input-field w-full px-4 py-3 rounded-xl bg-slate-100 text-slate-500 font-bold" placeholder="0">
+                            <input type="number" id="age" readonly class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-100 font-bold text-indigo-600" placeholder="0">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Civil Status *</label>
-                            <select id="civilStatus" required class="input-field w-full px-4 py-3 rounded-xl bg-white">
+                            <select id="civilStatus" required class="input-field w-full px-4 py-3 rounded-xl border border-slate-200 bg-white">
                                 <option value="Single">Single</option>
                                 <option value="Married">Married</option>
                                 <option value="Widowed">Widowed</option>
@@ -81,39 +80,40 @@
                 </div>
 
                 <div class="bg-slate-50/50 rounded-2xl p-6 border border-slate-100">
-                    <div class="flex items-center gap-2 mb-6">
-                        <div class="w-2 h-6 bg-purple-600 rounded-full"></div>
-                        <h2 class="text-xl font-semibold text-slate-800">Contact & Social Media</h2>
-                    </div>
+                    <h2 class="text-xl font-semibold text-slate-800 mb-6 flex items-center">
+                        <span class="w-8 h-8 rounded-lg bg-purple-600 text-white flex items-center justify-center mr-3 text-sm">2</span>
+                        Contact & Address
+                    </h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-slate-700 mb-2">Complete Address *</label>
-                            <textarea id="address" required rows="2" class="input-field w-full px-4 py-3 rounded-xl" placeholder="Barangay, City, Province"></textarea>
+                            <textarea id="address" required rows="2" class="input-field w-full px-4 py-3 rounded-xl border border-slate-200" placeholder="Barangay, City, Province"></textarea>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-2">Facebook Profile Link/Name</label>
-                            <input type="text" id="facebook" class="input-field w-full px-4 py-3 rounded-xl" placeholder="facebook.com/username">
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Facebook Profile</label>
+                            <input type="text" id="facebook" class="input-field w-full px-4 py-3 rounded-xl border border-slate-200" placeholder="facebook.com/username">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-2">Contact Person (Emergency) *</label>
-                            <input type="text" id="contactPerson" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="Name & Number">
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Emergency Contact *</label>
+                            <input type="text" id="contactPerson" required class="input-field w-full px-4 py-3 rounded-xl border border-slate-200" placeholder="Name & Number">
                         </div>
                     </div>
                 </div>
 
-                <div class="flex flex-col sm:flex-row justify-end gap-4 pt-6">
+                <div class="flex flex-col sm:flex-row justify-end gap-4">
                     <button type="reset" class="px-8 py-4 bg-slate-200 text-slate-700 rounded-2xl font-bold hover:bg-slate-300 transition-all">Clear Form</button>
-                    <button type="submit" class="px-10 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-bold hover:shadow-lg hover:shadow-indigo-500/30 transition-all">Register Member</button>
+                    <button type="submit" class="px-10 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-bold hover:shadow-lg transition-all">Register Member</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script type="module">
+        // 1. IMPORT FIREBASE TOOLS
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // CONFIG: Replace with your actual Firebase settings
+        // 2. CONFIG: Replace these with YOUR ACTUAL Firebase keys
         const firebaseConfig = {
             apiKey: "AIza...",
             authDomain: "your-project.firebaseapp.com",
@@ -127,28 +127,24 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- AGE CALCULATION LOGIC ---
+        // --- 3. AUTO-CALCULATE AGE LOGIC ---
         const birthDateInput = document.getElementById('birthDate');
         const ageInput = document.getElementById('age');
 
         birthDateInput.addEventListener('change', () => {
             const birthDate = new Date(birthDateInput.value);
             const today = new Date();
-            
             if (isNaN(birthDate.getTime())) return;
 
             let age = today.getFullYear() - birthDate.getFullYear();
-            const monthDiff = today.getMonth() - birthDate.getMonth();
-            
-            // Adjust if birthday hasn't happened yet this year
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            const m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
                 age--;
             }
-            
             ageInput.value = age >= 0 ? age : 0;
         });
 
-        // --- FORM SUBMISSION ---
+        // --- 4. CLOUD SUBMISSION LOGIC ---
         document.getElementById('registrationForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -166,11 +162,11 @@
             };
 
             const membersRef = ref(db, 'members');
-            const newMemberRef = push(membersRef);
+            const newMemberRef = push(membersRef); // Generates unique ID automatically
             
             set(newMemberRef, memberData)
                 .then(() => {
-                    alert('Registration Successful!');
+                    alert('Registration Successful! Data saved to Cloud.');
                     window.location.href = 'MONITOR.html';
                 })
                 .catch((error) => {
