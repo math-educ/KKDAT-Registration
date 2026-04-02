@@ -3,35 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Member Dashboard - Full View</title>
+    <title>Member Dashboard - KKDAT Registry</title>
     <script>
-    // Configuration
-    const ACCESS_PASSWORD = "Admin123"; // Change this to your desired password
+        const ACCESS_PASSWORD = "Admin123";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxg-Cwaa23wgAdqAxsc72gCCMah-rsYu9UirS3OQwiuva6D8tokK8GqsV4R1AnOeuQv/exec";
 
-    function checkAccess() {
-        // Check if already authenticated for this session
-        if (sessionStorage.getItem('isAuthorized') !== 'true') {
-            const entry = prompt("Please enter the Admin Password to view the Registry:");
-            
-            if (entry === ACCESS_PASSWORD) {
-                sessionStorage.setItem('isAuthorized', 'true');
-            } else {
-                alert("Unauthorized access. Redirecting...");
-                window.location.href = "REGFORM.html"; // Redirect away
+        function checkAccess() {
+            if (sessionStorage.getItem('isAuthorized') !== 'true') {
+                const entry = prompt("Please enter the Admin Password:");
+                if (entry === ACCESS_PASSWORD) {
+                    sessionStorage.setItem('isAuthorized', 'true');
+                } else {
+                    alert("Unauthorized.");
+                    window.location.href = "REGFORM.html";
+                }
             }
         }
-    }
-
-    // Run immediately before page renders
-    checkAccess();
-</script>
+        checkAccess();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         * { font-family: 'Inter', sans-serif; }
         .glass-panel { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); }
-        .table-container { scrollbar-width: thin; scrollbar-color: #6366f1 transparent; }
-        .data-label { font-size: 0.65rem; text-transform: uppercase; font-weight: 700; color: #94a3b8; margin-bottom: 2px; }
+        .loading-spinner { border: 3px solid #f3f3f3; border-top: 3px solid #6366f1; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 pb-12">
@@ -39,28 +35,28 @@
     <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-white/10">
         <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
+                    <span class="text-white font-bold text-xs">KK</span>
                 </div>
-                <span class="text-white font-bold text-lg">MemberTrack Pro</span>
+                <span class="text-white font-bold text-lg">MemberTrack</span>
             </div>
             <div class="flex gap-4">
-                <a href="REGFORM.html" class="text-white/70 hover:text-white px-4 py-2 rounded-lg text-sm transition-all">Add New</a>
-                <a href="MONITOR.html" class="text-white bg-white/20 px-4 py-2 rounded-lg text-sm font-medium">Full Registry</a>
+                <button onclick="fetchData()" class="text-indigo-300 hover:text-white text-sm font-medium transition-colors">Refresh Data</button>
+                <a href="REGFORM.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium">Add New</a>
             </div>
         </div>
     </nav>
 
-    <div class="relative max-w-[98%] mx-auto pt-24 px-2">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4 px-2">
+    <div class="relative max-w-[98%] mx-auto pt-24 px-4">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
             <div>
                 <h1 class="text-3xl font-bold text-white">Full Member Registry</h1>
-                <p class="text-indigo-200 text-sm">Detailed view of all registered profiles</p>
+                <p class="text-indigo-200 text-sm">Synced with Google Sheets Database</p>
             </div>
             <div class="relative w-full md:w-80">
-                <input type="text" id="searchInput" placeholder="Search anything..." 
-                    class="pl-10 pr-4 py-3 rounded-xl w-full outline-none border-none shadow-xl focus:ring-2 focus:ring-indigo-500 transition-all" 
-                    onkeyup="renderTable()">
+                <input type="text" id="searchInput" placeholder="Search members..." 
+                    class="pl-10 pr-4 py-3 rounded-xl w-full outline-none shadow-xl focus:ring-2 focus:ring-indigo-500" 
+                    onkeyup="filterTable()">
                 <span class="absolute left-3 top-3.5 text-slate-400">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="2"></path></svg>
                 </span>
@@ -68,95 +64,113 @@
         </div>
 
         <div class="glass-panel rounded-3xl shadow-2xl overflow-hidden border border-white/10">
-            <div class="overflow-x-auto table-container">
+            <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-slate-50/80 border-b border-slate-200">
-                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Member Profile</th>
-                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Birth & Status</th>
-                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Complete Address</th>
-                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Social & Emergency</th>
-                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-center">Admin</th>
+                        <tr class="bg-slate-50 border-b border-slate-200">
+                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Profile</th>
+                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
+                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Address</th>
+                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Social & ICE</th>
+                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody" class="divide-y divide-slate-100 bg-white">
-                        <!-- Content injected via JS -->
+                        <tr>
+                            <td colspan="5" class="px-6 py-12 text-center">
+                                <div class="flex flex-col items-center gap-3">
+                                    <div class="loading-spinner"></div>
+                                    <p class="text-slate-500">Connecting to Google Sheets...</p>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
             <div id="emptyState" class="hidden p-20 text-center bg-white">
-                <div class="text-slate-300 mb-4 flex justify-center">
-                    <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                </div>
-                <p class="text-slate-500 text-lg font-medium">No member records found.</p>
+                <p class="text-slate-400">No member records found.</p>
             </div>
         </div>
     </div>
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyDJhkFeWXnXHBSH5Algaa5BC8qv3ojT2Nc",
-        authDomain: "kkdat-regform.firebaseapp.com",
-        projectId: "kkdat-regform",
-        storageBucket: "kkdat-regform.firebasestorage.app",
-        messagingSenderId: "307124599850",
-        appId: "1:307124599850:web:5c339ca1552e49ec26d753",
-        measurementId: "G-YETCF41C2V"
-    };
+    <script>
+        let allMembers = [];
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const membersRef = ref(db, 'members');
-
-    // Live Sync with Database
-    onValue(membersRef, (snapshot) => {
-        const data = snapshot.val();
-        const tbody = document.getElementById('tableBody');
-        const emptyState = document.getElementById('emptyState');
-        tbody.innerHTML = '';
-        
-        if (!data) {
-            emptyState.classList.remove('hidden');
-            return;
+        async function fetchData() {
+            const tbody = document.getElementById('tableBody');
+            try {
+                const response = await fetch(SCRIPT_URL);
+                allMembers = await response.json();
+                renderTable(allMembers);
+            } catch (error) {
+                tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-red-500">Failed to load data. Please check your Script URL.</td></tr>`;
+            }
         }
 
-        emptyState.classList.add('hidden');
-        
-        Object.keys(data).forEach(key => {
-            const m = data[key];
-            const row = `
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-6 py-4">
-                        <div class="font-bold text-slate-800">${m.fullName}</div>
-                        <div class="text-xs text-slate-500">${m.sex}</div>
-                    </td>
-                    <td class="px-6 py-4">
-                        <div class="text-sm text-slate-600">${m.birthDate}</div>
-                        <span class="text-xs font-bold px-2 py-1 bg-indigo-100 text-indigo-700 rounded-full">${m.age} Yrs</span>
-                    </td>
-                    <td class="px-6 py-4 text-sm text-slate-600 max-w-xs truncate">${m.address}</td>
-                    <td class="px-6 py-4">
-                        <div class="text-xs font-medium text-blue-600 truncate">${m.facebook || 'No FB'}</div>
-                        <div class="text-[10px] text-slate-400 mt-1 uppercase font-bold">ICE: ${m.contactPerson}</div>
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        <button onclick="window.deleteUser('${key}')" class="text-red-400 hover:text-red-600 transition-colors">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                        </button>
-                    </td>
-                </tr>`;
-            tbody.insertAdjacentHTML('beforeend', row);
-        });
-    });
+        function renderTable(data) {
+            const tbody = document.getElementById('tableBody');
+            const emptyState = document.getElementById('emptyState');
+            tbody.innerHTML = '';
+            
+            if (data.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
 
-    // Delete Function
-    window.deleteUser = (id) => {
-        if(confirm("Permanently delete this member from the cloud?")) {
-            remove(ref(db, `members/${id}`));
+            emptyState.classList.add('hidden');
+            data.forEach(m => {
+                const row = `
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="font-bold text-slate-800">${m.fullName}</div>
+                            <div class="text-xs text-slate-500">${m.sex}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-slate-600">${m.birthDate}</div>
+                            <span class="text-[10px] font-bold px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-full">${m.age} YRS</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-slate-600 max-w-xs truncate">${m.address}</td>
+                        <td class="px-6 py-4">
+                            <div class="text-xs font-medium text-blue-600 truncate">${m.facebook || 'N/A'}</div>
+                            <div class="text-[10px] text-slate-400 mt-1 uppercase font-bold">ICE: ${m.contactPerson}</div>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <button onclick="deleteMember(${m.rowId})" class="text-slate-300 hover:text-red-500 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            </button>
+                        </td>
+                    </tr>`;
+                tbody.insertAdjacentHTML('beforeend', row);
+            });
         }
-    };
-</script>
+
+        function filterTable() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allMembers.filter(m => 
+                m.fullName.toLowerCase().includes(query) || 
+                m.address.toLowerCase().includes(query)
+            );
+            renderTable(filtered);
+        }
+
+        async function deleteMember(rowId) {
+            if (!confirm("Are you sure you want to remove this member from the spreadsheet?")) return;
+            
+            // Show loading
+            document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" class="text-center py-10">Deleting...</td></tr>`;
+            
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({ action: 'delete', rowId: rowId })
+            });
+
+            // Refresh data after a short delay to allow Google to update
+            setTimeout(fetchData, 1500);
+        }
+
+        // Initial Load
+        fetchData();
+    </script>
 </body>
 </html>
