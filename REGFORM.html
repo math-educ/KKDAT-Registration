@@ -10,65 +10,20 @@
         * { font-family: 'Inter', sans-serif; }
         .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
         .input-field { transition: all 0.2s ease; border: 1px solid #e2e8f0; }
-        .input-field:focus { border-color: #6366f1; ring: 2px; ring-color: #6366f1; outline: none; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+        .input-field:focus { border-color: #6366f1; outline: none; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
         .fade-in { animation: fadeIn 0.5s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-    <script type="module">
-  // Import Firebase functions
-  import { initializeApp } from "https://www.gstatic.com";
-  import { getDatabase, ref, push, set } from "https://www.gstatic.com";
 
-  // TODO: Replace this with your actual config from the Firebase Console
-        
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT.firebaseio.com",
-    projectId: "YOUR_PROJECT",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "...",
-    appId: "..."
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-
-  // Update your form submission
-  document.getElementById('registrationForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      const memberData = {
-          fullName: document.getElementById('fullName').value,
-          sex: document.getElementById('sex').value,
-          birthDate: document.getElementById('birthDate').value,
-          age: document.getElementById('age').value,
-          address: document.getElementById('address').value,
-          dateJoined: new Date().toLocaleDateString(),
-          status: 'Active'
-      };
-
-      // Push to Firebase (this creates a unique ID automatically)
-      const membersRef = ref(db, 'members');
-      const newMemberRef = push(membersRef);
-      set(newMemberRef, memberData).then(() => {
-          alert('Saved to Cloud Successfully!');
-          window.location.href = 'MONITOR.html';
-      });
-  });
-</script>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 py-12 px-4">
 
     <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-white/10">
         <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <!-- Logo Container -->
-                <div class="w-12 h-12 rounded-x1 overflow-hidden bg-indigo flex items-center justify-center shadow-lg">
-                    <img src="CURRIMAO.PNG" alt="KKDAT Logo" class="w-full h-full object-cover">
+                <div class="w-10 h-10 rounded-lg overflow-hidden bg-white flex items-center justify-center shadow-lg">
+                    <img src="CURRIMAO.PNG" alt="Logo" class="w-full h-full object-cover">
                 </div>
-                <!-- Organization Name -->
                 <span class="text-white font-bold text-lg tracking-tight">KKDAT Ilocandia Inc. Currimao</span>
             </div>
             <div class="flex gap-4">
@@ -87,7 +42,6 @@
         <div class="glass-panel rounded-3xl shadow-2xl p-6 md:p-10 fade-in">
             <form id="registrationForm" class="space-y-8">
                 
-                <!-- Section 1: Personal Details -->
                 <div class="bg-slate-50/50 rounded-2xl p-6 border border-slate-100">
                     <div class="flex items-center gap-2 mb-6">
                         <div class="w-2 h-6 bg-indigo-600 rounded-full"></div>
@@ -112,7 +66,7 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Age</label>
-                            <input type="number" id="age" readonly class="input-field w-full px-4 py-3 rounded-xl bg-slate-100 text-slate-500 font-semibold" placeholder="0">
+                            <input type="number" id="age" readonly class="input-field w-full px-4 py-3 rounded-xl bg-slate-100 text-slate-500 font-bold" placeholder="0">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Civil Status *</label>
@@ -126,7 +80,6 @@
                     </div>
                 </div>
 
-                <!-- Section 2: Contact & Socials -->
                 <div class="bg-slate-50/50 rounded-2xl p-6 border border-slate-100">
                     <div class="flex items-center gap-2 mb-6">
                         <div class="w-2 h-6 bg-purple-600 rounded-full"></div>
@@ -139,16 +92,15 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Facebook Profile Link/Name</label>
-                            <input type="text" id="facebook" class="input-field w-full px-4 py-3 rounded-xl" placeholder="://facebook.com">
+                            <input type="text" id="facebook" class="input-field w-full px-4 py-3 rounded-xl" placeholder="facebook.com/username">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-2">Contact Person (In case of emergency) *</label>
-                            <input type="text" id="contactPerson" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="Name of Relative and Contact Number">
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Contact Person (Emergency) *</label>
+                            <input type="text" id="contactPerson" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="Name & Number">
                         </div>
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
                 <div class="flex flex-col sm:flex-row justify-end gap-4 pt-6">
                     <button type="reset" class="px-8 py-4 bg-slate-200 text-slate-700 rounded-2xl font-bold hover:bg-slate-300 transition-all">Clear Form</button>
                     <button type="submit" class="px-10 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-bold hover:shadow-lg hover:shadow-indigo-500/30 transition-all">Register Member</button>
@@ -156,12 +108,12 @@
             </form>
         </div>
     </div>
-    <script type="module">
-        // 2. IMPORT THE TOOLS
-        import { initializeApp } from "https://www.gstatic.com";
-        import { getDatabase, ref, push, set } from "https://www.gstatic.com";
 
-        // 3. YOUR CONFIG (Copy this from Firebase Console)
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // CONFIG: Replace with your actual Firebase settings
         const firebaseConfig = {
             apiKey: "AIza...",
             authDomain: "your-project.firebaseapp.com",
@@ -172,15 +124,34 @@
             appId: "1:12345:web:abcde"
         };
 
-        // 4. INITIALIZE
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // 5. THE SAVE LOGIC
+        // --- AGE CALCULATION LOGIC ---
+        const birthDateInput = document.getElementById('birthDate');
+        const ageInput = document.getElementById('age');
+
+        birthDateInput.addEventListener('change', () => {
+            const birthDate = new Date(birthDateInput.value);
+            const today = new Date();
+            
+            if (isNaN(birthDate.getTime())) return;
+
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            // Adjust if birthday hasn't happened yet this year
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            ageInput.value = age >= 0 ? age : 0;
+        });
+
+        // --- FORM SUBMISSION ---
         document.getElementById('registrationForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Collect data from your inputs
             const memberData = {
                 fullName: document.getElementById('fullName').value,
                 sex: document.getElementById('sex').value,
@@ -194,13 +165,12 @@
                 status: 'Active'
             };
 
-            // PUSH & SET to the Cloud
             const membersRef = ref(db, 'members');
-            const newMemberRef = push(membersRef); // Create unique ID
+            const newMemberRef = push(membersRef);
             
-            set(newMemberRef, memberData) // Save the data
+            set(newMemberRef, memberData)
                 .then(() => {
-                    alert('Registration Successful! Data is now in the Cloud.');
+                    alert('Registration Successful!');
                     window.location.href = 'MONITOR.html';
                 })
                 .catch((error) => {
