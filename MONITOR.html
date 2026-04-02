@@ -92,29 +92,71 @@
             </div>
         </div>
     </div>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    <script>
-import { getDatabase, ref, onValue } from "https://www.gstatic.com";
+    const firebaseConfig = {
+        apiKey: "AIzaSyDJhkFeWXnXHBSH5Algaa5BC8qv3ojT2Nc",
+        authDomain: "kkdat-regform.firebaseapp.com",
+        projectId: "kkdat-regform",
+        storageBucket: "kkdat-regform.firebasestorage.app",
+        messagingSenderId: "307124599850",
+        appId: "1:307124599850:web:5c339ca1552e49ec26d753",
+        measurementId: "G-YETCF41C2V"
+    };
 
-const db = getDatabase();
-const membersRef = ref(db, 'members');
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const membersRef = ref(db, 'members');
 
-// This "onValue" function automatically updates the table 
-// whenever a new member is added on ANY device!
-onValue(membersRef, (snapshot) => {
-    const data = snapshot.val();
-    const tbody = document.getElementById('tableBody');
-    tbody.innerHTML = '';
-    
-    if (data) {
+    // Live Sync with Database
+    onValue(membersRef, (snapshot) => {
+        const data = snapshot.val();
+        const tbody = document.getElementById('tableBody');
+        const emptyState = document.getElementById('emptyState');
+        tbody.innerHTML = '';
+        
+        if (!data) {
+            emptyState.classList.remove('hidden');
+            return;
+        }
+
+        emptyState.classList.add('hidden');
+        
         Object.keys(data).forEach(key => {
             const m = data[key];
-            const row = `<tr>...your table row HTML...</tr>`;
-            tbody.innerHTML += row;
+            const row = `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4">
+                        <div class="font-bold text-slate-800">${m.fullName}</div>
+                        <div class="text-xs text-slate-500">${m.sex}</div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="text-sm text-slate-600">${m.birthDate}</div>
+                        <span class="text-xs font-bold px-2 py-1 bg-indigo-100 text-indigo-700 rounded-full">${m.age} Yrs</span>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-slate-600 max-w-xs truncate">${m.address}</td>
+                    <td class="px-6 py-4">
+                        <div class="text-xs font-medium text-blue-600 truncate">${m.facebook || 'No FB'}</div>
+                        <div class="text-[10px] text-slate-400 mt-1 uppercase font-bold">ICE: ${m.contactPerson}</div>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <button onclick="window.deleteUser('${key}')" class="text-red-400 hover:text-red-600 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </button>
+                    </td>
+                </tr>`;
+            tbody.insertAdjacentHTML('beforeend', row);
         });
-    }
-});
+    });
 
-    </script>
+    // Delete Function
+    window.deleteUser = (id) => {
+        if(confirm("Permanently delete this member from the cloud?")) {
+            remove(ref(db, `members/${id}`));
+        }
+    };
+</script>
 </body>
 </html>
