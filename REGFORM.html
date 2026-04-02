@@ -18,6 +18,38 @@
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 py-12 px-4">
 
+<div id="privacyModal" class="fixed inset-0 z-[100] flex items-center justify-center px-4 bg-slate-900/80 backdrop-blur-sm">
+    <div class="glass-panel max-w-lg w-full rounded-3xl shadow-2xl p-6 sm:p-8 border border-white/20 fade-in">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+            </div>
+            <h2 class="text-xl font-bold text-slate-800">Data Privacy Notice</h2>
+        </div>
+
+        <div class="space-y-4 text-slate-600 text-sm leading-relaxed mb-6">
+            <p>Before proceeding with your <strong>KKDAT Registration</strong>, please note that we collect personal information including your name, contact details, and address.</p>
+            <ul class="list-disc pl-5 space-y-1">
+                <li>Data is used solely for KKDAT membership records.</li>
+                <li>Your info is stored securely in our Google Database.</li>
+                <li>We will never share your data with third parties without consent.</li>
+            </ul>
+            <p>By clicking <strong>"I Accept"</strong>, you agree to the collection and processing of your personal data under the Data Privacy Act.</p>
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <button onclick="acceptPrivacy()" class="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200">
+                I Accept & Continue
+            </button>
+            <button onclick="window.location.href='https://google.com'" class="w-full py-2 text-slate-400 text-xs hover:text-slate-600 transition-colors">
+                Decline and Exit
+            </button>
+        </div>
+    </div>
+</div>
+    
     <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-white/10">
         <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
             <div class="flex items-center gap-2 sm:gap-3">
@@ -120,6 +152,31 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymx5klDjX_yTn59_VVzE1nOA8dEHUlFPfQD3FfJDR1ZRp62k0Wx-_2Ph-4zLTYCho5/exec";
 
+        // --- Data Privacy Logic ---
+window.onload = function() {
+    const privacyAccepted = sessionStorage.getItem('privacyAccepted');
+    const modal = document.getElementById('privacyModal');
+    
+    // If already accepted, hide the modal immediately
+    if (privacyAccepted === 'true') {
+        modal.classList.add('hidden');
+    }
+};
+
+function acceptPrivacy() {
+    // Save acceptance to session storage
+    sessionStorage.setItem('privacyAccepted', 'true');
+    
+    // Animate out and hide
+    const modal = document.getElementById('privacyModal');
+    modal.style.opacity = '0';
+    modal.style.transition = 'opacity 0.5s ease';
+    
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 500);
+}
+        
         // --- Auto-Calculate Age ---
         document.getElementById('birthDate').addEventListener('change', (e) => {
             const birthDate = new Date(e.target.value);
