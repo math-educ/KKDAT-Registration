@@ -9,7 +9,7 @@
         // PASTE YOUR NEW DEPLOYMENT URL HERE
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxZkFJL-fsBU8jLkAtLC0NP6dGiXLPWOJ9L6qFz3GnOGvrYN53iAES_PCrLw7Xy2BdN/exec";
         // PASTE YOUR GOOGLE SHEET LINK HERE
-        const SHEET_URL = "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_HERE/edit";
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/1NFPsNXgObQUxNmPQkmzl_OSJGVwFvSF7pVlZxp1ASoQ/edit?usp=sharing";
 
         function checkAccess() {
             if (sessionStorage.getItem('isAuthorized') !== 'true') {
@@ -48,7 +48,7 @@
                 <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white flex items-center justify-center shadow-lg overflow-hidden">
                     <img src="CURRIMAO.PNG" alt="Logo" class="w-full h-full object-cover">
                 </div>
-                <span class="text-white font-bold text-sm sm:text-lg truncate max-w-[120px] sm:max-w-none">KKDAT Registry</span>
+                <span class="text-white font-bold text-sm sm:text-lg truncate max-w-[120px] sm:max-w-none">KKDAT II Currimao Registry</span>
             </div>
             <div class="flex gap-2 sm:gap-4">
                 <button onclick="fetchData()" class="text-indigo-300 hover:text-white text-xs font-medium transition-colors">Refresh</button>
@@ -64,8 +64,8 @@
     <div class="relative max-w-[98%] mx-auto pt-24 px-2 sm:px-4">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4 px-2">
             <div>
-                <h1 class="text-2xl sm:text-3xl font-bold text-white uppercase tracking-tight">Member Database</h1>
-                <p class="text-indigo-200 text-xs sm:text-sm">Official Records - Synchronized with Google Sheets</p>
+                <h1 class="text-2xl sm:text-3xl font-bold text-white uppercase tracking-tight">KKDAT II Currimao Member Database</h1>
+                <p class="text-indigo-200 text-xs sm:text-sm">Official Records - Synchronized with KKDAT database</p>
             </div>
             <div class="relative w-full md:w-80 no-print">
                 <input type="text" id="searchInput" placeholder="Search members..." 
