@@ -88,12 +88,20 @@
                             <textarea id="address" required rows="2" class="input-field w-full px-4 py-3 rounded-xl" placeholder="Barangay, City, Province"></textarea>
                         </div>
                         <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Email Address *</label>
+                            <input type="email" id="email" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="juan@example.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Mobile Number *</label>
+                            <input type="tel" id="mobileNumber" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="09123456789">
+                        </div>
+                        <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Facebook Profile Link</label>
                             <input type="text" id="facebook" class="input-field w-full px-4 py-3 rounded-xl" placeholder="facebook.com/username">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-2">Emergency Contact *</label>
-                            <input type="text" id="contactPerson" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="Name - Number">
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Emergency Contact (Name - Number) *</label>
+                            <input type="text" id="contactPerson" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="Maria Dela Cruz - 09#########">
                         </div>
                     </div>
                 </div>
@@ -136,17 +144,16 @@
                 age: document.getElementById('age').value,
                 civilStatus: document.getElementById('civilStatus').value,
                 address: document.getElementById('address').value,
+                email: document.getElementById('email').value, // NEW
+                mobileNumber: document.getElementById('mobileNumber').value, // NEW
                 facebook: document.getElementById('facebook').value,
                 contactPerson: document.getElementById('contactPerson').value,
                 dateRegistered: new Date().toLocaleString()
             };
 
-            // Using fetch with 'no-cors' mode is common for Google Apps Script 
-            // but the JSON response might not be readable. 
-            // The standard 'cors' works best with the proper Apps Script return.
             fetch(SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors', // Essential for Google Script redirection
+                mode: 'no-cors', 
                 cache: 'no-cache',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(memberData)
