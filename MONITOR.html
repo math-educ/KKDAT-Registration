@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KKDAT Member Registry - Full View</title>
     <script>
-        const ACCESS_PASSWORD = "Admin123";
+        // UPDATE THIS URL with your latest Google Apps Script Web App URL
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzgT9TDcXFeDwqb8dIJp5Znh1A-8fZtWH41pXl4BJAufo4Xc7_Np_LaQH6jR-bACRho/exec";
+        const ACCESS_PASSWORD = "Admin123";
 
         function checkAccess() {
             if (sessionStorage.getItem('isAuthorized') !== 'true') {
@@ -25,25 +26,28 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         * { font-family: 'Inter', sans-serif; }
+        
         .glass-panel { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); }
         .table-container { scrollbar-width: thin; scrollbar-color: #6366f1 transparent; }
 
-        /* Print Optimization */
+        /* PRINT STYLES - This ensures the printed roster looks professional */
         @media print {
-            body { background: white !important; padding: 0 !important; }
+            body { background: white !important; padding: 0 !important; color: black !important; }
             nav, .no-print, button, #searchInput, .text-indigo-200 { display: none !important; }
-            .relative { pt: 0 !important; margin: 0 !important; max-width: 100% !important; }
-            .glass-panel { border: none !important; shadow: none !important; }
-            table { font-size: 10pt !important; border: 1px solid #e2e8f0 !important; }
-            th { background-color: #f8fafc !important; color: black !important; border-bottom: 2px solid black !important; }
-            tr { page-break-inside: avoid; }
+            .relative { padding-top: 0 !important; margin: 0 !important; max-width: 100% !important; width: 100% !important; }
+            .glass-panel { border: none !important; box-shadow: none !important; background: white !important; width: 100% !important; }
+            h1 { color: black !important; font-size: 20pt !important; margin-bottom: 5pt !important; }
+            table { width: 100% !important; border: 1px solid #000 !important; border-collapse: collapse !important; }
+            th { background-color: #f1f5f9 !important; color: black !important; border: 1px solid #000 !important; padding: 8px !important; text-transform: uppercase; font-size: 9pt; }
+            td { border: 1px solid #ccc !important; padding: 8px !important; color: black !important; font-size: 9pt; }
             .del-column { display: none !important; }
+            tr { page-break-inside: avoid; }
         }
     </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 pb-12">
 
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-white/10">
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-white/10 no-print">
         <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-lg overflow-hidden">
@@ -51,9 +55,9 @@
                 </div>
                 <span class="text-white font-bold text-lg">KKDAT Registry</span>
             </div>
-            <div class="flex items-center gap-4">
-                <button onclick="fetchData()" class="text-indigo-300 hover:text-white text-sm font-medium transition-colors">Refresh</button>
-                <button onclick="window.print()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2">
+            <div class="flex items-center gap-3">
+                <button onclick="fetchData()" class="text-indigo-300 hover:text-white text-sm font-medium px-3 py-2 transition-colors">Refresh</button>
+                <button onclick="window.print()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-all">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                     Print Roster
                 </button>
@@ -66,10 +70,11 @@
         <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4 px-2">
             <div>
                 <h1 class="text-3xl font-bold text-white">Full Member Database</h1>
-                <p class="text-indigo-200 text-sm">Official Records for Currimao Youth Advocacy</p>
+                <p class="text-indigo-200 text-sm">Official Records: Anti-Crime & Terrorism Youth Advocacy</p>
             </div>
+            
             <div class="relative w-full md:w-80 no-print">
-                <input type="text" id="searchInput" placeholder="Search members..." 
+                <input type="text" id="searchInput" placeholder="Search by name, email, or phone..." 
                     class="pl-10 pr-4 py-3 rounded-xl w-full outline-none border-none shadow-xl focus:ring-2 focus:ring-indigo-500 transition-all" 
                     onkeyup="filterTable()">
                 <span class="absolute left-3 top-3.5 text-slate-400">
@@ -80,22 +85,22 @@
 
         <div class="glass-panel rounded-3xl shadow-2xl overflow-hidden border border-white/10">
             <div class="overflow-x-auto table-container">
-                <table class="w-full text-left border-collapse" id="rosterTable">
+                <table class="w-full text-left border-collapse" id="mainTable">
                     <thead>
                         <tr class="bg-slate-50 border-b border-slate-200">
                             <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase">Name & Sex</th>
                             <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase">Birth & Age</th>
-                            <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase">Contact Info</th>
+                            <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase">Contact Details</th>
                             <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase">Address</th>
                             <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase">Social Media</th>
-                            <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase">Emergency Contact</th>
-                            <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase text-center del-column">Del</th>
+                            <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase">Emergency</th>
+                            <th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase text-center del-column">Action</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody" class="divide-y divide-slate-100 bg-white">
                         <tr>
                             <td colspan="7" class="px-6 py-20 text-center">
-                                <p class="text-slate-500 animate-pulse text-lg">Fetching data from KKDAT database...</p>
+                                <p class="text-slate-500 animate-pulse text-lg">Connecting to KKDAT database...</p>
                             </td>
                         </tr>
                     </tbody>
@@ -107,27 +112,23 @@
     <script>
         let allMembers = [];
 
-        function formatFBLink(input) {
-            if (!input || input === '---' || input === 'No FB') return null;
-            let cleanInput = input.trim();
-            if (cleanInput.startsWith('http')) return cleanInput;
-            if (cleanInput.startsWith('facebook.com')) return `https://${cleanInput}`;
-            return `https://facebook.com/${cleanInput.replace('@', '')}`;
-        }
-
+        // Fetches data from Google Sheets
         async function fetchData() {
             try {
                 const response = await fetch(SCRIPT_URL);
+                if (!response.ok) throw new Error('Network response was not ok');
                 allMembers = await response.json();
                 renderTable(allMembers);
             } catch (error) {
+                console.error("Fetch Error:", error);
                 document.getElementById('tableBody').innerHTML = `
                     <tr><td colspan="7" class="px-6 py-20 text-center text-red-500 font-medium">
-                        Error: Could not connect to the database.
+                        Error: Could not connect to the database. Check SCRIPT_URL and Deployment settings.
                     </td></tr>`;
             }
         }
 
+        // Renders the table rows
         function renderTable(data) {
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
@@ -138,11 +139,6 @@
             }
 
             data.forEach(m => {
-                const fbUrl = formatFBLink(m.facebook);
-                const fbDisplay = fbUrl ? 
-                    `<span class="text-blue-600 font-medium">${m.facebook}</span>` : 
-                    '<span class="text-slate-400 italic text-xs">None</span>';
-
                 const row = `
                     <tr class="hover:bg-slate-50 transition-colors text-sm">
                         <td class="px-4 py-4">
@@ -161,13 +157,13 @@
                             <div class="max-w-[180px] text-slate-600 text-xs line-clamp-2">${m.address || '---'}</div>
                         </td>
                         <td class="px-4 py-4">
-                            ${fbDisplay}
+                            <span class="text-blue-600 text-xs font-medium">${m.facebook || 'None'}</span>
                         </td>
                         <td class="px-4 py-4">
                             <div class="text-slate-700 font-semibold text-xs">${m.contactPerson || '---'}</div>
                         </td>
                         <td class="px-4 py-4 text-center del-column">
-                            <button onclick="deleteMember(${m.rowId})" class="text-slate-300 hover:text-red-500 transition-colors">
+                            <button onclick="deleteMember(${m.rowId})" class="text-slate-300 hover:text-red-500 transition-colors no-print">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                             </button>
                         </td>
@@ -176,6 +172,7 @@
             });
         }
 
+        // Live Search Filtering
         function filterTable() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const filtered = allMembers.filter(m => 
@@ -187,17 +184,29 @@
             renderTable(filtered);
         }
 
+        // Delete Functionality
         async function deleteMember(rowId) {
             if (!confirm("Permanently delete this member from the spreadsheet?")) return;
-            document.getElementById('tableBody').innerHTML = '<tr><td colspan="7" class="text-center py-10">Deleting...</td></tr>';
-            await fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify({ action: 'delete', rowId: rowId })
-            });
-            setTimeout(fetchData, 1500);
+            
+            // Show loading state
+            const originalBody = document.getElementById('tableBody').innerHTML;
+            document.getElementById('tableBody').innerHTML = '<tr><td colspan="7" class="text-center py-10 font-bold text-indigo-600">Processing Deletion...</td></tr>';
+            
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({ action: 'delete', rowId: rowId })
+                });
+                // Wait briefly for Google Sheets to update then refresh
+                setTimeout(fetchData, 1500);
+            } catch (error) {
+                alert("Deletion failed. Check connection.");
+                document.getElementById('tableBody').innerHTML = originalBody;
+            }
         }
 
+        // Initial Load
         fetchData();
     </script>
 </body>
