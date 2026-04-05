@@ -31,61 +31,45 @@
             object-fit: cover;
         }
 
-        /* Grid Carousel Styles */
-        .carousel-container {
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            max-width: 800px; /* Reduced size */
+        /* Multi-Carousel Grid Styles */
+        .mini-carousel-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            max-width: 600px; /* Smaller, professional footprint */
             margin: 0 auto;
         }
-        .carousel-track {
-            display: flex;
-            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .carousel-batch {
-            min-width: 100%;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2x2 Grid */
-            gap: 12px;
-            padding: 10px;
-        }
-        .square-img-container {
+        .mini-carousel {
+            position: relative;
             aspect-ratio: 1 / 1;
             overflow: hidden;
             border-radius: 1.5rem;
+        }
+        .mini-track {
+            display: flex;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .mini-slide {
+            min-width: 100%;
+            height: 100%;
             position: relative;
         }
-        .square-img-container img {
+        .mini-slide img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        .img-caption {
+        .mini-caption {
             position: absolute;
             bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 8px;
+            width: 100%;
+            padding: 10px 5px;
             background: linear-gradient(transparent, rgba(0,0,0,0.8));
             color: white;
-            font-size: 0.75rem;
-            font-weight: 600;
+            font-size: 0.7rem;
             text-align: center;
-        }
-        .nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            z-index: 20;
-            cursor: pointer;
-            backdrop-filter: blur(4px);
+            font-weight: 600;
         }
     </style>
 </head>
@@ -100,84 +84,60 @@
             <p class="text-indigo-300 text-xs md:text-sm mt-1 uppercase tracking-widest font-medium">Official Social Media Hub</p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mb-8 md:mb-12">
-            <a href="https://www.facebook.com/KKDATCurrimaoPower" target="_blank" class="glass-card flex flex-col items-center justify-center p-5 md:p-6 rounded-3xl text-center group">
-                <div class="w-12 h-12 md:w-14 md:h-14 bg-[#1877F2] rounded-2xl flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
-                    <i class="fa-brands fa-facebook-f text-xl md:text-2xl text-white"></i>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mb-10 md:mb-14">
+            <a href="https://www.facebook.com/KKDATCurrimaoPower" target="_blank" class="glass-card flex flex-col items-center justify-center p-5 rounded-3xl group">
+                <div class="w-12 h-12 bg-[#1877F2] rounded-2xl flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
+                    <i class="fa-brands fa-facebook-f text-xl text-white"></i>
                 </div>
-                <span class="font-bold text-white text-sm md:text-base">Facebook</span>
+                <span class="font-bold text-white text-sm">Facebook</span>
             </a>
-            <a href="https://www.youtube.com/@kkdatcurrimaochapter2731" target="_blank" class="glass-card flex flex-col items-center justify-center p-5 md:p-6 rounded-3xl text-center group">
-                <div class="w-12 h-12 md:w-14 md:h-14 bg-[#FF0000] rounded-2xl flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
-                    <i class="fa-brands fa-youtube text-xl md:text-2xl text-white"></i>
+            <a href="https://www.youtube.com/@kkdatcurrimaochapter2731" target="_blank" class="glass-card flex flex-col items-center justify-center p-5 rounded-3xl group">
+                <div class="w-12 h-12 bg-[#FF0000] rounded-2xl flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
+                    <i class="fa-brands fa-youtube text-xl text-white"></i>
                 </div>
-                <span class="font-bold text-white text-sm md:text-base">YouTube</span>
+                <span class="font-bold text-white text-sm">YouTube</span>
             </a>
-            <a href="mailto:kkdatcurrimao@gmail.com" class="glass-card flex flex-col items-center justify-center p-5 md:p-6 rounded-3xl text-center group">
-                <div class="w-12 h-12 md:w-14 md:h-14 bg-emerald-500 rounded-2xl flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
-                    <i class="fa-solid fa-envelope text-xl md:text-2xl text-white"></i>
+            <a href="mailto:kkdatcurrimao@gmail.com" class="glass-card flex flex-col items-center justify-center p-5 rounded-3xl group">
+                <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-envelope text-xl text-white"></i>
                 </div>
-                <span class="font-bold text-white text-sm md:text-base">Email</span>
+                <span class="font-bold text-white text-sm">Email</span>
             </a>
         </div>
 
-        <div class="mb-12 md:mb-16">
-            <h2 class="text-lg md:text-xl font-semibold text-white px-2 flex items-center gap-3 mb-6">
+        <div class="mb-14 md:mb-20">
+            <h2 class="text-lg md:text-xl font-semibold text-white px-2 flex items-center gap-3 mb-8">
                 <span class="h-px flex-1 bg-white/10"></span>
-                Activity Gallery
+                Activity Highlights
                 <span class="h-px flex-1 bg-white/10"></span>
             </h2>
 
-            <div class="carousel-container">
-                <button class="nav-btn -left-2 md:-left-5" onclick="moveGrid(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-                <button class="nav-btn -right-2 md:-right-5" onclick="moveGrid(1)"><i class="fa-solid fa-chevron-right"></i></button>
-                
-                <div class="carousel-track" id="gridTrack">
-                    <div class="carousel-batch">
-                        <div class="square-img-container glass-card">
-                            <img src="img1.jpg" alt="Activity">
-                            <div class="img-caption">Community Outreach</div>
+            <div class="mini-carousel-grid">
+                <div class="mini-carousel glass-card" id="carousel1">
+                    <div class="mini-track">
+                        <div class="mini-slide"><img src="adv1.jpg"><div class="mini-caption">Anti-Drug Awareness</div></div>
+                        <div class="mini-slide"><img src="adv2.jpg"><div class="mini-caption">Safety Seminar</div></div>
                         </div>
-                        <div class="square-img-container glass-card">
-                            <img src="img2.jpg" alt="Activity">
-                            <div class="img-caption">Youth Seminar</div>
-                        </div>
-                        <div class="square-img-container glass-card">
-                            <img src="img3.jpg" alt="Activity">
-                            <div class="img-caption">Anti-Drug Campaign</div>
-                        </div>
-                        <div class="square-img-container glass-card">
-                            <img src="img4.jpg" alt="Activity">
-                            <div class="img-caption">Coastal Clean-up</div>
-                        </div>
+                </div>
+
+                <div class="mini-carousel glass-card" id="carousel2">
+                    <div class="mini-track">
+                        <div class="mini-slide"><img src="com1.jpg"><div class="mini-caption">Community Clean-up</div></div>
+                        <div class="mini-slide"><img src="com2.jpg"><div class="mini-caption">Outreach Program</div></div>
                     </div>
-                    <div class="carousel-batch">
-                        <div class="square-img-container glass-card">
-                            <img src="img5.jpg" alt="Activity">
-                            <div class="img-caption">Leadership Training</div>
-                        </div>
-                        <div class="square-img-container glass-card">
-                            <img src="img6.jpg" alt="Activity">
-                            <div class="img-caption">Safety Awareness</div>
-                        </div>
-                        <div class="square-img-container glass-card">
-                            <img src="img7.jpg" alt="Activity">
-                            <div class="img-caption">Feeding Program</div>
-                        </div>
-                        <div class="square-img-container glass-card">
-                            <img src="img8.jpg" alt="Activity">
-                            <div class="img-caption">Tree Planting</div>
-                        </div>
+                </div>
+
+                <div class="mini-carousel glass-card" id="carousel3">
+                    <div class="mini-track">
+                        <div class="mini-slide"><img src="y1.jpg"><div class="mini-caption">Youth Leadership</div></div>
+                        <div class="mini-slide"><img src="y2.jpg"><div class="mini-caption">Team Building</div></div>
                     </div>
-                    <div class="carousel-batch">
-                        <div class="square-img-container glass-card">
-                            <img src="img9.jpg" alt="Activity">
-                            <div class="img-caption">Sports Fest</div>
-                        </div>
-                        <div class="square-img-container glass-card">
-                            <img src="img10.jpg" alt="Activity">
-                            <div class="img-caption">General Meeting</div>
-                        </div>
+                </div>
+
+                <div class="mini-carousel glass-card" id="carousel4">
+                    <div class="mini-track">
+                        <div class="mini-slide"><img src="e1.jpg"><div class="mini-caption">Anniversary Event</div></div>
+                        <div class="mini-slide"><img src="e2.jpg"><div class="mini-caption">Awarding Ceremony</div></div>
                     </div>
                 </div>
             </div>
@@ -189,54 +149,41 @@
                 Latest Content
                 <span class="h-px flex-1 bg-white/10"></span>
             </h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <a href="https://www.facebook.com/reel/2106853370157580" target="_blank" class="glass-card block rounded-[2rem] overflow-hidden group">
-                    <div class="relative overflow-hidden">
-                        <img src="assets/SEMANA SANTA.jpg" alt="Thumbnail" class="video-thumbnail w-full group-hover:scale-105 transition-transform duration-500">
-                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 md:group-hover:opacity-100 transition-opacity">
-                            <i class="fa-solid fa-play text-white text-3xl md:text-4xl"></i>
-                        </div>
-                    </div>
-                    <div class="p-5 md:p-6">
-                        <h3 class="font-bold text-white text-base md:text-lg">Ligtas SUMVAC Awareness</h3>
-                    </div>
+                    <img src="assets/SEMANA SANTA.jpg" class="video-thumbnail w-full group-hover:scale-105 transition-transform">
+                    <div class="p-5"><h3 class="font-bold text-white">Ligtas SUMVAC Awareness</h3></div>
                 </a>
-
                 <a href="https://youtube.com/watch?v=3JZ_D3ELwOQ" target="_blank" class="glass-card block rounded-[2rem] overflow-hidden group">
-                    <div class="relative overflow-hidden">
-                        <img src="https://img.youtube.com/vi/3JZ_D3ELwOQ/maxresdefault.jpg" alt="Thumbnail" class="video-thumbnail w-full group-hover:scale-105 transition-transform duration-500">
-                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 md:group-hover:opacity-100 transition-opacity">
-                            <i class="fa-solid fa-play text-white text-3xl md:text-4xl"></i>
-                        </div>
-                    </div>
-                    <div class="p-5 md:p-6">
-                        <h3 class="font-bold text-white text-base md:text-lg">KKDAT Anniversary</h3>
-                    </div>
+                    <img src="https://img.youtube.com/vi/3JZ_D3ELwOQ/maxresdefault.jpg" class="video-thumbnail w-full group-hover:scale-105 transition-transform">
+                    <div class="p-5"><h3 class="font-bold text-white">KKDAT Anniversary</h3></div>
                 </a>
             </div>
         </div>
 
         <footer class="text-center mt-16 md:mt-20 opacity-40">
-            <p class="text-[10px] md:text-xs uppercase tracking-[0.2em]">KKDAT II Currimao • Ilocos Norte</p>
+            <p class="text-[10px] uppercase tracking-[0.2em]">KKDAT II Currimao • Ilocos Norte</p>
         </footer>
     </div>
 
     <script>
-        let gridIndex = 0;
-        const track = document.getElementById('gridTrack');
-        const batches = document.querySelectorAll('.carousel-batch');
+        function setupCarousel(id, interval) {
+            const container = document.getElementById(id);
+            const track = container.querySelector('.mini-track');
+            const slides = container.querySelectorAll('.mini-slide');
+            let index = 0;
 
-        function moveGrid(direction) {
-            gridIndex += direction;
-            if (gridIndex >= batches.length) gridIndex = 0;
-            if (gridIndex < 0) gridIndex = batches.length - 1;
-            
-            track.style.transform = `translateX(-${gridIndex * 100}%)`;
+            setInterval(() => {
+                index = (index + 1) % slides.length;
+                track.style.transform = `translateX(-${index * 100}%)`;
+            }, interval);
         }
-        
-        // Auto-slide every 6 seconds
-        setInterval(() => moveGrid(1), 6000);
+
+        // Initialize all 4 carousels with slightly different speeds for a professional feel
+        setupCarousel('carousel1', 4000);
+        setupCarousel('carousel2', 4500);
+        setupCarousel('carousel3', 5000);
+        setupCarousel('carousel4', 5500);
     </script>
 </body>
 </html>
