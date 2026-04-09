@@ -52,7 +52,6 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         }
 
-        /* DYNAMIC PROGRESS RING */
         .progress-circle-container {
             position: relative;
             display: flex;
@@ -61,45 +60,12 @@
         }
         
         .progress-ring__circle {
-            transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
             transform: rotate(-90deg);
             transform-origin: 50% 50%;
-            /* Circumference for r=40 is 251.2 */
             stroke-dasharray: 251.2; 
-            stroke-dashoffset: 251.2; /* Hidden by default */
+            stroke-dashoffset: 251.2;
         }
-
-        .carousel-container { perspective: 1000px; }
-        .carousel-track {
-            display: flex;
-            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            transform-style: preserve-3d;
-        }
-        .carousel-set {
-            flex: 0 0 100%;
-            transition: all 0.6s ease;
-            transform: scale(0.9) rotateY(10deg);
-            opacity: 0.5;
-        }
-        .carousel-set.active {
-            transform: scale(1) rotateY(0deg);
-            opacity: 1;
-        }
-
-        .image-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-        }
-        @media (max-width: 640px) { .image-grid { grid-template-columns: repeat(2, 1fr); } }
-        
-        .img-item {
-            aspect-ratio: 1/1; border-radius: 12px;
-            overflow: hidden; cursor: zoom-in;
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: transform 0.2s;
-        }
-        .img-item:hover { transform: scale(1.05); }
 
         #lightbox {
             display: none; position: fixed; inset: 0;
@@ -148,7 +114,7 @@
                             <circle id="progressCircle" class="text-cyan-400 progress-ring__circle" stroke-width="8" stroke-linecap="round" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50"/>
                         </svg>
                         <div class="absolute inset-0 flex items-center justify-center">
-                            <span id="progressText" class="text-4xl font-black text-white">80%</span>
+                            <span id="progressText" class="text-4xl font-black text-white">20%</span>
                         </div>
                     </div>
                     <p class="mt-4 text-[10px] font-bold text-cyan-200 uppercase">Campaign Success</p>
@@ -168,13 +134,14 @@
                     <div class="progress-circle-container relative w-36 h-36">
                         <svg class="w-full h-full" viewBox="0 0 100 100">
                             <circle class="text-white/10" stroke-width="8" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50"/>
-                            <circle class="text-sky-300" stroke-width="8" stroke-dasharray="251.2" stroke-dashoffset="65.3" stroke-linecap="round" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50" style="transform: rotate(-90deg); transform-origin: 50% 50%;"/>
+                            <circle id="leafletsRing" class="text-sky-300 progress-ring__circle" stroke-width="8" stroke-linecap="round" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50"/>
+                            <circle id="membersRing" class="text-white progress-ring__circle" stroke-width="6" stroke-linecap="round" stroke="currentColor" fill="transparent" r="32" cx="50" cy="50"/>
                         </svg>
                         <div class="absolute inset-0 flex flex-col items-center justify-center leading-tight">
-                            <span class="text-2xl font-black text-white">45</span>
+                            <span id="membersVal" class="text-2xl font-black text-white">45</span>
                             <span class="text-[8px] font-bold text-sky-200 uppercase mb-1">Members</span>
                             <div class="w-10 h-px bg-white/20 my-1"></div>
-                            <span class="text-2xl font-black text-white">93</span>
+                            <span id="leafletsVal" class="text-2xl font-black text-white">930</span>
                             <span class="text-[8px] font-bold text-sky-200 uppercase">Leaflets</span>
                         </div>
                     </div>
@@ -190,28 +157,33 @@
     </div>
 
     <script>
-        // FUNCTION TO AUTO-ADJUST CIRCLE
-        function updateProgressCircle() {
-            const circle = document.getElementById('progressCircle');
-            const textElement = document.getElementById('progressText');
-            
-            // Extract number from "20%"
-            const percent = parseInt(textElement.innerText);
-            const radius = circle.r.baseVal.value;
-            const circumference = 2 * Math.PI * radius; // 251.2
+        function updateAllProgress() {
+            // 1. Update Target Progress
+            const mainCircle = document.getElementById('progressCircle');
+            const mainText = document.getElementById('progressText');
+            const mainPercent = parseInt(mainText.innerText);
+            applyProgress(mainCircle, mainPercent);
 
-            // Calculate offset
+            // 2. Update Members (Basis: 300)
+            const membersRing = document.getElementById('membersRing');
+            const membersCount = parseInt(document.getElementById('membersVal').innerText);
+            const membersPercent = Math.min((membersCount / 300) * 100, 100);
+            applyProgress(membersRing, membersPercent, 32); // r=32
+
+            // 3. Update Leaflets (Basis: 3000)
+            const leafletsRing = document.getElementById('leafletsRing');
+            const leafletsCount = parseInt(document.getElementById('leafletsVal').innerText);
+            const leafletsPercent = Math.min((leafletsCount / 3000) * 100, 100);
+            applyProgress(leafletsRing, leafletsPercent, 40); // r=40
+        }
+
+        function applyProgress(circle, percent, customRadius = 40) {
+            const circumference = 2 * Math.PI * customRadius;
             const offset = circumference - (percent / 100 * circumference);
-            
-            // Apply dasharray and offset
             circle.style.strokeDasharray = `${circumference} ${circumference}`;
             circle.style.strokeDashoffset = offset;
         }
 
-        // Initialize on load
-        window.onload = updateProgressCircle;
-
-        // Lightbox and Carousel functions
         function openLightbox(src) {
             const lb = document.getElementById('lightbox');
             const lbImg = document.getElementById('lightbox-img');
@@ -226,6 +198,8 @@
             lbImg.style.transform = 'scale(0.9)';
             setTimeout(() => lb.style.display = 'none', 200);
         }
+
+        window.onload = updateAllProgress;
     </script>
 </body>
 </html>
