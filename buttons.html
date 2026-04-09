@@ -4,20 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KKDAT II Currimao - Social Hub</title>
-    
-    <link rel="icon" type="image/png" href="CURRIMAO.PNG">
-    <meta name="theme-color" content="#0f172a">
-    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        * { font-family: 'Inter', sans-serif; }
-        
         body {
+            font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #0f172a 0%, #1e40af 50%, #60a5fa 100%);
-            background-attachment: fixed;
+            min-height: 100vh;
             overflow-x: hidden;
             position: relative;
         }
@@ -32,38 +26,61 @@
             border-radius: 50%; filter: blur(100px); opacity: 0.3;
             animation: move 15s infinite alternate;
         }
-
         .blob-1 { background: #00ffff; top: -10%; left: -10%; }
         .blob-2 { background: #1d4ed8; bottom: -10%; right: -10%; animation-delay: -3s; }
+        .blob-3 { background: #a78bfa; top: 30%; left: 20%; animation-delay: -7s; opacity: 0.15; }
+        .blob-4 { background: #ffffff; bottom: 20%; left: 50%; animation-delay: -10s; opacity: 0.1; }
 
         @keyframes move {
-            from { transform: translate(0, 0) scale(1); }
-            to { transform: translate(100px, 50px) scale(1.1); }
+            from { transform: translate(0, 0) scale(1) rotate(0deg); }
+            to { transform: translate(150px, 80px) scale(1.2) rotate(10deg); }
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         }
-
+        
+        /* Progress Ring Animation */
         .progress-ring__circle {
             transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
             transform: rotate(-90deg);
             transform-origin: 50% 50%;
         }
 
-        .carousel-container { perspective: 1200px; overflow: hidden; }
+        .video-thumbnail { aspect-ratio: 16 / 9; object-fit: cover; }
+
+        /* Carousel 3D */
+        .carousel-container { perspective: 1000px; }
         .carousel-track {
-            display: flex; transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
             transform-style: preserve-3d;
         }
         .carousel-set {
-            flex: 0 0 100%; transition: all 0.7s ease;
-            transform: scale(0.85) rotateY(15deg); opacity: 0.4;
+            flex: 0 0 100%;
+            transition: all 0.6s ease;
+            transform: scale(0.9) rotateY(10deg);
+            opacity: 0.5;
         }
         .carousel-set.active { transform: scale(1) rotateY(0deg); opacity: 1; }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+        @media (max-width: 640px) { .image-grid { grid-template-columns: repeat(2, 1fr); } }
+        
+        .img-item {
+            aspect-ratio: 1/1; border-radius: 12px; overflow: hidden;
+            cursor: zoom-in; border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.2s;
+        }
+        .img-item:hover { transform: scale(1.05); }
 
         #lightbox {
             display: none; position: fixed; inset: 0;
@@ -72,9 +89,14 @@
         }
     </style>
 </head>
-<body class="text-white py-8 md:py-12 px-4">
+<body class="text-white py-8 md:py-12 px-4 sm:px-6">
 
-    <div class="bg-blur-container"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+    <div class="bg-blur-container">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="blob blob-4"></div>
+    </div>
 
     <div id="lightbox" onclick="closeLightbox()">
         <span class="absolute top-5 right-8 text-white text-4xl cursor-pointer">&times;</span>
@@ -83,18 +105,23 @@
 
     <div class="max-w-4xl mx-auto relative">
         <div class="text-center mb-12">
-            <div class="w-24 h-24 bg-white/10 backdrop-blur-sm rounded-full mx-auto mb-4 p-1 shadow-lg border border-white/20 overflow-hidden">
-                <img src="CURRIMAO.PNG" alt="Logo" class="w-full h-full object-cover">
+            <div class="w-24 h-24 bg-white/10 backdrop-blur-sm rounded-full mx-auto mb-4 p-1.5 shadow-lg border border-white/20 overflow-hidden">
+                <img src="CURRIMAO.PNG" alt="Logo" class="w-full h-full object-cover rounded-full">
             </div>
-            <h1 class="text-3xl md:text-4xl font-black tracking-tight">KKDAT II Currimao</h1>
-            <p class="text-blue-100 text-xs mt-1 uppercase tracking-[0.4em] font-bold">Social Hub</p>
+            <h1 class="text-3xl md:text-4xl font-black tracking-tighter">KKDAT II Currimao</h1>
+            <p class="text-blue-100 text-xs mt-1 uppercase tracking-[0.4em] font-bold">Official Social Media Hub</p>
         </div>
 
         <div class="mb-16">
-            <h2 class="text-sm font-bold uppercase tracking-widest text-center mb-8 opacity-50">2026 Activity Progress</h2>
+            <h2 class="text-lg font-bold text-white mb-8 flex items-center gap-4">
+                <span class="h-0.5 flex-1 bg-white/20"></span>
+                2026 Activity Dashboard
+                <span class="h-0.5 flex-1 bg-white/20"></span>
+            </h2>
+
             <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
-                
-                <div class="md:col-span-3 glass-card p-6 rounded-[2.5rem] flex flex-col items-center justify-center">
+                <div class="md:col-span-3 glass-card p-6 rounded-[2.5rem] flex flex-col items-center justify-center text-center">
+                    <p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mb-4">Target Progress</p>
                     <div class="relative w-32 h-32">
                         <svg class="w-full h-full" viewBox="0 0 100 100">
                             <circle class="text-white/10" stroke-width="8" fill="transparent" r="40" cx="50" cy="50"/>
@@ -104,19 +131,21 @@
                             <span id="progressText" class="text-3xl font-black">20%</span>
                         </div>
                     </div>
-                    <p class="mt-4 text-[10px] font-bold text-cyan-200 uppercase">Campaign Success</p>
+                    <p class="mt-4 text-[10px] font-bold text-cyan-200 uppercase tracking-tighter">Campaign Success</p>
                 </div>
 
-                <div class="md:col-span-6 glass-card p-3 rounded-[3rem] overflow-hidden">
-                    <div class="relative group cursor-zoom-in rounded-[2rem] overflow-hidden h-full min-h-[250px]">
+                <div class="md:col-span-6 glass-card p-3 rounded-[3rem] overflow-hidden shadow-2xl">
+                    <div class="relative group cursor-zoom-in overflow-hidden rounded-[2.5rem] h-full min-h-[300px] border-2 border-white/10">
                         <img src="assets/PROGRESS.png" onclick="openLightbox(this.src)" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
-                            <h3 class="font-bold text-lg">Official Progress Report</h3>
+                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/90 via-transparent to-transparent flex flex-col justify-end p-6">
+                            <h3 class="text-white font-black text-xl">Project PUSO Report</h3>
+                            <p class="text-blue-100 text-[10px] font-medium italic">Pagwadan ti Umili Sagut ti agtutubO</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="md:col-span-3 glass-card p-6 rounded-[2.5rem] flex flex-col items-center justify-center">
+                <div class="md:col-span-3 glass-card p-6 rounded-[2.5rem] flex flex-col items-center justify-center text-center">
+                    <p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mb-4">Outreach Reach</p>
                     <div class="relative w-32 h-32">
                         <svg class="w-full h-full" viewBox="0 0 100 100">
                             <circle class="text-white/5" stroke-width="4" fill="transparent" r="40" cx="50" cy="50"/>
@@ -126,74 +155,114 @@
                         </svg>
                         <div class="absolute inset-0 flex flex-col items-center justify-center scale-90">
                             <span id="membersVal" class="text-xl font-black">45</span>
-                            <span class="text-[7px] font-bold uppercase">Members</span>
+                            <span class="text-[7px] font-bold uppercase mb-1">Members</span>
                             <div class="w-8 h-px bg-white/20 my-1"></div>
                             <span id="leafletsVal" class="text-xl font-black">930</span>
                             <span class="text-[7px] font-bold uppercase">Leaflets</span>
                         </div>
                     </div>
-                    <p class="mt-4 text-[10px] font-bold text-sky-200 uppercase">Community Impact</p>
+                    <p class="mt-4 text-[10px] font-bold text-sky-200 uppercase tracking-tighter">Community Impact</p>
                 </div>
             </div>
         </div>
 
         <div class="mb-16">
-            <h2 class="text-sm font-bold uppercase tracking-widest mb-6"><i class="fas fa-video mr-2"></i> Featured Videos</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="glass-card p-2 rounded-3xl overflow-hidden aspect-video">
-                    <iframe class="w-full h-full rounded-2xl" src="https://www.youtube.com/embed/VIDEO_ID_1" frameborder="0" allowfullscreen></iframe>
-                </div>
-                <div class="glass-card p-2 rounded-3xl overflow-hidden aspect-video">
-                    <iframe class="w-full h-full rounded-2xl" src="https://www.youtube.com/embed/VIDEO_ID_2" frameborder="0" allowfullscreen></iframe>
-                </div>
-            </div>
-        </div>
+            <h2 class="text-lg font-bold text-white mb-6 flex items-center gap-4">
+                <span class="h-0.5 flex-1 bg-white/20"></span>
+                Event Gallery
+                <span class="h-0.5 flex-1 bg-white/20"></span>
+            </h2>
 
-        <div class="mb-16">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-sm font-bold uppercase tracking-widest"><i class="fas fa-camera-retro mr-2"></i> Activity Gallery</h2>
-                <div class="flex gap-2">
-                    <button onclick="moveCarousel(-1)" class="w-10 h-10 glass-card rounded-full hover:bg-white/10 transition-colors"><i class="fas fa-chevron-left"></i></button>
-                    <button onclick="moveCarousel(1)" class="w-10 h-10 glass-card rounded-full hover:bg-white/10 transition-colors"><i class="fas fa-chevron-right"></i></button>
-                </div>
-            </div>
-            
-            <div class="carousel-container">
+            <div class="carousel-container relative overflow-hidden">
                 <div id="carouselTrack" class="carousel-track">
                     <div class="carousel-set active">
-                        <div class="grid grid-cols-5 gap-2">
-                            <div class="aspect-square rounded-lg overflow-hidden glass-card cursor-zoom-in">
-                                <img src="assets/img1.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover">
+                        <div class="glass-card p-5 rounded-[2.5rem]">
+                            <div class="image-grid">
+                                <div class="img-item"><img src="assets/ELECTION/ELECT1.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/ELECTION/ELECT2.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/ELECTION/ELECT3.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/ELECTION/ELECT4.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/ELECTION/ELECT5.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/ELECTION/ELECT6.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/ELECTION/ELECT7.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/ELECTION/ELECT8.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/ELECTION/ELECT9.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/ELECTION/ELECT10.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
                             </div>
+                            <div class="mt-6 text-center">
+                                <h4 class="font-extrabold text-xl">ELECTION 2026</h4>
+                                <div class="bg-white/10 text-blue-100 text-xs font-bold inline-block px-4 py-1 rounded-full mt-2">MARCH 7, 2026</div>
                             </div>
-                        <div class="mt-4 text-center">
-                            <h4 class="font-bold text-sm">Community Outreach Program</h4>
-                            <p class="text-[10px] opacity-60 uppercase">March 15, 2026</p>
+                        </div>
+                    </div>
+
+                    <div class="carousel-set">
+                        <div class="glass-card p-5 rounded-[2.5rem]">
+                            <div class="image-grid">
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK1.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK2.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK3.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK4.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK5.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK6.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK7.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK8.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK9.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK10.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                            </div>
+                            <div class="mt-6 text-center">
+                                <h4 class="font-extrabold text-xl">OPLAN KRUS - Leaflets</h4>
+                                <div class="bg-white/10 text-blue-100 text-xs font-bold inline-block px-4 py-1 rounded-full mt-2">APRIL 4, 2026</div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <button onclick="moveCarousel(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 glass-card rounded-full z-10 hover:scale-110 transition-transform"><i class="fas fa-chevron-left"></i></button>
+                <button onclick="moveCarousel(1)" class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 glass-card rounded-full z-10 hover:scale-110 transition-transform"><i class="fas fa-chevron-right"></i></button>
             </div>
         </div>
 
-        <footer class="text-center py-10 opacity-40 text-[10px] font-bold uppercase tracking-[0.3em]">
+        <div class="space-y-8">
+            <h2 class="text-lg font-bold text-white flex items-center gap-4">
+                <span class="h-0.5 flex-1 bg-white/20"></span>
+                Latest Content
+                <span class="h-0.5 flex-1 bg-white/20"></span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <a href="https://www.facebook.com/reel/2106853370157580" target="_blank" class="glass-card block rounded-[2.5rem] overflow-hidden group shadow-xl">
+                    <img src="assets/SEMANA SANTA.jpg" class="video-thumbnail w-full group-hover:scale-105 transition-transform duration-500">
+                    <div class="p-6 bg-white/5"><h3 class="font-black">Ligtas SUMVAC 2026</h3></div>
+                </a>
+                <a href="https://youtube.com/watch?v=3JZ_D3ELwOQ" target="_blank" class="glass-card block rounded-[2.5rem] overflow-hidden group shadow-xl">
+                    <img src="https://img.youtube.com/vi/3JZ_D3ELwOQ/maxresdefault.jpg" class="video-thumbnail w-full group-hover:scale-105 transition-transform duration-500">
+                    <div class="p-6 bg-white/5"><h3 class="font-black">Anniversary Highlights</h3></div>
+                </a>
+            </div>
+        </div>
+
+        <footer class="text-center mt-24 opacity-60 text-xs font-black uppercase tracking-[0.4em]">
             KKDAT II Currimao • Ilocos Norte
         </footer>
     </div>
 
     <script>
-        let currentSet = 0;
+        let currentIdx = 0;
+        const track = document.getElementById('carouselTrack');
+        const sets = document.querySelectorAll('.carousel-set');
+
         function moveCarousel(dir) {
-            const track = document.getElementById('carouselTrack');
-            const sets = document.querySelectorAll('.carousel-set');
-            sets[currentSet].classList.remove('active');
-            currentSet = (currentSet + dir + sets.length) % sets.length;
-            track.style.transform = `translateX(-${currentSet * 100}%)`;
-            sets[currentSet].classList.add('active');
+            currentIdx = (currentIdx + dir + sets.length) % sets.length;
+            track.style.transform = `translateX(-${currentIdx * 100}%)`;
+            sets.forEach((s, i) => i === currentIdx ? s.classList.add('active') : s.classList.remove('active'));
         }
 
         function updateAllProgress() {
+            // Main Circle
             applyProgress(document.getElementById('progressCircle'), parseInt(document.getElementById('progressText').innerText), 40);
+            // Members (Target 300)
             applyProgress(document.getElementById('membersRing'), (parseInt(document.getElementById('membersVal').innerText)/300)*100, 32);
+            // Leaflets (Target 3000)
             applyProgress(document.getElementById('leafletsRing'), (parseInt(document.getElementById('leafletsVal').innerText)/3000)*100, 40);
         }
 
