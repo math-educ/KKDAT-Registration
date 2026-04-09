@@ -23,8 +23,7 @@
         }
 
         .bg-blur-container {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1; overflow: hidden;
         }
 
@@ -36,34 +35,35 @@
 
         .blob-1 { background: #00ffff; top: -10%; left: -10%; }
         .blob-2 { background: #1d4ed8; bottom: -10%; right: -10%; animation-delay: -3s; }
-        .blob-3 { background: #a78bfa; top: 30%; left: 20%; animation-delay: -7s; opacity: 0.15; }
-        .blob-4 { background: #ffffff; bottom: 20%; left: 50%; animation-delay: -10s; opacity: 0.1; }
 
         @keyframes move {
-            from { transform: translate(0, 0) scale(1) rotate(0deg); }
-            to { transform: translate(150px, 80px) scale(1.2) rotate(10deg); }
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(100px, 50px) scale(1.1); }
         }
 
         .glass-card {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         }
 
-        .progress-circle-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
         .progress-ring__circle {
             transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
             transform: rotate(-90deg);
             transform-origin: 50% 50%;
         }
+
+        .carousel-container { perspective: 1200px; overflow: hidden; }
+        .carousel-track {
+            display: flex; transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+            transform-style: preserve-3d;
+        }
+        .carousel-set {
+            flex: 0 0 100%; transition: all 0.7s ease;
+            transform: scale(0.85) rotateY(15deg); opacity: 0.4;
+        }
+        .carousel-set.active { transform: scale(1) rotateY(0deg); opacity: 1; }
 
         #lightbox {
             display: none; position: fixed; inset: 0;
@@ -72,14 +72,9 @@
         }
     </style>
 </head>
-<body class="text-white py-8 md:py-12 px-4 sm:px-6">
+<body class="text-white py-8 md:py-12 px-4">
 
-    <div class="bg-blur-container">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-        <div class="blob blob-4"></div>
-    </div>
+    <div class="bg-blur-container"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
 
     <div id="lightbox" onclick="closeLightbox()">
         <span class="absolute top-5 right-8 text-white text-4xl cursor-pointer">&times;</span>
@@ -87,130 +82,137 @@
     </div>
 
     <div class="max-w-4xl mx-auto relative">
-        <div class="text-center mb-10 md:mb-12">
-            <div class="w-24 h-24 bg-white/10 backdrop-blur-sm rounded-full mx-auto mb-4 p-1.5 shadow-lg border border-white/20 overflow-hidden">
-                <img src="CURRIMAO.PNG" alt="Logo" class="w-full h-full object-cover rounded-full">
+        <div class="text-center mb-12">
+            <div class="w-24 h-24 bg-white/10 backdrop-blur-sm rounded-full mx-auto mb-4 p-1 shadow-lg border border-white/20 overflow-hidden">
+                <img src="CURRIMAO.PNG" alt="Logo" class="w-full h-full object-cover">
             </div>
-            <h1 class="text-3xl md:text-4xl font-black text-white tracking-tight">KKDAT II Currimao</h1>
-            <p class="text-blue-100 text-xs mt-1 uppercase tracking-[0.4em] font-bold">Official Social Media Hub</p>
+            <h1 class="text-3xl md:text-4xl font-black tracking-tight">KKDAT II Currimao</h1>
+            <p class="text-blue-100 text-xs mt-1 uppercase tracking-[0.4em] font-bold">Social Hub</p>
         </div>
 
-        <div class="mb-16 relative">
-            <h2 class="text-lg font-semibold text-white mb-6 flex items-center gap-3 relative z-10">
-                <span class="h-px flex-1 bg-white/10"></span>
-                2026 Activity Progress Dashboard
-                <span class="h-px flex-1 bg-white/10"></span>
-            </h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch relative z-10">
+        <div class="mb-16">
+            <h2 class="text-sm font-bold uppercase tracking-widest text-center mb-8 opacity-50">2026 Activity Progress</h2>
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
                 
-                <div class="md:col-span-3 glass-card p-6 rounded-[2.5rem] flex flex-col items-center justify-center text-center">
-                    <p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mb-4">Target Progress</p>
-                    <div class="progress-circle-container relative w-36 h-36">
+                <div class="md:col-span-3 glass-card p-6 rounded-[2.5rem] flex flex-col items-center justify-center">
+                    <div class="relative w-32 h-32">
                         <svg class="w-full h-full" viewBox="0 0 100 100">
-                            <circle class="text-white/10" stroke-width="8" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50"/>
-                            <circle id="progressCircle" class="text-cyan-400 progress-ring__circle" stroke-width="8" stroke-linecap="round" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50"/>
+                            <circle class="text-white/10" stroke-width="8" fill="transparent" r="40" cx="50" cy="50"/>
+                            <circle id="progressCircle" class="text-cyan-400 progress-ring__circle" stroke-width="8" stroke-linecap="round" fill="transparent" r="40" cx="50" cy="50"/>
                         </svg>
                         <div class="absolute inset-0 flex items-center justify-center">
-                            <span id="progressText" class="text-4xl font-black text-white">20%</span>
+                            <span id="progressText" class="text-3xl font-black">20%</span>
                         </div>
                     </div>
                     <p class="mt-4 text-[10px] font-bold text-cyan-200 uppercase">Campaign Success</p>
                 </div>
 
-                <div class="md:col-span-6 glass-card p-3 rounded-[3rem] overflow-hidden shadow-2xl">
-                    <div class="relative group cursor-zoom-in overflow-hidden rounded-[2.5rem] h-full min-h-[300px] border-2 border-white/10">
-                        <img src="assets/PROGRESS.png" 
-                             onclick="openLightbox(this.src)" 
-                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 cursor-zoom-in" 
-                             alt="Progress Report">
-                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/80 via-transparent to-transparent flex flex-col justify-end p-6 pointer-events-none">
-                            <h3 class="text-white font-black text-xl">Official Progress Report</h3>
+                <div class="md:col-span-6 glass-card p-3 rounded-[3rem] overflow-hidden">
+                    <div class="relative group cursor-zoom-in rounded-[2rem] overflow-hidden h-full min-h-[250px]">
+                        <img src="assets/PROGRESS.png" onclick="openLightbox(this.src)" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+                            <h3 class="font-bold text-lg">Official Progress Report</h3>
                         </div>
                     </div>
                 </div>
 
-                <div class="md:col-span-3 glass-card p-6 rounded-[2.5rem] flex flex-col items-center justify-center text-center">
-                    <p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mb-4">Outreach Reach</p>
-                    <div class="progress-circle-container relative w-36 h-36">
+                <div class="md:col-span-3 glass-card p-6 rounded-[2.5rem] flex flex-col items-center justify-center">
+                    <div class="relative w-32 h-32">
                         <svg class="w-full h-full" viewBox="0 0 100 100">
-                            <circle class="text-white/5" stroke-width="4" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50"/>
-                            <circle id="leafletsRing" class="text-sky-300 progress-ring__circle" stroke-width="4" stroke-linecap="round" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50"/>
-                            
-                            <circle class="text-white/5" stroke-width="4" stroke="currentColor" fill="transparent" r="32" cx="50" cy="50"/>
-                            <circle id="membersRing" class="text-white progress-ring__circle" stroke-width="4" stroke-linecap="round" stroke="currentColor" fill="transparent" r="32" cx="50" cy="50"/>
+                            <circle class="text-white/5" stroke-width="4" fill="transparent" r="40" cx="50" cy="50"/>
+                            <circle id="leafletsRing" class="text-sky-300 progress-ring__circle" stroke-width="4" stroke-linecap="round" fill="transparent" r="40" cx="50" cy="50"/>
+                            <circle class="text-white/5" stroke-width="4" fill="transparent" r="32" cx="50" cy="50"/>
+                            <circle id="membersRing" class="text-white progress-ring__circle" stroke-width="4" stroke-linecap="round" fill="transparent" r="32" cx="50" cy="50"/>
                         </svg>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center leading-tight">
-                            <span id="membersVal" class="text-2xl font-black text-white">45</span>
-                            <span class="text-[8px] font-bold text-sky-200 uppercase mb-1">Members</span>
-                            <div class="w-10 h-px bg-white/20 my-1"></div>
-                            <span id="leafletsVal" class="text-2xl font-black text-white">93</span>
-                            <span class="text-[8px] font-bold text-sky-200 uppercase">Leaflets</span>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center scale-90">
+                            <span id="membersVal" class="text-xl font-black">45</span>
+                            <span class="text-[7px] font-bold uppercase">Members</span>
+                            <div class="w-8 h-px bg-white/20 my-1"></div>
+                            <span id="leafletsVal" class="text-xl font-black">930</span>
+                            <span class="text-[7px] font-bold uppercase">Leaflets</span>
                         </div>
                     </div>
                     <p class="mt-4 text-[10px] font-bold text-sky-200 uppercase">Community Impact</p>
                 </div>
-
             </div>
         </div>
 
-        <footer class="text-center mt-24 opacity-60 relative z-10">
-            <p class="text-[10px] uppercase tracking-[0.4em] font-bold text-white">KKDAT II Currimao • Ilocos Norte</p>
+        <div class="mb-16">
+            <h2 class="text-sm font-bold uppercase tracking-widest mb-6"><i class="fas fa-video mr-2"></i> Featured Videos</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-card p-2 rounded-3xl overflow-hidden aspect-video">
+                    <iframe class="w-full h-full rounded-2xl" src="https://www.youtube.com/embed/VIDEO_ID_1" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="glass-card p-2 rounded-3xl overflow-hidden aspect-video">
+                    <iframe class="w-full h-full rounded-2xl" src="https://www.youtube.com/embed/VIDEO_ID_2" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-16">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-sm font-bold uppercase tracking-widest"><i class="fas fa-camera-retro mr-2"></i> Activity Gallery</h2>
+                <div class="flex gap-2">
+                    <button onclick="moveCarousel(-1)" class="w-10 h-10 glass-card rounded-full hover:bg-white/10 transition-colors"><i class="fas fa-chevron-left"></i></button>
+                    <button onclick="moveCarousel(1)" class="w-10 h-10 glass-card rounded-full hover:bg-white/10 transition-colors"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+            
+            <div class="carousel-container">
+                <div id="carouselTrack" class="carousel-track">
+                    <div class="carousel-set active">
+                        <div class="grid grid-cols-5 gap-2">
+                            <div class="aspect-square rounded-lg overflow-hidden glass-card cursor-zoom-in">
+                                <img src="assets/img1.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover">
+                            </div>
+                            </div>
+                        <div class="mt-4 text-center">
+                            <h4 class="font-bold text-sm">Community Outreach Program</h4>
+                            <p class="text-[10px] opacity-60 uppercase">March 15, 2026</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="text-center py-10 opacity-40 text-[10px] font-bold uppercase tracking-[0.3em]">
+            KKDAT II Currimao • Ilocos Norte
         </footer>
     </div>
 
     <script>
+        let currentSet = 0;
+        function moveCarousel(dir) {
+            const track = document.getElementById('carouselTrack');
+            const sets = document.querySelectorAll('.carousel-set');
+            sets[currentSet].classList.remove('active');
+            currentSet = (currentSet + dir + sets.length) % sets.length;
+            track.style.transform = `translateX(-${currentSet * 100}%)`;
+            sets[currentSet].classList.add('active');
+        }
+
         function updateAllProgress() {
-            // 1. Update Main Target Progress
-            const mainCircle = document.getElementById('progressCircle');
-            const mainText = document.getElementById('progressText');
-            const mainPercent = parseInt(mainText.innerText);
-            applyProgress(mainCircle, mainPercent, 40);
-
-            // 2. Update Members (Target: 300)
-            const membersRing = document.getElementById('membersRing');
-            const membersCount = parseInt(document.getElementById('membersVal').innerText);
-            const membersPercent = Math.min((membersCount / 300) * 100, 100);
-            applyProgress(membersRing, membersPercent, 32);
-
-            // 3. Update Leaflets (Target: 3000)
-            const leafletsRing = document.getElementById('leafletsRing');
-            const leafletsCount = parseInt(document.getElementById('leafletsVal').innerText);
-            const leafletsPercent = Math.min((leafletsCount / 3000) * 100, 100);
-            applyProgress(leafletsRing, leafletsPercent, 40);
+            applyProgress(document.getElementById('progressCircle'), parseInt(document.getElementById('progressText').innerText), 40);
+            applyProgress(document.getElementById('membersRing'), (parseInt(document.getElementById('membersVal').innerText)/300)*100, 32);
+            applyProgress(document.getElementById('leafletsRing'), (parseInt(document.getElementById('leafletsVal').innerText)/3000)*100, 40);
         }
 
-        function applyProgress(circle, percent, radius) {
-            const circumference = 2 * Math.PI * radius;
-            const offset = circumference - (percent / 100 * circumference);
-            
-            circle.style.strokeDasharray = `${circumference} ${circumference}`;
-            circle.style.strokeDashoffset = circumference;
-            
-            setTimeout(() => {
-                circle.style.strokeDashoffset = offset;
-            }, 100);
+        function applyProgress(el, percent, r) {
+            const c = 2 * Math.PI * r;
+            el.style.strokeDasharray = `${c} ${c}`;
+            el.style.strokeDashoffset = c - (Math.min(percent, 100) / 100 * c);
         }
 
-        // Lightbox Control Functions
         function openLightbox(src) {
             const lb = document.getElementById('lightbox');
-            const lbImg = document.getElementById('lightbox-img');
-            lbImg.src = src;
-            lb.style.display = 'flex';
-            // Smooth entrance animation
-            setTimeout(() => {
-                lbImg.style.transform = 'scale(1)';
-            }, 10);
+            const img = document.getElementById('lightbox-img');
+            img.src = src; lb.style.display = 'flex';
+            setTimeout(() => img.style.transform = 'scale(1)', 10);
         }
 
         function closeLightbox() {
-            const lb = document.getElementById('lightbox');
-            const lbImg = document.getElementById('lightbox-img');
-            lbImg.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                lb.style.display = 'none';
-            }, 200);
+            document.getElementById('lightbox-img').style.transform = 'scale(0.9)';
+            setTimeout(() => document.getElementById('lightbox').style.display = 'none', 200);
         }
 
         window.onload = updateAllProgress;
