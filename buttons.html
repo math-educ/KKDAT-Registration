@@ -158,7 +158,7 @@
                             <circle id="progressCircle" class="text-cyan-400 progress-ring__circle" stroke-width="8" stroke-linecap="round" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50"/>
                         </svg>
                         <div class="absolute inset-0 flex items-center justify-center">
-                            <span id="progressText" class="text-4xl font-black text-white">0%</span>
+                            <span id="progressText" class="text-4xl font-black text-white">20%</span>
                         </div>
                     </div>
                     <p class="mt-4 text-[10px] font-bold text-cyan-200 uppercase">Campaign Success</p>
@@ -185,12 +185,12 @@
                         </svg>
                         <div class="absolute inset-0 flex flex-col items-center justify-center">
                             <div class="flex flex-col items-center translate-y-[-2px]">
-                                <span id="membersVal" class="text-xl font-black text-white leading-none">--</span>
+                                <span id="membersVal" class="text-xl font-black text-white leading-none">45</span>
                                 <span class="text-[7px] font-bold text-sky-200 uppercase tracking-tighter">Members</span>
                             </div>
                             <div class="w-8 h-px bg-white/10 my-1.5"></div>
                             <div class="flex flex-col items-center translate-y-[2px]">
-                                <span id="leafletsVal" class="text-xl font-black text-white">--</span>
+                                <span id="leafletsVal" class="text-xl font-black text-white">93</span>
                                 <span class="text-[7px] font-bold text-sky-200 uppercase tracking-tighter">Leaflets</span>
                             </div>
                         </div>
@@ -213,11 +213,19 @@
                         <i class="fa-solid fa-user-plus"></i>
                         Register Now
                     </a>
+
                     <div class="hidden md:block w-px h-8 bg-white/10 mx-2"></div>
+
                     <div class="flex gap-3">
-                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-blue-600 hover:scale-110 transition-all duration-300"><i class="fa-brands fa-facebook-f text-sm"></i></a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-red-600 hover:scale-110 transition-all duration-300"><i class="fa-brands fa-youtube text-sm"></i></a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-emerald-500 hover:scale-110 transition-all duration-300"><i class="fa-solid fa-envelope text-sm"></i></a>
+                        <a href="https://www.facebook.com/yourpage" target="_blank" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-blue-600 hover:scale-110 transition-all duration-300" title="Facebook">
+                            <i class="fa-brands fa-facebook-f text-sm"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@yourchannel" target="_blank" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-red-600 hover:scale-110 transition-all duration-300" title="YouTube">
+                            <i class="fa-brands fa-youtube text-sm"></i>
+                        </a>
+                        <a href="mailto:contact@yourkkdat.org" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-emerald-500 hover:scale-110 transition-all duration-300" title="Gmail">
+                            <i class="fa-solid fa-envelope text-sm"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -248,16 +256,56 @@
                             </div>
                             <div class="mt-6 text-center">
                                 <h4 class="text-white font-extrabold text-xl">ELECTION 2026</h4>
-                                <div class="bg-white/10 text-blue-100 text-xs font-bold inline-block px-4 py-1.5 rounded-full mt-2 border border-white/10">MARCH 7, 2026</div>
+                                <div class="bg-white/10 text-blue-100 text-xs font-bold inline-block px-4 py-1.5 rounded-full mt-2 shadow-md border border-white/10">MARCH 7, 2026</div>
                             </div>
                         </div>
                     </div>
+                    <div class="carousel-set">
+                        <div class="glass-card p-5 rounded-[2.5rem]">
+                            <div class="image-grid">
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK11.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK2.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK3.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK4.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK5.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK6.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK7.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK8.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK9.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK10.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                            </div>
+                            <div class="mt-6 text-center">
+                                <h4 class="text-white font-extrabold text-xl">OPLAN KRUS - Leaflets Distribution</h4>
+                                <div class="bg-white/10 text-blue-100 text-xs font-bold inline-block px-4 py-1.5 rounded-full mt-2 shadow-md border border-white/10">APRIL 4, 2026</div>
+                            </div>
+                        </div>
                     </div>
+                    <div class="carousel-set">
+                        <div class="glass-card p-5 rounded-[2.5rem]">
+                            <div class="image-grid">
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK11.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK12.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK13.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK14.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK15.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK16.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK17.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK18.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK19.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                                <div class="img-item"><img src="assets/OPLAN KRUS/OK20.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+                            </div>
+                            <div class="mt-6 text-center">
+                                <h4 class="text-white font-extrabold text-xl">OPLAN KRUS - Coastal Clean-Up</h4>
+                                <div class="bg-white/10 text-blue-100 text-xs font-bold inline-block px-4 py-1.5 rounded-full mt-2 shadow-md border border-white/10">APRIL 4, 2026</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                <button onclick="moveCarousel(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-blue-950/40 hover:bg-blue-900/60 backdrop-blur-sm p-4 rounded-full z-10 border border-white/10 transition-all text-white hover:scale-110">
+                <button onclick="moveCarousel(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-blue-950/40 hover:bg-blue-900/60 backdrop-blur-sm p-4 rounded-full z-10 border border-white/10 transition-all shadow-lg text-white hover:scale-110">
                     <i class="fa-solid fa-chevron-left fa-lg"></i>
                 </button>
-                <button onclick="moveCarousel(1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-blue-950/40 hover:bg-blue-900/60 backdrop-blur-sm p-4 rounded-full z-10 border border-white/10 transition-all text-white hover:scale-110">
+                <button onclick="moveCarousel(1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-blue-950/40 hover:bg-blue-900/60 backdrop-blur-sm p-4 rounded-full z-10 border border-white/10 transition-all shadow-lg text-white hover:scale-110">
                     <i class="fa-solid fa-chevron-right fa-lg"></i>
                 </button>
             </div>
@@ -292,42 +340,19 @@
     </div>
 
     <script>
-        // --- 1. GOOGLE SHEETS INTEGRATION ---
-        // PASTE YOUR WEB APP URL HERE
-        const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbxoASRY9lhgZupd5jdOLdzs1G5PtXm9gFBEvTk8nmD7A-QW2te5c8deYRDAtDzpxFk3/exec';
-
-        async function fetchSheetData() {
-            try {
-                const response = await fetch(SHEET_API_URL);
-                const data = await response.json();
-                
-                // Update elements if data exists
-                if(data.members !== undefined) document.getElementById('membersVal').innerText = data.members;
-                if(data.leaflets !== undefined) document.getElementById('leafletsVal').innerText = data.leaflets;
-                if(data.progress !== undefined) document.getElementById('progressText').innerText = data.progress + '%';
-                
-                // Trigger the ring animations
-                updateAllProgress();
-            } catch (error) {
-                console.error("Sheet Sync Failed:", error);
-                // Fallback to update with whatever is currently in the HTML
-                updateAllProgress();
-            }
-        }
-
-        // --- 2. Progress Rings Logic ---
+        // --- 1. Progress Rings Logic ---
         function updateAllProgress() {
             const mainCircle = document.getElementById('progressCircle');
-            const mainPercent = parseInt(document.getElementById('progressText').innerText) || 0;
+            const mainPercent = parseInt(document.getElementById('progressText').innerText);
             applyProgress(mainCircle, mainPercent, 40);
 
             const membersRing = document.getElementById('membersRing');
-            const membersCount = parseInt(document.getElementById('membersVal').innerText) || 0;
-            const membersPercent = Math.min((membersCount / 300) * 100, 100); 
+            const membersCount = parseInt(document.getElementById('membersVal').innerText);
+            const membersPercent = Math.min((membersCount / 300) * 100, 100);
             applyProgress(membersRing, membersPercent, 34);
 
             const leafletsRing = document.getElementById('leafletsRing');
-            const leafletsCount = parseInt(document.getElementById('leafletsVal').innerText) || 0;
+            const leafletsCount = parseInt(document.getElementById('leafletsVal').innerText);
             const leafletsPercent = Math.min((leafletsCount / 3000) * 100, 100);
             applyProgress(leafletsRing, leafletsPercent, 42);
         }
@@ -340,13 +365,12 @@
             setTimeout(() => { circle.style.strokeDashoffset = offset; }, 100);
         }
 
-        // --- 3. Carousel Logic ---
+        // --- 2. Carousel Logic ---
         let currentIdx = 0;
         const track = document.getElementById('carouselTrack');
         const sets = document.querySelectorAll('.carousel-set');
 
         function moveCarousel(dir) {
-            if(sets.length === 0) return;
             currentIdx = (currentIdx + dir + sets.length) % sets.length;
             track.style.transform = `translateX(-${currentIdx * 100}%)`;
             sets.forEach((s, i) => {
@@ -354,7 +378,7 @@
             });
         }
 
-        // --- 4. Lightbox Logic ---
+        // --- 3. Lightbox Logic ---
         function openLightbox(src) {
             const lb = document.getElementById('lightbox');
             const lbImg = document.getElementById('lightbox-img');
@@ -370,8 +394,7 @@
             setTimeout(() => { lb.style.display = 'none'; }, 200);
         }
 
-        // Run fetch on load
-        window.onload = fetchSheetData;
+        window.onload = updateAllProgress;
     </script>
 </body>
 </html>
