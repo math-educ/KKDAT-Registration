@@ -10,13 +10,14 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0f172a;
+            /* BRIGHTER GRADIENT BACKGROUND */
+            background: linear-gradient(135deg, #6d28d9 0%, #db2777 50%, #f97316 100%);
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
         }
 
-        /* Animated Blurred Background Graphics */
+        /* VIBRANT Animated Blurred Background Graphics */
         .bg-blur-container {
             position: fixed;
             top: 0;
@@ -29,32 +30,38 @@
 
         .blob {
             position: absolute;
-            width: 500px;
-            height: 500px;
+            width: 600px;
+            height: 600px;
             border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.15;
-            animation: move 20s infinite alternate;
+            filter: blur(100px);
+            /* INCREASED OPACITY FOR MORE COLOR */
+            opacity: 0.4;
+            animation: move 15s infinite alternate;
         }
 
-        .blob-1 { background: #4f46e5; top: -10%; left: -10%; }
-        .blob-2 { background: #06b6d4; bottom: -10%; right: -10%; animation-delay: -5s; }
-        .blob-3 { background: #7c3aed; top: 40%; left: 30%; animation-delay: -10s; }
+        /* BRIGHTER COLORS FOR BLOBS */
+        .blob-1 { background: #fdf9c4; top: -10%; left: -10%; } /* Pale Yellow */
+        .blob-2 { background: #ff007f; bottom: -10%; right: -10%; animation-delay: -3s; } /* Bright Pink */
+        .blob-3 { background: #00ffff; top: 30%; left: 20%; animation-delay: -7s; } /* Cyan */
+        .blob-4 { background: #ffffff; bottom: 20%; left: 50%; animation-delay: -10s; opacity: 0.2; } /* White highlight */
 
         @keyframes move {
-            from { transform: translate(0, 0) scale(1); }
-            to { transform: translate(100px, 50px) scale(1.1); }
+            from { transform: translate(0, 0) scale(1) rotate(0deg); }
+            to { transform: translate(150px, 80px) scale(1.2) rotate(10deg); }
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            /* MORE TRANSPARENT GLASS TO SHOW BRIGHT BG */
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            /* BRIGHTER BORDER */
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
             transition: all 0.3s ease;
         }
         
+        /* Thumbnail aspect ratio */
         .video-thumbnail { aspect-ratio: 16 / 9; object-fit: cover; }
 
         /* Carousel 3D Effects */
@@ -68,7 +75,7 @@
             flex: 0 0 100%;
             transition: all 0.6s ease;
             transform: scale(0.9) rotateY(10deg);
-            opacity: 0.4;
+            opacity: 0.5;
         }
         .carousel-set.active {
             transform: scale(1) rotateY(0deg);
@@ -88,7 +95,7 @@
             border-radius: 12px;
             overflow: hidden;
             cursor: zoom-in;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
             transition: transform 0.2s;
         }
         .img-item:hover { transform: scale(1.05); }
@@ -98,7 +105,7 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.92);
+            background: rgba(255,255,255,0.85); /* BRIGHT LIGHTBOX BG */
             backdrop-filter: blur(15px);
             z-index: 100;
             justify-content: center;
@@ -107,62 +114,65 @@
         }
     </style>
 </head>
-<body class="text-slate-200 py-8 md:py-12 px-4 sm:px-6">
+<body class="text-white py-8 md:py-12 px-4 sm:px-6">
 
     <div class="bg-blur-container">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
         <div class="blob blob-3"></div>
+        <div class="blob blob-4"></div>
     </div>
 
     <div id="lightbox" onclick="closeLightbox()">
-        <span class="absolute top-5 right-8 text-white text-4xl cursor-pointer">&times;</span>
-        <img id="lightbox-img" src="" class="max-w-full max-h-[90vh] rounded-lg shadow-2xl transition-transform duration-300 scale-95">
+        <span class="absolute top-5 right-8 text-black text-4xl cursor-pointer transition-transform hover:scale-110">&times;</span>
+        <img id="lightbox-img" src="" class="max-w-full max-h-[90vh] rounded-lg shadow-2xl transition-transform duration-300 scale-95 border-4 border-white">
     </div>
 
     <div class="max-w-4xl mx-auto relative">
         <div class="text-center mb-10 md:mb-12">
-            <div class="w-20 h-20 bg-white rounded-2xl mx-auto mb-4 p-1 shadow-2xl overflow-hidden">
-                <img src="CURRIMAO.PNG" alt="Logo" class="w-full h-full object-cover rounded-xl">
+            <div class="w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full mx-auto mb-4 p-1.5 shadow-lg border border-white/30 overflow-hidden">
+                <img src="CURRIMAO.PNG" alt="Logo" class="w-full h-full object-cover rounded-full">
             </div>
-            <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight">KKDAT II Currimao</h1>
-            <p class="text-indigo-300 text-xs mt-1 uppercase tracking-[0.3em] font-medium">Official Social Media Hub</p>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-white tracking-tighter drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)]">KKDAT II Currimao</h1>
+            <p class="text-white text-sm mt-1 uppercase tracking-[0.4em] font-bold drop-shadow-sm">Official Social Media Hub</p>
         </div>
 
-        <div class="mb-16">
-            <h2 class="text-lg font-semibold text-white mb-6 flex items-center gap-3">
-                <span class="h-px flex-1 bg-white/10"></span>
+        <div class="mb-16 relative">
+            <div class="absolute -top-10 -left-10 w-20 h-20 bg-yellow-300 rounded-full blur-3xl opacity-50"></div>
+            
+            <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-4 drop-shadow-sm">
+                <span class="h-0.5 flex-1 bg-white/40 rounded-full"></span>
                 2026 Activity Progress Report
-                <span class="h-px flex-1 bg-white/10"></span>
+                <span class="h-0.5 flex-1 bg-white/40 rounded-full"></span>
             </h2>
-            <div class="glass-card p-2 rounded-[2.5rem] overflow-hidden max-w-sm mx-auto">
-                <div class="relative group cursor-zoom-in overflow-hidden rounded-[2rem] aspect-square">
+            <div class="glass-card p-3 rounded-[3rem] overflow-hidden max-w-sm mx-auto shadow-2xl">
+                <div class="relative group cursor-zoom-in overflow-hidden rounded-[2.5rem] aspect-square border-2 border-white/20">
                     <img 
                         src="assets/PROGRESS.png" 
                         onclick="openLightbox(this.src)" 
                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                         alt="Progress Report"
                     >
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <h3 class="text-white font-bold text-xl">Project PUSO</h3>
-                        <p class="text-indigo-200 text-sm"><strong>P</strong>agwadan ti <strong>U</strong>mili <strong>S</strong>agut ti agtutub<strong>O</strong></p>
+                    <div class="absolute inset-0 bg-gradient-to-t from-pink-600/90 via-transparent to-transparent flex flex-col justify-end p-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <h3 class="text-white font-extrabold text-2xl drop-shadow-sm">Project PUSO</h3>
+                        <p class="text-white text-sm font-medium mt-1"><strong>P</strong>agwadan ti <strong>U</strong>mili <strong>S</strong>agut ti agtutub<strong>O</strong></p>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="mb-16">
-            <h2 class="text-lg font-semibold text-white mb-6 flex items-center gap-3">
-                <span class="h-px flex-1 bg-white/10"></span>
+            <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-4 drop-shadow-sm">
+                <span class="h-0.5 flex-1 bg-white/40 rounded-full"></span>
                 Event Gallery
-                <span class="h-px flex-1 bg-white/10"></span>
+                <span class="h-0.5 flex-1 bg-white/40 rounded-full"></span>
             </h2>
 
             <div class="carousel-container relative overflow-hidden">
                 <div id="carouselTrack" class="carousel-track">
                     
                     <div class="carousel-set active">
-                        <div class="glass-card p-4 rounded-[2rem]">
+                        <div class="glass-card p-5 rounded-[2.5rem]">
                             <div class="image-grid">
                                 <div class="img-item"><img src="assets/ELECTION/ELECT1.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
                                 <div class="img-item"><img src="assets/ELECTION/ELECT2.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
@@ -176,14 +186,14 @@
                                 <div class="img-item"><img src="assets/ELECTION/ELECT10.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
                             </div>
                             <div class="mt-6 text-center">
-                                <h4 class="text-white font-bold text-lg">ELECTION 2026</h4>
-                                <div class="bg-white/10 text-indigo-200 text-[10px] inline-block px-3 py-1 rounded-full mt-1 border border-white/10">MARCH 7, 2026</div>
+                                <h4 class="text-white font-extrabold text-xl">ELECTION 2026</h4>
+                                <div class="bg-white text-pink-700 text-xs font-bold inline-block px-4 py-1.5 rounded-full mt-2 shadow-md">MARCH 7, 2026</div>
                             </div>
                         </div>
                     </div>
 
                     <div class="carousel-set">
-                        <div class="glass-card p-4 rounded-[2rem]">
+                        <div class="glass-card p-5 rounded-[2.5rem]">
                             <div class="image-grid">
                                 <div class="img-item"><img src="assets/OPLAN KRUS/OK11.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
                                 <div class="img-item"><img src="assets/OPLAN KRUS/OK2.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
@@ -197,14 +207,14 @@
                                 <div class="img-item"><img src="assets/OPLAN KRUS/OK10.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
                             </div>
                             <div class="mt-6 text-center">
-                                <h4 class="text-white font-bold text-lg">OPLAN KRUS - Leaflets Distribution</h4>
-                                <div class="bg-white/10 text-indigo-200 text-[10px] inline-block px-3 py-1 rounded-full mt-1 border border-white/10">APRIL 4, 2026</div>
+                                <h4 class="text-white font-extrabold text-xl">OPLAN KRUS - Leaflets Distribution</h4>
+                                <div class="bg-white text-pink-700 text-xs font-bold inline-block px-4 py-1.5 rounded-full mt-2 shadow-md">APRIL 4, 2026</div>
                             </div>
                         </div>
                     </div>
 
                     <div class="carousel-set">
-                        <div class="glass-card p-4 rounded-[2rem]">
+                        <div class="glass-card p-5 rounded-[2.5rem]">
                             <div class="image-grid">
                                 <div class="img-item"><img src="assets/OPLAN KRUS/OK11.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
                                 <div class="img-item"><img src="assets/OPLAN KRUS/OK12.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
@@ -218,41 +228,43 @@
                                 <div class="img-item"><img src="assets/OPLAN KRUS/OK20.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
                             </div>
                             <div class="mt-6 text-center">
-                                <h4 class="text-white font-bold text-lg">OPLAN KRUS - Coastal Clean-Up</h4>
-                                <div class="bg-white/10 text-indigo-200 text-[10px] inline-block px-3 py-1 rounded-full mt-1 border border-white/10">APRIL 4, 2026</div>
+                                <h4 class="text-white font-extrabold text-xl">OPLAN KRUS - Coastal Clean-Up</h4>
+                                <div class="bg-white text-pink-700 text-xs font-bold inline-block px-4 py-1.5 rounded-full mt-2 shadow-md">APRIL 4, 2026</div>
                             </div>
                         </div>
                     </div>
 
                 </div>
 
-                <button onclick="moveCarousel(-1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/5 hover:bg-white/10 backdrop-blur-md p-3 rounded-full z-10 border border-white/10 transition-colors">
-                    <i class="fa-solid fa-chevron-left text-white"></i>
+                <button onclick="moveCarousel(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 backdrop-blur-sm p-4 rounded-full z-10 border border-white/40 transition-all shadow-lg text-white hover:scale-110">
+                    <i class="fa-solid fa-chevron-left fa-lg"></i>
                 </button>
-                <button onclick="moveCarousel(1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/5 hover:bg-white/10 backdrop-blur-md p-3 rounded-full z-10 border border-white/10 transition-colors">
-                    <i class="fa-solid fa-chevron-right text-white"></i>
+                <button onclick="moveCarousel(1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 backdrop-blur-sm p-4 rounded-full z-10 border border-white/40 transition-all shadow-lg text-white hover:scale-110">
+                    <i class="fa-solid fa-chevron-right fa-lg"></i>
                 </button>
             </div>
         </div>
 
-        <div class="space-y-6">
-             <h2 class="text-lg font-semibold text-white px-2 flex items-center gap-3">
-                <span class="h-px flex-1 bg-white/10"></span> Latest Content <span class="h-px flex-1 bg-white/10"></span>
+        <div class="space-y-6 relative">
+             <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-cyan-300 rounded-full blur-3xl opacity-40"></div>
+
+             <h2 class="text-xl font-bold text-white px-2 flex items-center gap-4 drop-shadow-sm relative z-10">
+                <span class="h-0.5 flex-1 bg-white/40 rounded-full"></span> Latest Content <span class="h-0.5 flex-1 bg-white/40 rounded-full"></span>
             </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <a href="https://www.facebook.com/reel/2106853370157580" target="_blank" class="glass-card block rounded-[2.5rem] overflow-hidden group">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                <a href="https://www.facebook.com/reel/2106853370157580" target="_blank" class="glass-card block rounded-[2.5rem] overflow-hidden group shadow-xl hover:-translate-y-2 transition-transform duration-300">
                     <img src="assets/SEMANA SANTA.jpg" class="video-thumbnail w-full transition-transform duration-500 group-hover:scale-105">
-                    <div class="p-6"><h3 class="font-bold text-white group-hover:text-indigo-300 transition-colors">Ligtas SUMVAC 2026</h3></div>
+                    <div class="p-6 bg-white/5"><h3 class="font-extrabold text-white text-lg group-hover:text-yellow-200 transition-colors">Ligtas SUMVAC 2026</h3></div>
                 </a>
-                <a href="https://youtube.com/watch?v=3JZ_D3ELwOQ" target="_blank" class="glass-card block rounded-[2.5rem] overflow-hidden group">
+                <a href="https://youtube.com/watch?v=3JZ_D3ELwOQ" target="_blank" class="glass-card block rounded-[2.5rem] overflow-hidden group shadow-xl hover:-translate-y-2 transition-transform duration-300">
                     <img src="https://img.youtube.com/vi/3JZ_D3ELwOQ/maxresdefault.jpg" class="video-thumbnail w-full transition-transform duration-500 group-hover:scale-105">
-                    <div class="p-6"><h3 class="font-bold text-white group-hover:text-indigo-300 transition-colors">Anniversary Highlights</h3></div>
+                    <div class="p-6 bg-white/5"><h3 class="font-extrabold text-white text-lg group-hover:text-yellow-200 transition-colors">Anniversary Highlights</h3></div>
                 </a>
             </div>
         </div>
 
-        <footer class="text-center mt-20 opacity-40">
-            <p class="text-[10px] uppercase tracking-[0.3em] font-medium">KKDAT II Currimao • Ilocos Norte</p>
+        <footer class="text-center mt-24 opacity-60 relative z-10">
+            <p class="text-xs uppercase tracking-[0.4em] font-bold text-white shadow-text">KKDAT II Currimao • Ilocos Norte</p>
         </footer>
     </div>
 
@@ -280,12 +292,14 @@
             const lbImg = document.getElementById('lightbox-img');
             lbImg.src = src;
             lb.style.display = 'flex';
+            // Scale up animation
             setTimeout(() => lbImg.style.transform = 'scale(1)', 10);
         }
 
         function closeLightbox() {
             const lb = document.getElementById('lightbox');
             const lbImg = document.getElementById('lightbox-img');
+            // Scale down animation
             lbImg.style.transform = 'scale(0.9)';
             setTimeout(() => lb.style.display = 'none', 200);
         }
