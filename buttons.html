@@ -60,11 +60,9 @@
         }
         
         .progress-ring__circle {
-            transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
             transform: rotate(-90deg);
             transform-origin: 50% 50%;
-            stroke-dasharray: 251.2; 
-            stroke-dashoffset: 251.2;
         }
 
         #lightbox {
@@ -122,8 +120,11 @@
 
                 <div class="md:col-span-6 glass-card p-3 rounded-[3rem] overflow-hidden shadow-2xl">
                     <div class="relative group cursor-zoom-in overflow-hidden rounded-[2.5rem] h-full min-h-[300px] border-2 border-white/10">
-                        <img src="assets/PROGRESS.png" onclick="openLightbox(this.src)" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/80 via-transparent to-transparent flex flex-col justify-end p-6">
+                        <img src="assets/PROGRESS.png" 
+                             onclick="openLightbox(this.src)" 
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 cursor-zoom-in" 
+                             alt="Progress Report">
+                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/80 via-transparent to-transparent flex flex-col justify-end p-6 pointer-events-none">
                             <h3 class="text-white font-black text-xl">Official Progress Report</h3>
                         </div>
                     </div>
@@ -133,9 +134,11 @@
                     <p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mb-4">Outreach Reach</p>
                     <div class="progress-circle-container relative w-36 h-36">
                         <svg class="w-full h-full" viewBox="0 0 100 100">
-                            <circle class="text-white/10" stroke-width="8" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50"/>
-                            <circle id="leafletsRing" class="text-sky-300 progress-ring__circle" stroke-width="8" stroke-linecap="round" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50"/>
-                            <circle id="membersRing" class="text-white progress-ring__circle" stroke-width="6" stroke-linecap="round" stroke="currentColor" fill="transparent" r="32" cx="50" cy="50"/>
+                            <circle class="text-white/5" stroke-width="4" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50"/>
+                            <circle id="leafletsRing" class="text-sky-300 progress-ring__circle" stroke-width="4" stroke-linecap="round" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50"/>
+                            
+                            <circle class="text-white/5" stroke-width="4" stroke="currentColor" fill="transparent" r="32" cx="50" cy="50"/>
+                            <circle id="membersRing" class="text-white progress-ring__circle" stroke-width="4" stroke-linecap="round" stroke="currentColor" fill="transparent" r="32" cx="50" cy="50"/>
                         </svg>
                         <div class="absolute inset-0 flex flex-col items-center justify-center leading-tight">
                             <span id="membersVal" class="text-2xl font-black text-white">45</span>
@@ -158,45 +161,56 @@
 
     <script>
         function updateAllProgress() {
-            // 1. Update Target Progress
+            // 1. Update Main Target Progress
             const mainCircle = document.getElementById('progressCircle');
             const mainText = document.getElementById('progressText');
             const mainPercent = parseInt(mainText.innerText);
-            applyProgress(mainCircle, mainPercent);
+            applyProgress(mainCircle, mainPercent, 40);
 
-            // 2. Update Members (Basis: 300)
+            // 2. Update Members (Target: 300)
             const membersRing = document.getElementById('membersRing');
             const membersCount = parseInt(document.getElementById('membersVal').innerText);
             const membersPercent = Math.min((membersCount / 300) * 100, 100);
-            applyProgress(membersRing, membersPercent, 32); // r=32
+            applyProgress(membersRing, membersPercent, 32);
 
-            // 3. Update Leaflets (Basis: 3000)
+            // 3. Update Leaflets (Target: 3000)
             const leafletsRing = document.getElementById('leafletsRing');
             const leafletsCount = parseInt(document.getElementById('leafletsVal').innerText);
             const leafletsPercent = Math.min((leafletsCount / 3000) * 100, 100);
-            applyProgress(leafletsRing, leafletsPercent, 40); // r=40
+            applyProgress(leafletsRing, leafletsPercent, 40);
         }
 
-        function applyProgress(circle, percent, customRadius = 40) {
-            const circumference = 2 * Math.PI * customRadius;
+        function applyProgress(circle, percent, radius) {
+            const circumference = 2 * Math.PI * radius;
             const offset = circumference - (percent / 100 * circumference);
+            
             circle.style.strokeDasharray = `${circumference} ${circumference}`;
-            circle.style.strokeDashoffset = offset;
+            circle.style.strokeDashoffset = circumference;
+            
+            setTimeout(() => {
+                circle.style.strokeDashoffset = offset;
+            }, 100);
         }
 
+        // Lightbox Control Functions
         function openLightbox(src) {
             const lb = document.getElementById('lightbox');
             const lbImg = document.getElementById('lightbox-img');
             lbImg.src = src;
             lb.style.display = 'flex';
-            setTimeout(() => lbImg.style.transform = 'scale(1)', 10);
+            // Smooth entrance animation
+            setTimeout(() => {
+                lbImg.style.transform = 'scale(1)';
+            }, 10);
         }
 
         function closeLightbox() {
             const lb = document.getElementById('lightbox');
             const lbImg = document.getElementById('lightbox-img');
-            lbImg.style.transform = 'scale(0.9)';
-            setTimeout(() => lb.style.display = 'none', 200);
+            lbImg.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                lb.style.display = 'none';
+            }, 200);
         }
 
         window.onload = updateAllProgress;
