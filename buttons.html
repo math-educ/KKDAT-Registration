@@ -133,8 +133,7 @@
             <p class="text-blue-100 text-sm mt-1 uppercase tracking-[0.4em] font-bold">Official Social Media Hub</p>
         </div>
 
-        <div class="mb-20 relative">
-            <h2 class="text-lg font-semibold text-white mb-8 flex items-center gap-3 relative z-10">
+        <div class="mb-6 relative"> <h2 class="text-lg font-semibold text-white mb-8 flex items-center gap-3 relative z-10">
                 <span class="h-px flex-1 bg-white/10"></span>
                 2026 Activity Progress Dashboard
                 <span class="h-px flex-1 bg-white/10"></span>
@@ -186,20 +185,26 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="mt-5 flex gap-3 justify-center">
-                        <a href="#" target="_blank" class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-blue-600 hover:scale-110 transition-all duration-300" title="Facebook">
-                            <i class="fa-brands fa-facebook-f text-xs"></i>
-                        </a>
-                        <a href="#" target="_blank" class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-red-600 hover:scale-110 transition-all duration-300" title="YouTube">
-                            <i class="fa-brands fa-youtube text-xs"></i>
-                        </a>
-                        <a href="mailto:contact@example.com" class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-emerald-500 hover:scale-110 transition-all duration-300" title="Gmail">
-                            <i class="fa-solid fa-envelope text-xs"></i>
-                        </a>
-                    </div>
-
                     <p class="mt-4 text-[10px] font-bold text-sky-200 uppercase">Community Impact</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card mb-20 p-5 rounded-[2.5rem] relative z-10">
+            <div class="flex flex-wrap gap-4 items-center justify-center md:justify-between px-2">
+                <p class="text-[11px] uppercase tracking-[0.2em] font-bold text-blue-100 flex items-center gap-3">
+                    <span class="w-5 h-px bg-blue-300/30"></span>Connect with KKDAT II Currimao<span class="w-5 h-px bg-blue-300/30"></span>
+                </p>
+                <div class="flex gap-4 justify-center">
+                    <a href="https://www.facebook.com/KKDATCurrimaoPower" target="_blank" class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-blue-600 hover:scale-110 transition-all duration-300" title="Facebook">
+                        <i class="fa-brands fa-facebook-f text-sm"></i>
+                    </a>
+                    <a href="https://www.youtube.com/@kkdatcurrimaochapter2731" target="_blank" class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-red-600 hover:scale-110 transition-all duration-300" title="YouTube">
+                        <i class="fa-brands fa-youtube text-sm"></i>
+                    </a>
+                    <a href="mailto:kkdatcurrimao@gmail.com" class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-emerald-500 hover:scale-110 transition-all duration-300" title="Gmail">
+                        <i class="fa-solid fa-envelope text-sm"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -315,15 +320,18 @@
     <script>
         // --- 1. Progress Rings Logic ---
         function updateAllProgress() {
+            // Main Target
             const mainCircle = document.getElementById('progressCircle');
             const mainPercent = parseInt(document.getElementById('progressText').innerText);
             applyProgress(mainCircle, mainPercent, 40);
 
+            // Members (Target: 300) - Radius: 34
             const membersRing = document.getElementById('membersRing');
             const membersCount = parseInt(document.getElementById('membersVal').innerText);
             const membersPercent = Math.min((membersCount / 300) * 100, 100);
             applyProgress(membersRing, membersPercent, 34);
 
+            // Leaflets (Target: 3000) - Radius: 42
             const leafletsRing = document.getElementById('leafletsRing');
             const leafletsCount = parseInt(document.getElementById('leafletsVal').innerText);
             const leafletsPercent = Math.min((leafletsCount / 3000) * 100, 100);
