@@ -109,7 +109,6 @@
                 </table>
             </div>
         </div>
-        <p class="text-white/40 text-[10px] text-center mt-4 md:hidden">← Swipe left/right to view more info →</p>
     </div>
 
     <script>
@@ -166,10 +165,13 @@
                     `<a href="${fbUrl}" target="_blank" class="text-blue-600 font-medium hover:underline">View FB</a>` : 
                     '<span class="text-slate-400 text-xs italic">None</span>';
 
+                // Check both potential key names for the registration date
+                const rawRegDate = m.timestamp || m.registrationDate || '---';
+
                 const row = `
                     <tr class="hover:bg-slate-50 transition-colors text-xs sm:text-sm">
                         <td class="px-4 py-4 text-indigo-600 font-bold text-[10px] uppercase">
-                            ${formatSafeDate(m.timestamp)}
+                            ${formatSafeDate(rawRegDate)}
                         </td>
                         <td class="px-4 py-4">
                             <div class="font-bold text-slate-800 uppercase">${m.fullName || '---'}</div>
