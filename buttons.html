@@ -3,398 +3,281 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KKDAT II Currimao - Social Hub</title>
-    
+    <title>Member Registration - KKDAT</title>
     <link rel="icon" type="image/png" href="CURRIMAO.PNG">
-    <meta name="theme-color" content="#0f172a">
-    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Inter', sans-serif; }
         
         body {
             background: linear-gradient(135deg, #0f172a 0%, #1e40af 50%, #60a5fa 100%);
             background-attachment: fixed;
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
         }
 
-        .bg-blur-container {
+        .glass-panel { 
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .input-field { transition: all 0.3s ease; border: 1px solid #e2e8f0; font-size: 16px; }
+        .input-field:focus { 
+            transform: translateY(-2px); 
+            border-color: #3b82f6; 
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.2); 
+            outline: none; 
+        }
+
+        /* Modal / Overlay Style */
+        #passcodeOverlay {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; overflow: hidden;
-        }
-
-        .blob {
-            position: absolute; width: 600px; height: 600px;
-            border-radius: 50%; filter: blur(100px); opacity: 0.3;
-            animation: move 15s infinite alternate;
-        }
-
-        .blob-1 { background: #00ffff; top: -10%; left: -10%; }
-        .blob-2 { background: #1d4ed8; bottom: -10%; right: -10%; animation-delay: -3s; }
-        .blob-3 { background: #a78bfa; top: 30%; left: 20%; animation-delay: -7s; opacity: 0.15; }
-        .blob-4 { background: #ffffff; bottom: 20%; left: 50%; animation-delay: -10s; opacity: 0.1; }
-
-        @keyframes move {
-            from { transform: translate(0, 0) scale(1) rotate(0deg); }
-            to { transform: translate(150px, 80px) scale(1.2) rotate(10deg); }
-        }
-
-        @keyframes pulse-slow {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.9; transform: scale(1.02); }
-        }
-
-        .animate-pulse-slow {
-            animation: pulse-slow 3s infinite ease-in-out;
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05);
+            inset: 0;
+            z-index: 100;
+            background: rgba(15, 23, 42, 0.9);
             backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .progress-circle-container {
-            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-        
-        .progress-ring__circle {
-            transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: rotate(-90deg);
-            transform-origin: 50% 50%;
+            transition: opacity 0.5s ease;
         }
 
-        .carousel-container { perspective: 1000px; }
-        .carousel-track {
-            display: flex;
-            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            transform-style: preserve-3d;
-        }
-        .carousel-set {
-            flex: 0 0 100%;
-            transition: all 0.6s ease;
-            transform: scale(0.9) rotateY(10deg);
-            opacity: 0.5;
-        }
-        .carousel-set.active {
-            transform: scale(1) rotateY(0deg);
-            opacity: 1;
-        }
-
-        .image-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-        }
-        @media (max-width: 640px) { .image-grid { grid-template-columns: repeat(2, 1fr); } }
-        
-        .img-item {
-            aspect-ratio: 1/1;
-            border-radius: 12px;
-            overflow: hidden;
-            cursor: zoom-in;
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: transform 0.2s;
-        }
-        .img-item:hover { transform: scale(1.05); }
-
-        #lightbox {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0, 0, 10, 0.9); backdrop-filter: blur(15px);
-            z-index: 100; justify-content: center; align-items: center; padding: 20px;
-        }
-        
-        .video-thumbnail { aspect-ratio: 16 / 9; object-fit: cover; }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="text-white py-8 md:py-12 px-4 sm:px-6">
+<body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 py-12 px-4">
 
-    <div class="bg-blur-container">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-        <div class="blob blob-4"></div>
+    <div id="passcodeOverlay">
+        <div class="glass-panel p-8 rounded-3xl shadow-2xl w-full max-w-md text-center mx-4 fade-in">
+            <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-800 mb-2">Access Restricted</h2>
+            <p class="text-slate-500 mb-6 text-sm">Please enter the authorized passcode to proceed with the registration.</p>
+            
+            <input type="password" id="passcodeInput" 
+                class="input-field w-full px-4 py-3 rounded-xl mb-4 text-center tracking-widest font-bold" 
+                placeholder="••••••••">
+            
+            <button onclick="verifyPasscode()" 
+                class="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg">
+                Verify & Enter
+            </button>
+            <p id="passcodeError" class="text-red-500 text-xs mt-3 hidden">Invalid passcode. Please contact your administrator.</p>
+        </div>
     </div>
 
-    <div id="lightbox" onclick="closeLightbox()">
-        <span class="absolute top-5 right-8 text-white text-4xl cursor-pointer">&times;</span>
-        <img id="lightbox-img" src="" class="max-w-full max-h-[90vh] rounded-lg shadow-2xl transition-transform duration-300 scale-95 border-4 border-white/20">
-    </div>
-
-    <div class="max-w-5xl mx-auto relative">
-        <div class="text-center mb-10 md:mb-12">
-            <div class="w-24 h-24 bg-white/10 backdrop-blur-sm rounded-full mx-auto mb-4 p-1.5 shadow-lg border border-white/20 overflow-hidden">
-                <img src="CURRIMAO.PNG" alt="Logo" class="w-full h-full object-cover rounded-full">
-            </div>
-            <h1 class="text-3xl md:text-5xl font-black text-white tracking-tight drop-shadow-md">KKDAT II Currimao</h1>
-            <p class="text-blue-100 text-sm mt-1 uppercase tracking-[0.4em] font-bold">Official Social Media Hub</p>
-        </div>
-
-        <div class="mb-6 relative">
-            <h2 class="text-lg font-semibold text-white mb-8 flex items-center gap-3 relative z-10">
-                <span class="h-px flex-1 bg-white/10"></span>
-                2026 Activity Progress Dashboard
-                <span class="h-px flex-1 bg-white/10"></span>
-            </h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch relative z-10">
-                <div class="md:col-span-3 glass-card p-6 rounded-[2.5rem] flex flex-col items-center justify-center text-center">
-                    <p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mb-4">Target Progress</p>
-                    <div class="progress-circle-container relative w-36 h-36">
-                        <svg class="w-full h-full" viewBox="0 0 100 100">
-                            <circle class="text-white/10" stroke-width="8" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50"/>
-                            <circle id="progressCircle" class="text-cyan-400 progress-ring__circle" stroke-width="8" stroke-linecap="round" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50"/>
-                        </svg>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <span id="progressText" class="text-4xl font-black text-white">20%</span>
-                        </div>
+    <div id="mainContent" class="opacity-0 pointer-events-none">
+        <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-white/10">
+            <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <div class="w-10 h-10 sm:w-11 sm:h-11 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center shadow-xl border border-white/20 overflow-hidden p-1">
+                        <img src="CURRIMAO.PNG" alt="Logo" class="w-full h-full object-cover rounded-full">
                     </div>
-                    <p class="mt-4 text-[10px] font-bold text-cyan-200 uppercase">Campaign Success</p>
+                    <span class="text-white font-bold text-sm sm:text-lg tracking-tight truncate">KKDAT II Currimao</span>
                 </div>
-
-                <div class="md:col-span-6 glass-card p-3 rounded-[3rem] overflow-hidden shadow-2xl relative">
-                    <div class="relative group cursor-zoom-in overflow-hidden rounded-[2.5rem] h-full min-h-[300px] border-2 border-white/10">
-                        <img src="assets/PROGRESS.png" onclick="openLightbox(this.src)" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Progress Report">
-                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/90 via-transparent to-transparent flex flex-col justify-end p-8 pointer-events-none">
-                            <h3 class="text-white font-black text-2xl">Project PUSO</h3>
-                            <p class="text-blue-100 text-xs font-medium mt-1">Pagwadan ti Umili Sagut ti Agtutubo</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="md:col-span-3 glass-card p-6 rounded-[2.5rem] flex flex-col items-center justify-center text-center">
-                    <p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mb-4">Outreach Reach</p>
-                    <div class="progress-circle-container relative w-40 h-40">
-                        <svg class="w-full h-full" viewBox="0 0 100 100">
-                            <circle class="text-white/5" stroke-width="4" stroke="currentColor" fill="transparent" r="42" cx="50" cy="50"/>
-                            <circle id="leafletsRing" class="text-sky-300 progress-ring__circle" stroke-width="4" stroke-linecap="round" stroke="currentColor" fill="transparent" r="42" cx="50" cy="50"/>
-                            <circle class="text-white/5" stroke-width="4" stroke="currentColor" fill="transparent" r="34" cx="50" cy="50"/>
-                            <circle id="membersRing" class="text-white progress-ring__circle" stroke-width="4" stroke-linecap="round" stroke="currentColor" fill="transparent" r="34" cx="50" cy="50"/>
-                        </svg>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center">
-                            <div class="flex flex-col items-center translate-y-[-2px]">
-                                <span id="membersVal" class="text-xl font-black text-white leading-none">45</span>
-                                <span class="text-[7px] font-bold text-sky-200 uppercase tracking-tighter">Members</span>
-                            </div>
-                            <div class="w-8 h-px bg-white/10 my-1.5"></div>
-                            <div class="flex flex-col items-center translate-y-[2px]">
-                                <span id="leafletsVal" class="text-xl font-black text-white">93</span>
-                                <span class="text-[7px] font-bold text-sky-200 uppercase tracking-tighter">Leaflets</span>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="mt-4 text-[10px] font-bold text-sky-200 uppercase">Community Impact</p>
+                <div class="flex gap-2 sm:gap-4">
+                    <a href="REGFORM.html" class="text-white bg-white/20 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium hover:bg-white/30 transition-all">Register</a>
+                    <a href="SOCIAL HUB.html" target="_blank" class="text-white/70 hover:text-white px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center gap-1">
+                        Socmed Hub
+                    </a>
                 </div>
             </div>
-        </div>
+        </nav>
 
-        <div class="glass-card mb-20 p-5 rounded-[2.5rem] relative z-10">
-            <div class="flex flex-wrap gap-6 items-center justify-center md:justify-between px-2">
-                <div class="flex flex-col">
-                    <p class="text-[11px] uppercase tracking-[0.2em] font-bold text-blue-100 flex items-center gap-3">
-                        <span class="w-5 h-px bg-blue-300/30"></span>Connect & Join Us<span class="w-5 h-px bg-blue-300/30"></span>
-                    </p>
+        <div class="relative max-w-5xl mx-auto pt-16 sm:pt-24">
+            <div class="text-center mb-10 fade-in px-2">
+                <div class="w-20 h-20 sm:w-24 sm:h-24 bg-white/10 backdrop-blur-md rounded-full mx-auto mb-6 p-1.5 shadow-2xl border border-white/20 overflow-hidden">
+                    <img src="CURRIMAO.PNG" alt="Logo" class="w-full h-full object-cover rounded-full">
                 </div>
                 
-                <div class="flex flex-wrap gap-4 items-center justify-center">
-                    <a href="REGFORM.html" class="flex items-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full font-bold text-xs uppercase tracking-wider transition-all duration-300 hover:scale-105 shadow-lg border border-indigo-400/30 animate-pulse-slow">
-                        <i class="fa-solid fa-user-plus"></i>
-                        Register Now
-                    </a>
-
-                    <div class="hidden md:block w-px h-8 bg-white/10 mx-2"></div>
-
-                    <div class="flex gap-3">
-                        <a href="https://www.facebook.com/yourpage" target="_blank" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-blue-600 hover:scale-110 transition-all duration-300" title="Facebook">
-                            <i class="fa-brands fa-facebook-f text-sm"></i>
-                        </a>
-                        <a href="https://www.youtube.com/@yourchannel" target="_blank" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-red-600 hover:scale-110 transition-all duration-300" title="YouTube">
-                            <i class="fa-brands fa-youtube text-sm"></i>
-                        </a>
-                        <a href="mailto:contact@yourkkdat.org" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-emerald-500 hover:scale-110 transition-all duration-300" title="Gmail">
-                            <i class="fa-solid fa-envelope text-sm"></i>
-                        </a>
-                    </div>
-                </div>
+                <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">KKDAT Registration</h1>
+                <p class="text-indigo-200 text-sm sm:text-base">Data is synchronized with the official KKDAT database</p>
             </div>
-        </div>
 
-        <div class="mb-20">
-            <h2 class="text-xl font-bold text-white mb-8 flex items-center gap-4 drop-shadow-sm">
-                <span class="h-0.5 flex-1 bg-white/20 rounded-full"></span>
-                Event Gallery
-                <span class="h-0.5 flex-1 bg-white/20 rounded-full"></span>
-            </h2>
-
-            <div class="carousel-container relative overflow-hidden">
-                <div id="carouselTrack" class="carousel-track">
-                    <div class="carousel-set active">
-                        <div class="glass-card p-5 rounded-[2.5rem]">
-                            <div class="image-grid">
-                                <div class="img-item"><img src="assets/ELECTION/ELECT1.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/ELECTION/ELECT2.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/ELECTION/ELECT3.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/ELECTION/ELECT4.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/ELECTION/ELECT5.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/ELECTION/ELECT6.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/ELECTION/ELECT7.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/ELECTION/ELECT8.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/ELECTION/ELECT9.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/ELECTION/ELECT10.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+            <div class="glass-panel rounded-3xl shadow-2xl p-6 sm:p-10 fade-in">
+                <form id="registrationForm" class="space-y-6 sm:space-y-8">
+                    <div class="bg-slate-50/50 rounded-2xl p-4 sm:p-6 border border-slate-100">
+                        <h2 class="text-lg sm:text-xl font-semibold text-slate-800 mb-6 flex items-center">
+                            <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center mr-3 text-xs sm:text-sm">1</span>
+                            Personal Information
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Full Name *</label>
+                                <input type="text" id="fullName" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="Juan Dela Cruz">
                             </div>
-                            <div class="mt-6 text-center">
-                                <h4 class="text-white font-extrabold text-xl">ELECTION 2026</h4>
-                                <div class="bg-white/10 text-blue-100 text-xs font-bold inline-block px-4 py-1.5 rounded-full mt-2 shadow-md border border-white/10">MARCH 7, 2026</div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Sex *</label>
+                                <select id="sex" required class="input-field w-full px-4 py-3 rounded-xl bg-white">
+                                    <option value="">Select sex</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Birthday *</label>
+                                <input type="date" id="birthDate" required class="input-field w-full px-4 py-3 rounded-xl">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Age</label>
+                                <input type="number" id="age" readonly class="input-field w-full px-4 py-3 rounded-xl bg-slate-100 font-bold text-indigo-600" placeholder="0">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Civil Status *</label>
+                                <select id="civilStatus" required class="input-field w-full px-4 py-3 rounded-xl bg-white">
+                                    <option value="Single">Single</option>
+                                    <option value="Married">Married</option>
+                                    <option value="Widowed">Widowed</option>
+                                    <option value="Separated">Separated</option>
+                                </select>
                             </div>
                         </div>
                     </div>
-                    <div class="carousel-set">
-                        <div class="glass-card p-5 rounded-[2.5rem]">
-                            <div class="image-grid">
-                                <div class="img-item"><img src="assets/OPLAN KRUS/OK11.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/OPLAN KRUS/OK2.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/OPLAN KRUS/OK3.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/OPLAN KRUS/OK4.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/OPLAN KRUS/OK5.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/OPLAN KRUS/OK6.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/OPLAN KRUS/OK7.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/OPLAN KRUS/OK8.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/OPLAN KRUS/OK9.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/OPLAN KRUS/OK10.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
+
+                    <div class="bg-slate-50/50 rounded-2xl p-4 sm:p-6 border border-slate-100">
+                        <h2 class="text-lg sm:text-xl font-semibold text-slate-800 mb-6 flex items-center">
+                            <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-purple-600 text-white flex items-center justify-center mr-3 text-xs sm:text-sm">2</span>
+                            Contact & Address
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Complete Address *</label>
+                                <textarea id="address" required rows="2" class="input-field w-full px-4 py-3 rounded-xl" placeholder="Poblacion, Currimao, Ilocos Norte"></textarea>
                             </div>
-                            <div class="mt-6 text-center">
-                                <h4 class="text-white font-extrabold text-xl">OPLAN KRUS - Leaflets Distribution</h4>
-                                <div class="bg-white/10 text-blue-100 text-xs font-bold inline-block px-4 py-1.5 rounded-full mt-2 shadow-md border border-white/10">APRIL 4, 2026</div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Email Address *</label>
+                                <input type="email" id="email" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="juan@example.com">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Mobile Number *</label>
+                                <input type="tel" id="mobileNumber" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="09123456789">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Facebook Profile Link</label>
+                                <input type="text" id="facebook" class="input-field w-full px-4 py-3 rounded-xl" placeholder="facebook.com/username">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Emergency Contact (Name - Number) *</label>
+                                <input type="text" id="contactPerson" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="Maria Dela Cruz - 09123456789">
                             </div>
                         </div>
                     </div>
-                    <div class="carousel-set">
-                        <div class="glass-card p-5 rounded-[2.5rem]">
-                            <div class="image-grid">
-                                <div class="img-item"><img src="assets/OPLAN KRUS/OK11.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/OPLAN KRUS/OK12.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/OPLAN KRUS/OK13.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/OPLAN KRUS/OK14.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/OPLAN KRUS/OK15.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/OPLAN KRUS/OK16.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/OPLAN KRUS/OK17.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/OPLAN KRUS/OK18.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/OPLAN KRUS/OK19.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                                <div class="img-item"><img src="assets/OPLAN KRUS/OK20.jpg" onclick="openLightbox(this.src)" class="w-full h-full object-cover"></div>
-                            </div>
-                            <div class="mt-6 text-center">
-                                <h4 class="text-white font-extrabold text-xl">OPLAN KRUS - Coastal Clean-Up</h4>
-                                <div class="bg-white/10 text-blue-100 text-xs font-bold inline-block px-4 py-1.5 rounded-full mt-2 shadow-md border border-white/10">APRIL 4, 2026</div>
-                            </div>
+
+                    <div class="bg-slate-50/50 rounded-2xl p-4 sm:p-6 border border-slate-100">
+                        <h2 class="text-lg sm:text-xl font-semibold text-slate-800 mb-4 flex items-center">
+                            <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center mr-3 text-xs sm:text-sm">3</span>
+                            Data Privacy Consent
+                        </h2>
+                        <div class="text-sm text-slate-600 space-y-3 mb-6 bg-white/50 p-4 rounded-xl border border-slate-200">
+                            <p>In compliance with the <strong>Data Privacy Act of 2012</strong>, by clicking "Register Member", I hereby authorize KKDAT II Currimao to collect, process, and store my personal information for the purpose of membership records and official organizational activities.</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <input type="checkbox" id="privacyConsent" required class="mt-1 w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                            <label for="privacyConsent" class="text-sm text-slate-700 cursor-pointer select-none">
+                                I have read and agree to the Data Privacy terms and conditions. *
+                            </label>
                         </div>
                     </div>
-                </div>
 
-                <button onclick="moveCarousel(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-blue-950/40 hover:bg-blue-900/60 backdrop-blur-sm p-4 rounded-full z-10 border border-white/10 transition-all shadow-lg text-white hover:scale-110">
-                    <i class="fa-solid fa-chevron-left fa-lg"></i>
-                </button>
-                <button onclick="moveCarousel(1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-blue-950/40 hover:bg-blue-900/60 backdrop-blur-sm p-4 rounded-full z-10 border border-white/10 transition-all shadow-lg text-white hover:scale-110">
-                    <i class="fa-solid fa-chevron-right fa-lg"></i>
-                </button>
+                    <div class="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 pt-4">
+                        <button type="reset" class="w-full sm:w-auto px-8 py-4 bg-slate-200 text-slate-700 rounded-2xl font-bold hover:bg-slate-300 transition-all">Clear Form</button>
+                        <button type="submit" id="submitBtn" class="w-full sm:w-auto px-10 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-bold hover:shadow-lg transition-all">Register Member</button>
+                    </div>
+                </form>
             </div>
         </div>
-
-        <div class="space-y-6 relative pb-20">
-             <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-sky-400 rounded-full blur-3xl opacity-30"></div>
-             <h2 class="text-xl font-bold text-white px-2 flex items-center gap-4 drop-shadow-sm relative z-10">
-                <span class="h-0.5 flex-1 bg-white/20 rounded-full"></span> Latest Content <span class="h-0.5 flex-1 bg-white/20 rounded-full"></span>
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
-                <a href="https://www.facebook.com/reel/2106853370157580" target="_blank" class="glass-card block rounded-[2.5rem] overflow-hidden group shadow-xl hover:-translate-y-2 transition-transform duration-300">
-                    <img src="assets/SEMANA SANTA.jpg" class="video-thumbnail w-full transition-transform duration-500 group-hover:scale-105">
-                    <div class="p-6 bg-white/5 flex items-center justify-between">
-                        <h3 class="font-extrabold text-white text-lg group-hover:text-cyan-200 transition-colors">Ligtas SUMVAC 2026</h3>
-                        <i class="fa-brands fa-facebook text-2xl opacity-50 group-hover:opacity-100 transition-opacity"></i>
-                    </div>
-                </a>
-                <a href="https://youtube.com/watch?v=3JZ_D3ELwOQ" target="_blank" class="glass-card block rounded-[2.5rem] overflow-hidden group shadow-xl hover:-translate-y-2 transition-transform duration-300">
-                    <img src="https://img.youtube.com/vi/3JZ_D3ELwOQ/maxresdefault.jpg" class="video-thumbnail w-full transition-transform duration-500 group-hover:scale-105">
-                    <div class="p-6 bg-white/5 flex items-center justify-between">
-                        <h3 class="font-extrabold text-white text-lg group-hover:text-cyan-200 transition-colors">Anniversary Highlights</h3>
-                        <i class="fa-brands fa-youtube text-2xl opacity-50 group-hover:opacity-100 transition-opacity text-red-500"></i>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-        <footer class="text-center py-12 opacity-60 relative z-10">
-            <p class="text-[10px] uppercase tracking-[0.4em] font-bold text-white">KKDAT II Currimao • Ilocos Norte</p>
-        </footer>
     </div>
 
     <script>
-        // --- 1. Progress Rings Logic ---
-        function updateAllProgress() {
-            const mainCircle = document.getElementById('progressCircle');
-            const mainPercent = parseInt(document.getElementById('progressText').innerText);
-            applyProgress(mainCircle, mainPercent, 40);
+        // --- PASSCODE CONFIGURATION ---
+        const CORRECT_PASSCODE = "KKDAT2024"; // Update this passcode here
+        
+        function verifyPasscode() {
+            const input = document.getElementById('passcodeInput').value;
+            const errorMsg = document.getElementById('passcodeError');
+            const overlay = document.getElementById('passcodeOverlay');
+            const content = document.getElementById('mainContent');
 
-            const membersRing = document.getElementById('membersRing');
-            const membersCount = parseInt(document.getElementById('membersVal').innerText);
-            const membersPercent = Math.min((membersCount / 300) * 100, 100);
-            applyProgress(membersRing, membersPercent, 34);
-
-            const leafletsRing = document.getElementById('leafletsRing');
-            const leafletsCount = parseInt(document.getElementById('leafletsVal').innerText);
-            const leafletsPercent = Math.min((leafletsCount / 3000) * 100, 100);
-            applyProgress(leafletsRing, leafletsPercent, 42);
+            if (input === CORRECT_PASSCODE) {
+                // Correct: Hide overlay and show content
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    content.classList.remove('opacity-0', 'pointer-events-none');
+                    content.classList.add('fade-in');
+                }, 500);
+            } else {
+                // Incorrect: Show error and shake input
+                errorMsg.classList.remove('hidden');
+                const inputEl = document.getElementById('passcodeInput');
+                inputEl.classList.add('border-red-500');
+                inputEl.value = "";
+            }
         }
 
-        function applyProgress(circle, percent, radius) {
-            const circumference = 2 * Math.PI * radius;
-            circle.style.strokeDasharray = `${circumference} ${circumference}`;
-            const offset = circumference - (percent / 100 * circumference);
-            circle.style.strokeDashoffset = circumference;
-            setTimeout(() => { circle.style.strokeDashoffset = offset; }, 100);
-        }
+        // Allow pressing "Enter" key on passcode input
+        document.getElementById('passcodeInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') verifyPasscode();
+        });
 
-        // --- 2. Carousel Logic ---
-        let currentIdx = 0;
-        const track = document.getElementById('carouselTrack');
-        const sets = document.querySelectorAll('.carousel-set');
+        // --- ORIGINAL REGISTRATION SCRIPT ---
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymx5klDjX_yTn59_VVzE1nOA8dEHUlFPfQD3FfJDR1ZRp62k0Wx-_2Ph-4zLTYCho5/exec";
 
-        function moveCarousel(dir) {
-            currentIdx = (currentIdx + dir + sets.length) % sets.length;
-            track.style.transform = `translateX(-${currentIdx * 100}%)`;
-            sets.forEach((s, i) => {
-                i === currentIdx ? s.classList.add('active') : s.classList.remove('active');
+        document.getElementById('birthDate').addEventListener('change', (e) => {
+            const birthDate = new Date(e.target.value);
+            const today = new Date();
+            if (isNaN(birthDate.getTime())) return;
+
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+            document.getElementById('age').value = age >= 0 ? age : 0;
+        });
+
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Registering...";
+            
+            const memberData = {
+                fullName: document.getElementById('fullName').value,
+                sex: document.getElementById('sex').value,
+                birthDate: document.getElementById('birthDate').value,
+                age: document.getElementById('age').value,
+                civilStatus: document.getElementById('civilStatus').value,
+                address: document.getElementById('address').value,
+                email: document.getElementById('email').value,
+                mobileNumber: document.getElementById('mobileNumber').value,
+                facebook: document.getElementById('facebook').value,
+                contactPerson: document.getElementById('contactPerson').value,
+                dateRegistered: new Date().toLocaleString()
+            };
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', 
+                cache: 'no-cache',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(memberData)
+            })
+            .then(() => {
+                alert('Success! Member added to the Google Sheet.');
+                document.getElementById('registrationForm').reset();
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Register Member";
+            })
+            .catch((error) => {
+                alert('Error: ' + error.message);
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Register Member";
             });
-        }
-
-        // --- 3. Lightbox Logic ---
-        function openLightbox(src) {
-            const lb = document.getElementById('lightbox');
-            const lbImg = document.getElementById('lightbox-img');
-            lbImg.src = src;
-            lb.style.display = 'flex';
-            setTimeout(() => { lbImg.style.transform = 'scale(1)'; }, 10);
-        }
-
-        function closeLightbox() {
-            const lb = document.getElementById('lightbox');
-            const lbImg = document.getElementById('lightbox-img');
-            lbImg.style.transform = 'scale(0.95)';
-            setTimeout(() => { lb.style.display = 'none'; }, 200);
-        }
-
-        window.onload = updateAllProgress;
+        });
     </script>
 </body>
 </html>
