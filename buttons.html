@@ -114,12 +114,24 @@
         let allMembers = [];
         let isDeleting = false;
 
-        // Shared Date Formatter
+        // Shared Date Formatter for both Registration and Birthday
         function formatSafeDate(val) {
             if (!val || val === '---' || val === '') return '---';
+            
+            // Try to parse the date
             const date = new Date(val);
-            if (isNaN(date.getTime())) return val;
-            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            
+            // If the date is valid, return the formatted version
+            if (!isNaN(date.getTime())) {
+                return date.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric', 
+                    year: 'numeric' 
+                });
+            }
+            
+            // If it's already a text string from the sheet, return as is
+            return val;
         }
 
         function formatFBLink(input) {
