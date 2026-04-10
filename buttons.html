@@ -39,7 +39,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.5s ease;
         }
 
         .fade-in { animation: fadeIn 0.5s ease-in forwards; }
@@ -56,11 +55,11 @@
                 </svg>
             </div>
             <h2 class="text-2xl font-bold text-slate-800 mb-2">Secure Access</h2>
-            <p class="text-slate-500 mb-6 text-sm">Enter the authorized daily passcode to proceed.</p>
+            <p class="text-slate-500 mb-6 text-sm">Enter the authorized passcode to proceed.</p>
             
             <input type="password" id="passcodeInput" 
                 class="input-field w-full px-4 py-3 rounded-xl mb-4 text-center tracking-widest font-bold text-xl" 
-                placeholder="Passcode Sign">
+                placeholder="••••••••">
             
             <button onclick="verifyPasscode()" 
                 class="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg">
@@ -78,6 +77,9 @@
                         <img src="CURRIMAO.PNG" alt="Logo" class="w-full h-full object-cover rounded-full">
                     </div>
                     <span class="text-white font-bold text-sm sm:text-lg tracking-tight">KKDAT II Currimao</span>
+                </div>
+                <div class="flex gap-2">
+                    <a href="SOCIAL HUB.html" target="_blank" class="text-white/70 hover:text-white px-3 py-2 text-xs sm:text-sm font-medium transition-colors">Socmed Hub</a>
                 </div>
             </div>
         </nav>
@@ -150,9 +152,9 @@
                             Data Privacy
                         </h2>
                         <div class="flex items-start gap-3">
-                            <input type="checkbox" id="privacyConsent" required class="mt-1 w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                            <input type="checkbox" id="privacyConsent" required class="mt-1 w-5 h-5 rounded border-slate-300 text-indigo-600 cursor-pointer">
                             <label for="privacyConsent" class="text-sm text-slate-700 cursor-pointer select-none">
-                                I authorize KKDAT II Currimao to process my data for official membership purposes.
+                                I authorize KKDAT II Currimao to process my data for official membership purposes in compliance with the Data Privacy Act of 2012.
                             </label>
                         </div>
                     </div>
@@ -183,7 +185,7 @@
             const content = document.getElementById('mainContent');
             
             if (input === getTodayPasscode()) {
-                overlay.style.opacity = '0';
+                overlay.classList.add('opacity-0');
                 setTimeout(() => {
                     overlay.style.display = 'none';
                     content.classList.remove('opacity-0', 'pointer-events-none');
@@ -197,7 +199,7 @@
 
         document.getElementById('passcodeInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') verifyPasscode(); });
 
-        // 2. REGISTRATION & REDIRECTION LOGIC
+        // 2. REGISTRATION & AGE CALCULATION LOGIC
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymx5klDjX_yTn59_VVzE1nOA8dEHUlFPfQD3FfJDR1ZRp62k0Wx-_2Ph-4zLTYCho5/exec";
 
         document.getElementById('birthDate').addEventListener('change', (e) => {
