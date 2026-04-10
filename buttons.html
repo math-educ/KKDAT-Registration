@@ -55,7 +55,7 @@
                 </svg>
             </div>
             <h2 class="text-2xl font-bold text-slate-800 mb-2">Secure Access</h2>
-            <p class="text-slate-500 mb-6 text-sm">Enter the authorized passcode to proceed.</p>
+            <p class="text-slate-500 mb-6 text-sm">Enter the authorized daily passcode to proceed.</p>
             
             <input type="password" id="passcodeInput" 
                 class="input-field w-full px-4 py-3 rounded-xl mb-4 text-center tracking-widest font-bold text-xl" 
@@ -236,8 +236,7 @@
             })
             .then(() => {
                 alert('Success! Registration completed.');
-                // REDIRECT TO SOCIAL HUB
-                window.location.href = "SOCIAL HUB.html";
+                location.reload(); // Reloads to reset and lock the form again
             })
             .catch(() => {
                 alert('Registration failed. Please try again.');
