@@ -32,7 +32,6 @@
         .fade-in { animation: fadeIn 0.5s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Passcode Overlay Styles */
         #passcodeOverlay {
             position: fixed;
             inset: 0;
@@ -56,10 +55,10 @@
                 </svg>
             </div>
             <h2 class="text-2xl font-bold text-slate-800 mb-2">Access Protected</h2>
-            <p class="text-slate-500 text-sm mb-6">Please enter the registration passcode to proceed.</p>
-            <input type="password" id="passcodeInput" class="input-field w-full px-4 py-3 rounded-xl mb-4 text-center tracking-widest font-bold" placeholder="••••••">
+            <p class="text-slate-500 text-sm mb-6">Enter today's passcode (MMDDYYYY)</p>
+            <input type="password" id="passcodeInput" class="input-field w-full px-4 py-3 rounded-xl mb-4 text-center tracking-widest font-bold" placeholder="••••••••">
             <button onclick="checkPasscode()" class="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all">Verify Access</button>
-            <p id="passcodeError" class="text-red-500 text-xs mt-3 hidden">Invalid daily passcode. Please try again.</p>
+            <p id="passcodeError" class="text-red-500 text-xs mt-3 hidden">Invalid daily passcode.</p>
         </div>
     </div>
 
@@ -164,12 +163,11 @@
                         </h2>
                         <div class="text-sm text-slate-600 space-y-3 mb-6 bg-white/50 p-4 rounded-xl border border-slate-200">
                             <p>In compliance with the <strong>Data Privacy Act of 2012</strong>, by clicking "Register Member", I hereby authorize KKDAT II Currimao to collect, process, and store my personal information for the purpose of membership records and official organizational activities.</p>
-                            <p>I understand that my information will be handled with strict confidentiality and will not be shared with third parties without my explicit consent.</p>
                         </div>
                         <div class="flex items-start gap-3">
                             <input type="checkbox" id="privacyConsent" required class="mt-1 w-5 h-5 rounded border-slate-300 text-indigo-600 cursor-pointer">
                             <label for="privacyConsent" class="text-sm text-slate-700 cursor-pointer select-none">
-                                I have read and agree to the Data Privacy terms and conditions. *
+                                I have read and agree to the terms. *
                             </label>
                         </div>
                     </div>
@@ -184,15 +182,14 @@
     </div>
 
     <script>
-        // --- PASSCODE LOGIC ---
+        // --- UPDATED PASSCODE LOGIC (MMDDYYYY) ---
         function getDailyPasscode() {
             const now = new Date();
             const year = now.getFullYear();
-            const month = now.getMonth() + 1;
-            const day = now.getDate();
-            // This formula creates a unique number for each day (e.g., April 10, 2026 = 20261004)
-            // You can change this formula to anything you like.
-            return (year * 10000 + month * 100 + day).toString();
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const day = now.getDate().toString().padStart(2, '0');
+            
+            return month + day + year; // Returns MMDDYYYY
         }
 
         function checkPasscode() {
@@ -210,12 +207,11 @@
             }
         }
 
-        // Support "Enter" key for passcode
-        document.getElementById('passcodeInput').addEventListener('keypress', function (e) {
+        document.getElementById('passcodeInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') checkPasscode();
         });
 
-        // --- ORIGINAL REGISTRATION LOGIC ---
+        // --- REGISTRATION LOGIC ---
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymx5klDjX_yTn59_VVzE1nOA8dEHUlFPfQD3FfJDR1ZRp62k0Wx-_2Ph-4zLTYCho5/exec";
 
         document.getElementById('birthDate').addEventListener('change', (e) => {
