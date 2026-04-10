@@ -91,9 +91,10 @@
 
         <div class="glass-panel rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border border-white/10">
             <div class="overflow-x-auto table-container">
-                <table class="w-full text-left border-collapse min-w-[900px]">
+                <table class="w-full text-left border-collapse min-w-[1000px]">
                     <thead>
                         <tr class="bg-slate-50 border-b border-slate-200">
+                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Registration Date</th>
                             <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Name & Sex</th>
                             <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Birth & Age</th>
                             <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Contact Info</th>
@@ -105,7 +106,7 @@
                     </thead>
                     <tbody id="tableBody" class="divide-y divide-slate-100 bg-white">
                         <tr>
-                            <td colspan="7" class="px-6 py-20 text-center">
+                            <td colspan="8" class="px-6 py-20 text-center">
                                 <p class="text-slate-500 animate-pulse text-lg font-medium">Fetching data from KKDAT database...</p>
                             </td>
                         </tr>
@@ -128,15 +129,26 @@
             return `https://facebook.com/${cleanInput.replace('@', '')}`;
         }
 
-        async function fetchData() {
-            // Prevent auto-refresh from interrupting a deletion
-            if (isDeleting) return;
+        // Helper function to format Google Sheet Timestamp
+        function formatDate(timestamp) {
+            if (!timestamp || timestamp === '---') return '---';
+            try {
+                const date = new Date(timestamp);
+                return date.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric', 
+                    year: 'numeric' 
+                });
+            } catch (e) {
+                return timestamp;
+            }
+        }
 
+        async function fetchData() {
+            if (isDeleting) return;
             try {
                 const response = await fetch(SCRIPT_URL);
                 allMembers = await response.json();
-                
-                // Only render if search bar is empty to prevent interrupting user typing
                 const query = document.getElementById('searchInput').value;
                 if (!query) {
                     renderTable(allMembers);
@@ -149,14 +161,11 @@
         function renderTable(data) {
             const tbody = document.getElementById('tableBody');
             const countDisplay = document.getElementById('memberCount');
-            
-            // Update the member count badge
             countDisplay.innerText = data ? data.length : 0;
-
             tbody.innerHTML = '';
             
             if (!data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-20 text-center text-slate-400 text-lg font-medium">No records found.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-20 text-center text-slate-400 text-lg font-medium">No records found.</td></tr>';
                 return;
             }
 
@@ -168,6 +177,9 @@
 
                 const row = `
                     <tr class="hover:bg-slate-50 transition-colors text-xs sm:text-sm">
+                        <td class="px-4 py-4">
+                            <div class="text-indigo-600 font-bold text-[11px]">${formatDate(m.timestamp)}</div>
+                        </td>
                         <td class="px-4 py-4">
                             <div class="font-bold text-slate-800 uppercase">${m.fullName || '---'}</div>
                             <div class="text-[9px] text-slate-400 uppercase font-bold">${m.sex || '---'} | ${m.civilStatus || 'Single'}</div>
@@ -212,7 +224,7 @@
         async function deleteMember(rowId) {
             if (!confirm("Delete this entry permanently?")) return;
             isDeleting = true;
-            document.getElementById('tableBody').innerHTML = '<tr><td colspan="7" class="text-center py-10 font-bold text-red-500 animate-pulse">Deleting from Sheet...</td></tr>';
+            document.getElementById('tableBody').innerHTML = '<tr><td colspan="8" class="text-center py-10 font-bold text-red-500 animate-pulse">Deleting from Sheet...</td></tr>';
             try {
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
@@ -231,10 +243,7 @@
             }
         }
 
-        // INITIAL FETCH
         fetchData();
-
-        // AUTO-REFRESH EVERY 5 SECONDS (5000ms)
         setInterval(fetchData, 5000);
     </script>
 </body>
