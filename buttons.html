@@ -7,7 +7,8 @@
     <link rel="icon" type="image/png" href="CURRIMAO.PNG">
     <script>
         const ACCESS_PASSWORD = "Admin123";
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxZkFJL-fsBU8jLkAtLC0NP6dGiXLPWOJ9L6qFz3GnOGvrYN53iAES_PCrLw7Xy2BdN/exec";
+        // PASTE YOUR NEW DEPLOYMENT URL HERE:
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyXUP8T2tS_gK-sPDmnbjzid3hBXEuwrixoQygG8HXv91d1-QP58372a0hAXFG6uN8/exec";
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/1NFPsNXgObQUxNmPQkmzl_OSJGVwFvSF7pVlZxp1ASoQ/edit?usp=sharing";
 
         function checkAccess() {
@@ -45,17 +46,13 @@
                     <img src="CURRIMAO.PNG" alt="Logo" class="w-full h-full object-cover">
                 </div>
                 <div class="flex flex-col">
-                    <span class="text-white font-bold text-sm sm:text-lg truncate max-w-[120px] sm:max-w-none">KKDAT II Currimao Registry</span>
+                    <span class="text-white font-bold text-sm sm:text-lg truncate">KKDAT II Currimao</span>
                     <span id="liveStatus" class="text-[8px] text-emerald-400 font-bold uppercase tracking-widest animate-pulse">● Live Syncing</span>
                 </div>
             </div>
             <div class="flex gap-2 sm:gap-4">
                 <button onclick="fetchData()" class="text-indigo-300 hover:text-white text-xs font-medium transition-colors">Refresh</button>
-                <a href="javascript:void(0)" onclick="window.open(SHEET_URL, '_blank')" class="text-white bg-emerald-600 hover:bg-emerald-700 px-3 py-1 rounded text-xs font-medium flex items-center gap-2">
-                    <span class="hidden md:inline">View Sheets</span>
-                    <span class="md:hidden">Sheet</span>
-                </a>
-                <a href="REGFORM.html" class="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium">Add</a>
+                <a href="REGFORM.html" class="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium">Add New</a>
             </div>
         </div>
     </nav>
@@ -63,47 +60,36 @@
     <div class="relative max-w-[98%] mx-auto pt-24 px-2 sm:px-4">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4 px-2">
             <div>
-                <h1 class="text-2xl sm:text-3xl font-bold text-white uppercase tracking-tight">KKDAT II Currimao Member Database</h1>
-                <p class="text-indigo-200 text-xs sm:text-sm">Official Records - Synchronized with KKDAT database</p>
+                <h1 class="text-2xl sm:text-3xl font-bold text-white uppercase tracking-tight">Member Database</h1>
+                <p class="text-indigo-200 text-xs sm:text-sm">Official Records • KKDAT II Currimao</p>
             </div>
-            
             <div class="flex items-center gap-3 w-full md:w-auto no-print">
-                <div class="bg-white/10 border border-white/20 rounded-xl px-4 py-2 sm:py-3 flex flex-col justify-center min-w-[100px] shadow-lg">
-                    <span class="text-[10px] text-indigo-300 uppercase font-bold leading-none">Total Members</span>
+                <div class="bg-white/10 border border-white/20 rounded-xl px-4 py-2 flex flex-col justify-center min-w-[100px]">
+                    <span class="text-[10px] text-indigo-300 uppercase font-bold">Total</span>
                     <span id="memberCount" class="text-white text-lg font-bold">0</span>
                 </div>
-
-                <div class="relative w-full md:w-80">
-                    <input type="text" id="searchInput" placeholder="Search members..." 
-                        class="pl-10 pr-4 py-2 sm:py-3 rounded-xl w-full outline-none border-none shadow-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm" 
-                        onkeyup="filterTable()">
-                    <span class="absolute left-3 top-2.5 sm:top-3.5 text-slate-400">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="2"></path></svg>
-                    </span>
-                </div>
+                <input type="text" id="searchInput" placeholder="Search members..." 
+                    class="rounded-xl w-full md:w-64 px-4 py-2 outline-none text-sm" onkeyup="filterTable()">
             </div>
         </div>
 
-        <div class="glass-panel rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border border-white/10">
+        <div class="glass-panel rounded-2xl shadow-2xl overflow-hidden border border-white/10">
             <div class="overflow-x-auto table-container">
                 <table class="w-full text-left border-collapse min-w-[1000px]">
                     <thead>
                         <tr class="bg-slate-50 border-b border-slate-200">
-                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Registered</th>
-                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Name & Sex</th>
-                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Birth & Age</th>
-                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Contact Info</th>
-                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Address</th>
-                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Social Media</th>
-                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Emergency</th>
-                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase text-center del-col">Del</th>
+                            <th class="px-4 py-4 text-[10px] font-bold text-slate-500 uppercase">Registration Date</th>
+                            <th class="px-4 py-4 text-[10px] font-bold text-slate-500 uppercase">Name & Sex</th>
+                            <th class="px-4 py-4 text-[10px] font-bold text-slate-500 uppercase">Birth & Age</th>
+                            <th class="px-4 py-4 text-[10px] font-bold text-slate-500 uppercase">Contact Info</th>
+                            <th class="px-4 py-4 text-[10px] font-bold text-slate-500 uppercase">Address</th>
+                            <th class="px-4 py-4 text-[10px] font-bold text-slate-500 uppercase">Social Media</th>
+                            <th class="px-4 py-4 text-[10px] font-bold text-slate-500 uppercase text-center del-col">Action</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody" class="divide-y divide-slate-100 bg-white">
                         <tr>
-                            <td colspan="8" class="px-6 py-20 text-center">
-                                <p class="text-slate-500 animate-pulse text-lg font-medium">Fetching data from KKDAT database...</p>
-                            </td>
+                            <td colspan="7" class="px-6 py-20 text-center text-slate-500 animate-pulse">Connecting to Database...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -116,24 +102,10 @@
         let isDeleting = false;
 
         function formatSafeDate(val) {
-            if (!val || val === '---' || val === '') return '---';
+            if (!val || val === '---') return '---';
             const date = new Date(val);
-            if (!isNaN(date.getTime())) {
-                return date.toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric', 
-                    year: 'numeric' 
-                });
-            }
-            return val;
-        }
-
-        function formatFBLink(input) {
-            if (!input || input === '---' || input === 'No FB') return null;
-            let cleanInput = input.trim();
-            if (cleanInput.startsWith('http')) return cleanInput;
-            if (cleanInput.startsWith('facebook.com')) return `https://${cleanInput}`;
-            return `https://facebook.com/${cleanInput.replace('@', '')}`;
+            return !isNaN(date.getTime()) ? 
+                date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : val;
         }
 
         async function fetchData() {
@@ -141,59 +113,46 @@
             try {
                 const response = await fetch(SCRIPT_URL);
                 allMembers = await response.json();
-                const query = document.getElementById('searchInput').value;
-                if (!query) renderTable(allMembers);
-            } catch (error) {
-                console.error("Fetch Error:", error);
-            }
+                renderTable(allMembers);
+            } catch (error) { console.error("Fetch Error:", error); }
         }
 
         function renderTable(data) {
             const tbody = document.getElementById('tableBody');
-            const countDisplay = document.getElementById('memberCount');
-            countDisplay.innerText = data ? data.length : 0;
+            document.getElementById('memberCount').innerText = data.length;
             tbody.innerHTML = '';
             
-            if (!data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-20 text-center text-slate-400 text-lg font-medium">No records found.</td></tr>';
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-20 text-center text-slate-400">No records found.</td></tr>';
                 return;
             }
 
             data.forEach(m => {
-                const fbUrl = formatFBLink(m.facebook);
-                const fbDisplay = fbUrl ? 
-                    `<a href="${fbUrl}" target="_blank" class="text-blue-600 font-medium hover:underline">View FB</a>` : 
-                    '<span class="text-slate-400 text-xs italic">None</span>';
-
-                // Check both potential key names for the registration date
-                const rawRegDate = m.timestamp || m.registrationDate || '---';
-
+                const fbUrl = (m.facebook && m.facebook !== '---') ? (m.facebook.startsWith('http') ? m.facebook : `https://facebook.com/${m.facebook}`) : null;
+                
                 const row = `
-                    <tr class="hover:bg-slate-50 transition-colors text-xs sm:text-sm">
-                        <td class="px-4 py-4 text-indigo-600 font-bold text-[10px] uppercase">
-                            ${formatSafeDate(rawRegDate)}
+                    <tr class="hover:bg-slate-50 transition-colors text-xs">
+                        <td class="px-4 py-4 text-indigo-600 font-bold uppercase">
+                            ${formatSafeDate(m.registrationDate)}
                         </td>
                         <td class="px-4 py-4">
                             <div class="font-bold text-slate-800 uppercase">${m.fullName || '---'}</div>
-                            <div class="text-[9px] text-slate-400 uppercase font-bold">${m.sex || '---'} | ${m.civilStatus || 'Single'}</div>
+                            <div class="text-[9px] text-slate-400 uppercase font-bold">${m.sex || '---'} | ${m.civilStatus || '---'}</div>
                         </td>
                         <td class="px-4 py-4">
-                            <div class="text-slate-600 text-[11px]">${formatSafeDate(m.birthDate)}</div>
+                            <div class="text-slate-600">${formatSafeDate(m.birthDate)}</div>
                             <span class="text-[9px] font-bold px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-full">${m.age || '0'} YRS</span>
                         </td>
                         <td class="px-4 py-4">
-                            <div class="text-slate-800 font-medium text-[11px]">${m.mobileNumber || 'No Phone'}</div>
-                            <div class="text-slate-500 text-[10px] truncate max-w-[120px]">${m.email || 'No Email'}</div>
+                            <div class="text-slate-800 font-medium">${m.mobileNumber || '---'}</div>
+                            <div class="text-slate-400 text-[10px]">${m.email || ''}</div>
                         </td>
+                        <td class="px-4 py-4 uppercase text-slate-600 max-w-[150px] truncate">${m.address || '---'}</td>
                         <td class="px-4 py-4">
-                            <div class="max-w-[180px] text-slate-600 text-[11px] line-clamp-2 uppercase">${m.address || '---'}</div>
-                        </td>
-                        <td class="px-4 py-4">${fbDisplay}</td>
-                        <td class="px-4 py-4">
-                            <div class="text-slate-700 font-semibold text-[11px]">${m.contactPerson || '---'}</div>
+                            ${fbUrl ? `<a href="${fbUrl}" target="_blank" class="text-blue-600 font-bold hover:underline">View FB</a>` : '<span class="text-slate-300">N/A</span>'}
                         </td>
                         <td class="px-4 py-4 text-center del-col">
-                            <button onclick="deleteMember(${m.rowId})" class="text-slate-300 hover:text-red-500 transition-colors no-print p-2">
+                            <button onclick="deleteMember(${m.rowId})" class="text-slate-300 hover:text-red-500 transition-colors">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                             </button>
                         </td>
@@ -204,32 +163,21 @@
 
         function filterTable() {
             const query = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = allMembers.filter(m => 
-                (m.fullName && m.fullName.toLowerCase().includes(query)) || 
-                (m.address && m.address.toLowerCase().includes(query)) ||
-                (m.email && m.email.toLowerCase().includes(query))
-            );
+            const filtered = allMembers.filter(m => (m.fullName || '').toLowerCase().includes(query));
             renderTable(filtered);
         }
 
         async function deleteMember(rowId) {
-            if (!confirm("Delete this entry permanently?")) return;
+            if (!confirm("Delete member?")) return;
             isDeleting = true;
             try {
-                await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify({ action: 'delete', rowId: rowId })
-                });
+                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', rowId: rowId }) });
                 setTimeout(() => { isDeleting = false; fetchData(); }, 2000);
-            } catch (error) {
-                isDeleting = false;
-                fetchData();
-            }
+            } catch (e) { isDeleting = false; fetchData(); }
         }
 
         fetchData();
-        setInterval(fetchData, 5000);
+        setInterval(fetchData, 10000); // Auto-refresh every 10 seconds
     </script>
 </body>
 </html>
