@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="CURRIMAO.PNG">
     <script>
         const ACCESS_PASSWORD = "Admin123";
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwI23CVdO9Z8VtXP-ftxp2pKTZmIQwHpGzCel3r-WdCqVEwoIjRP2FndVhcTmpBwbAb/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxZkFJL-fsBU8jLkAtLC0NP6dGiXLPWOJ9L6qFz3GnOGvrYN53iAES_PCrLw7Xy2BdN/exec";
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/1NFPsNXgObQUxNmPQkmzl_OSJGVwFvSF7pVlZxp1ASoQ/edit?usp=sharing";
 
         function checkAccess() {
@@ -124,6 +124,7 @@
             return `https://facebook.com/${cleanInput.replace('@', '')}`;
         }
 
+        // Unified date formatter for Registration and Birthday
         function formatTimestamp(ts) {
             if (!ts || ts === '---') return '---';
             const date = new Date(ts);
@@ -167,7 +168,7 @@
                             <div class="text-[9px] text-slate-400 uppercase font-bold">${m.sex || '---'} | ${m.civilStatus || 'Single'}</div>
                         </td>
                         <td class="px-4 py-4">
-                            <div class="text-slate-600 text-[11px]">${m.birthDate || '---'}</div>
+                            <div class="text-slate-600 text-[11px]">${formatTimestamp(m.birthDate) || '---'}</div>
                             <span class="text-[9px] font-bold px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-full">${m.age || '0'} YRS</span>
                         </td>
                         <td class="px-4 py-4">
