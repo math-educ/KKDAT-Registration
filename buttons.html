@@ -64,11 +64,11 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4 px-2">
             <div>
                 <h1 class="text-2xl sm:text-3xl font-bold text-white uppercase tracking-tight">KKDAT II Currimao Member Database</h1>
-                <p class="text-indigo-200 text-xs sm:text-sm">Official Records - Live Database</p>
+                <p class="text-indigo-200 text-xs sm:text-sm">Official Records - Synchronized with KKDAT database</p>
             </div>
             
             <div class="flex items-center gap-3 w-full md:w-auto no-print">
-                <div class="bg-white/10 border border-white/20 rounded-xl px-4 py-2 sm:py-3 flex flex-col justify-center min-w-[110px] shadow-lg">
+                <div class="bg-white/10 border border-white/20 rounded-xl px-4 py-2 sm:py-3 flex flex-col justify-center min-w-[100px] shadow-lg">
                     <span class="text-[10px] text-indigo-300 uppercase font-bold leading-none">Total Members</span>
                     <span id="memberCount" class="text-white text-lg font-bold">0</span>
                 </div>
@@ -91,8 +91,7 @@
                         <tr class="bg-slate-50 border-b border-slate-200">
                             <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Registered</th>
                             <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Name & Sex</th>
-                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Birth Date</th>
-                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Age</th>
+                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Birth & Age</th>
                             <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Contact Info</th>
                             <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Address</th>
                             <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Social Media</th>
@@ -101,7 +100,9 @@
                     </thead>
                     <tbody id="tableBody" class="divide-y divide-slate-100 bg-white">
                         <tr>
-                            <td colspan="8" class="px-6 py-20 text-center text-slate-500 animate-pulse font-medium">Syncing live data...</td>
+                            <td colspan="7" class="px-6 py-20 text-center">
+                                <p class="text-slate-500 animate-pulse text-lg font-medium">Fetching data from KKDAT database...</p>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -113,35 +114,20 @@
         let allMembers = [];
         let isDeleting = false;
 
+        // Shared Date Formatter
+        function formatSafeDate(val) {
+            if (!val || val === '---' || val === '') return '---';
+            const date = new Date(val);
+            if (isNaN(date.getTime())) return val;
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
         function formatFBLink(input) {
             if (!input || input === '---' || input === 'No FB') return null;
             let cleanInput = input.trim();
             if (cleanInput.startsWith('http')) return cleanInput;
             if (cleanInput.startsWith('facebook.com')) return `https://${cleanInput}`;
             return `https://facebook.com/${cleanInput.replace('@', '')}`;
-        }
-
-        /**
-         * Unified Date Formatter
-         * Works for both Registration Date and Birthday.
-         */
-        function applyDateFormat(val) {
-            if (!val || val === '---' || val === '') return '---';
-            
-            // Try to create a date object
-            const date = new Date(val);
-            
-            // If the date is valid, return the formatted version
-            if (!isNaN(date.getTime())) {
-                return date.toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric', 
-                    year: 'numeric' 
-                });
-            }
-            
-            // If it's already a formatted string from the sheet, just return it
-            return val;
         }
 
         async function fetchData() {
@@ -158,43 +144,42 @@
 
         function renderTable(data) {
             const tbody = document.getElementById('tableBody');
-            document.getElementById('memberCount').innerText = data ? data.length : 0;
+            const countDisplay = document.getElementById('memberCount');
+            countDisplay.innerText = data ? data.length : 0;
             tbody.innerHTML = '';
             
             if (!data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-20 text-center text-slate-400 font-medium">No records found.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-20 text-center text-slate-400 text-lg font-medium">No records found.</td></tr>';
                 return;
             }
 
             data.forEach(m => {
                 const fbUrl = formatFBLink(m.facebook);
-                const fbDisplay = fbUrl ? `<a href="${fbUrl}" target="_blank" class="text-blue-600 font-medium hover:underline">View Profile</a>` : '<span class="text-slate-400 italic">None</span>';
+                const fbDisplay = fbUrl ? `<a href="${fbUrl}" target="_blank" class="text-blue-600 font-medium hover:underline">View FB</a>` : '<span class="text-slate-400 text-xs italic">None</span>';
 
                 const row = `
                     <tr class="hover:bg-slate-50 transition-colors text-xs sm:text-sm">
                         <td class="px-4 py-4 text-indigo-600 font-bold text-[10px] uppercase">
-                            ${applyDateFormat(m.timestamp)}
+                            ${formatSafeDate(m.timestamp)}
                         </td>
                         <td class="px-4 py-4">
                             <div class="font-bold text-slate-800 uppercase">${m.fullName || '---'}</div>
                             <div class="text-[9px] text-slate-400 uppercase font-bold">${m.sex || '---'} | ${m.civilStatus || 'Single'}</div>
                         </td>
-                        <td class="px-4 py-4 text-slate-600 font-medium">
-                            ${applyDateFormat(m.birthDate)}
-                        </td>
                         <td class="px-4 py-4">
-                            <span class="text-[10px] font-bold px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-full">${m.age || '0'} YRS</span>
+                            <div class="text-slate-600 text-[11px]">${formatSafeDate(m.birthDate)}</div>
+                            <span class="text-[9px] font-bold px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-full">${m.age || '0'} YRS</span>
                         </td>
                         <td class="px-4 py-4">
                             <div class="text-slate-800 font-medium text-[11px]">${m.mobileNumber || 'No Phone'}</div>
-                            <div class="text-slate-500 text-[10px] truncate max-w-[120px]">${m.email || ''}</div>
+                            <div class="text-slate-500 text-[10px] truncate max-w-[120px]">${m.email || 'No Email'}</div>
                         </td>
                         <td class="px-4 py-4">
                             <div class="max-w-[180px] text-slate-600 text-[11px] line-clamp-2 uppercase">${m.address || '---'}</div>
                         </td>
                         <td class="px-4 py-4">${fbDisplay}</td>
                         <td class="px-4 py-4 text-center del-col">
-                            <button onclick="deleteMember(${m.rowId})" class="text-slate-300 hover:text-red-500 transition-colors p-2">
+                            <button onclick="deleteMember(${m.rowId})" class="text-slate-300 hover:text-red-500 transition-colors no-print p-2">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                             </button>
                         </td>
@@ -213,7 +198,7 @@
         }
 
         async function deleteMember(rowId) {
-            if (!confirm("Delete this entry?")) return;
+            if (!confirm("Delete this entry permanently?")) return;
             isDeleting = true;
             try {
                 await fetch(SCRIPT_URL, {
@@ -229,7 +214,7 @@
         }
 
         fetchData();
-        setInterval(fetchData, 5000); // 5-second auto-refresh
+        setInterval(fetchData, 5000);
     </script>
 </body>
 </html>
