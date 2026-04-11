@@ -44,9 +44,34 @@
             justify-content: center;
             padding: 1rem;
         }
+
+        /* Review Modal Styles */
+        #reviewModal {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 py-12 px-4">
+
+    <div id="reviewModal">
+        <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h2 class="text-2xl font-bold text-slate-800 mb-4 border-b pb-4">Review Your Information</h2>
+            <div id="reviewContent" class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mb-8">
+                </div>
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button onclick="closeReview()" class="flex-1 py-3 bg-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-300 transition-all">Edit Details</button>
+                <button onclick="confirmSubmission()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shadow-lg transition-all">Confirm & Submit</button>
+            </div>
+        </div>
+    </div>
 
     <div id="passcodeOverlay">
         <div class="glass-panel p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center">
@@ -176,7 +201,8 @@
 
                     <div class="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 pt-4">
                         <button type="reset" class="w-full sm:w-auto px-8 py-4 bg-slate-200 text-slate-700 rounded-2xl font-bold hover:bg-slate-300 transition-all">Clear Form</button>
-                        <button type="submit" id="submitBtn" class="w-full sm:w-auto px-10 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-bold hover:shadow-lg transition-all">Register Member</button>
+                        <button type="button" id="reviewBtn" onclick="openReview()" class="w-full sm:w-auto px-10 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-bold hover:shadow-lg transition-all">Register Member</button>
+                        <button type="submit" id="submitBtn" class="hidden"></button>
                     </div>
                 </form>
             </div>
@@ -184,6 +210,50 @@
     </div>
 
     <script>
+        // --- NEW REVIEW FEATURE LOGIC ---
+        function openReview() {
+            const form = document.getElementById('registrationForm');
+            if(!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const fields = [
+                { label: 'Full Name', id: 'fullName' },
+                { label: 'Sex', id: 'sex' },
+                { label: 'Birthday', id: 'birthDate' },
+                { label: 'Age', id: 'age' },
+                { label: 'Civil Status', id: 'civilStatus' },
+                { label: 'Address', id: 'address' },
+                { label: 'Email', id: 'email' },
+                { label: 'Mobile', id: 'mobileNumber' },
+                { label: 'Facebook', id: 'facebook' },
+                { label: 'Emergency Contact', id: 'contactPerson' }
+            ];
+
+            let html = '';
+            fields.forEach(field => {
+                const val = document.getElementById(field.id).value || 'N/A';
+                html += `
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                        <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">${field.label}</p>
+                        <p class="text-slate-700 font-medium">${val}</p>
+                    </div>`;
+            });
+
+            document.getElementById('reviewContent').innerHTML = html;
+            document.getElementById('reviewModal').style.display = 'flex';
+        }
+
+        function closeReview() {
+            document.getElementById('reviewModal').style.display = 'none';
+        }
+
+        function confirmSubmission() {
+            closeReview();
+            document.getElementById('submitBtn').click();
+        }
+
         // Passcode Integration Logic
         function getDailyPasscode() {
             const now = new Date();
@@ -227,9 +297,9 @@
 
         document.getElementById('registrationForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerText = "Registering...";
+            const visualBtn = document.getElementById('reviewBtn');
+            visualBtn.disabled = true;
+            visualBtn.innerText = "Registering...";
 
             const memberData = {
                 fullName: document.getElementById('fullName').value,
@@ -257,8 +327,8 @@
             })
             .catch((error) => {
                 alert('Error: ' + error.message);
-                submitBtn.disabled = false;
-                submitBtn.innerText = "Register Member";
+                visualBtn.disabled = false;
+                visualBtn.innerText = "Register Member";
             });
         });
     </script>
