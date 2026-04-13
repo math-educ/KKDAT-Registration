@@ -34,7 +34,7 @@
         @media print {
             nav, .no-print, .del-col, .view-col { display: none !important; }
             body { background: white !important; }
-            .modal-content { border: 1px solid #e2e8f0; box-shadow: none !important; }
+            .modal-content { border: 1px solid #e2e8f0; box-shadow: none !important; margin: 0 auto; }
         }
     </style>
 </head>
@@ -67,7 +67,7 @@
             
             <div class="flex items-center gap-3 w-full md:w-auto no-print">
                 <div class="bg-white/10 border border-white/20 rounded-xl px-4 py-2 flex flex-col justify-center min-w-[100px]">
-                    <span class="text-[10px] text-indigo-300 uppercase font-bold">Total</span>
+                    <span class="text-[10px] text-indigo-300 uppercase font-bold">Total Members</span>
                     <span id="memberCount" class="text-white text-lg font-bold">0</span>
                 </div>
                 <input type="text" id="searchInput" placeholder="Search members..." 
@@ -84,13 +84,13 @@
                             <th class="px-4 py-4">Birth & Age</th>
                             <th class="px-4 py-4">Contact</th>
                             <th class="px-4 py-4">Address</th>
-                            <th class="px-4 py-4 text-center">Social Media</th>
-                            <th class="px-4 py-4 text-center view-col">ID</th>
+                            <th class="px-4 py-4">Social Media</th>
+                            <th class="px-4 py-4 text-center view-col">ID Card</th>
                             <th class="px-4 py-4 text-center del-col">Del</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody" class="divide-y divide-slate-100 bg-white">
-                        <tr><td colspan="7" class="px-6 py-20 text-center animate-pulse">Fetching records...</td></tr>
+                        <tr><td colspan="7" class="px-6 py-20 text-center animate-pulse">Fetching records from KKDAT...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -108,12 +108,12 @@
                 <p class="text-[9px] opacity-70 uppercase tracking-[0.2em] font-bold">Official Digital ID</p>
             </div>
 
-            <div id="idDetails" class="p-8 space-y-5">
+            <div id="idDetails" class="p-8 space-y-4">
                 </div>
 
             <div class="bg-slate-50 p-6 flex justify-center gap-3 no-print">
-                <button onclick="window.print()" class="bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider shadow-lg hover:bg-indigo-700 transition-all">Print Card</button>
-                <button onclick="closeModal()" class="bg-white border border-slate-200 text-slate-600 px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-slate-100 transition-all">Close</button>
+                <button onclick="window.print()" class="bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider shadow-lg">Print ID</button>
+                <button onclick="closeModal()" class="bg-white border border-slate-200 text-slate-600 px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider">Close</button>
             </div>
         </div>
     </div>
@@ -135,7 +135,7 @@
                 const response = await fetch(SCRIPT_URL);
                 allMembers = await response.json();
                 if (!document.getElementById('searchInput').value) renderTable(allMembers);
-            } catch (error) { console.error(error); }
+            } catch (error) { console.error("Fetch Error:", error); }
         }
 
         function renderTable(data) {
@@ -147,7 +147,7 @@
                 const fbUrl = formatFBLink(m.facebook);
                 const fbDisplay = fbUrl ? 
                     `<a href="${fbUrl}" target="_blank" class="text-blue-600 font-bold hover:underline">View FB</a>` : 
-                    '<span class="text-slate-300">None</span>';
+                    '<span class="text-slate-300 italic text-[10px]">None</span>';
 
                 tbody.insertAdjacentHTML('beforeend', `
                     <tr class="hover:bg-slate-50 transition-colors text-xs sm:text-sm">
@@ -165,7 +165,7 @@
                         <td class="px-4 py-4">
                             <div class="max-w-[150px] truncate text-slate-500 uppercase text-[10px]">${m.address || '---'}</div>
                         </td>
-                        <td class="px-4 py-4 text-center">${fbDisplay}</td>
+                        <td class="px-4 py-4">${fbDisplay}</td>
                         <td class="px-4 py-4 text-center view-col">
                             <button onclick="showMemberID(${index})" class="bg-indigo-50 text-indigo-600 p-2 rounded-lg hover:bg-indigo-600 hover:text-white transition-all">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-width="2"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-width="2"/></svg>
@@ -180,39 +180,39 @@
 
         function showMemberID(index) {
             const m = allMembers[index];
-            const qrData = encodeURIComponent(`KKDAT:${m.fullName}:${m.rowId}`);
+            const qrData = encodeURIComponent(`KKDAT-ID:${m.fullName}:${m.rowId}`);
             const qrUrl = `https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=${qrData}&choe=UTF-8`;
 
             document.getElementById('idDetails').innerHTML = `
                 <div class="text-center">
-                    <h3 class="text-2xl font-black text-slate-900 uppercase leading-none mb-1">${m.fullName}</h3>
+                    <h3 class="text-2xl font-black text-slate-900 uppercase leading-tight mb-1">${m.fullName}</h3>
                     <p class="text-indigo-600 font-bold text-[10px] tracking-widest uppercase mb-4">${m.sex} • ${m.civilStatus || 'SINGLE'}</p>
                 </div>
                 
-                <div class="flex justify-center mb-2">
+                <div class="flex justify-center mb-4">
                     <div class="p-2 bg-white border border-slate-100 rounded-2xl shadow-sm">
-                        <img src="${qrUrl}" alt="QR Code" class="w-24 h-24">
+                        <img src="${qrUrl}" alt="QR Code" class="w-28 h-28">
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 gap-3">
-                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                        <p class="text-[9px] text-slate-400 font-bold uppercase mb-0.5 text-center">Home Address</p>
-                        <p class="text-slate-700 font-bold text-[11px] uppercase text-center">${m.address || '---'}</p>
+                <div class="space-y-3">
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 text-center">
+                        <p class="text-[8px] text-slate-400 font-bold uppercase mb-0.5">Address</p>
+                        <p class="text-slate-700 font-bold text-[10px] uppercase">${m.address || '---'}</p>
                     </div>
-                    <div class="grid grid-cols-2 gap-3 text-center">
-                        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                            <p class="text-[8px] text-slate-400 font-bold uppercase">Born</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 text-center">
+                            <p class="text-[8px] text-slate-400 font-bold uppercase">Birth Date</p>
                             <p class="text-slate-800 font-bold text-[10px]">${m.birthDate || '---'}</p>
                         </div>
-                        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                            <p class="text-[8px] text-slate-400 font-bold uppercase">Phone</p>
+                        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 text-center">
+                            <p class="text-[8px] text-slate-400 font-bold uppercase">Contact</p>
                             <p class="text-slate-800 font-bold text-[10px]">${m.mobileNumber || '---'}</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="text-center pt-2">
+                <div class="text-center pt-3 border-t border-slate-100">
                     <p class="text-[8px] text-slate-400 font-bold uppercase">Emergency Contact</p>
                     <p class="text-indigo-900 font-black text-[11px] uppercase">${m.contactPerson || '---'}</p>
                 </div>
@@ -241,7 +241,7 @@
         }
 
         fetchData();
-        setInterval(fetchData, 8000);
+        setInterval(fetchData, 10000);
     </script>
 </body>
 </html>
