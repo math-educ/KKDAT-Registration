@@ -5,40 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KKDAT Member Registry - Full View</title>
     <link rel="icon" type="image/png" href="CURRIMAO.PNG">
-    <script>
-        const ACCESS_PASSWORD = "Admin123";
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxZkFJL-fsBU8jLkAtLC0NP6dGiXLPWOJ9L6qFz3GnOGvrYN53iAES_PCrLw7Xy2BdN/exec";
-        const SHEET_URL = "https://docs.google.com/spreadsheets/d/1NFPsNXgObQUxNmPQkmzl_OSJGVwFvSF7pVlZxp1ASoQ/edit?usp=sharing";
-
-        function checkAccess() {
-            if (sessionStorage.getItem('isAuthorized') !== 'true') {
-                const entry = prompt("Please enter the Admin Password:");
-                if (entry === ACCESS_PASSWORD) {
-                    sessionStorage.setItem('isAuthorized', 'true');
-                } else {
-                    alert("Unauthorized access.");
-                    window.location.href = "REGFORM.html";
-                }
-            }
-        }
-        checkAccess();
-    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         * { font-family: 'Inter', sans-serif; }
         .glass-panel { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); }
+        
+        /* Custom scrollbar for the horizontal table */
         .table-container::-webkit-scrollbar { height: 6px; }
         .table-container::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
         
         @media print {
-            nav, .no-print, .del-col, .view-col { display: none !important; }
-            body { background: white !important; }
-            .modal-content { border: 1px solid #e2e8f0; box-shadow: none !important; margin: 0 auto; }
+            nav, .no-print, .del-col, #loginModal { display: none !important; }
+            body { background: white; color: black; }
+        }
+
+        /* Modal Blur Effect */
+        #loginModal {
+            backdrop-filter: blur(8px);
         }
     </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 pb-12">
+
+    <div id="loginModal" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/80 px-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 transform transition-all border border-white/20">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800">Admin Access</h2>
+                <p class="text-slate-500 text-sm mt-1">Please enter your unique passcode (YYYY-MM-DD)</p>
+            </div>
+            
+            <div class="space-y-4">
+                <input type="password" id="passcodeInput" placeholder="Enter Birthdate" 
+                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-center text-lg tracking-widest">
+                
+                <button onclick="validateAccess()" 
+                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-indigo-200 transition-all">
+                    Unlock Registry
+                </button>
+                
+                <p id="errorMsg" class="text-red-500 text-xs text-center font-medium hidden">Invalid passcode. Access denied.</p>
+            </div>
+        </div>
+    </div>
 
     <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-white/10 no-print">
         <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
@@ -47,13 +61,17 @@
                     <img src="CURRIMAO.PNG" alt="Logo" class="w-full h-full object-cover">
                 </div>
                 <div class="flex flex-col">
-                    <span class="text-white font-bold text-sm sm:text-lg">KKDAT II Currimao</span>
+                    <span class="text-white font-bold text-sm sm:text-lg truncate max-w-[120px] sm:max-w-none">KKDAT II Currimao Registry</span>
                     <span id="liveStatus" class="text-[8px] text-emerald-400 font-bold uppercase tracking-widest animate-pulse">● Live Syncing</span>
                 </div>
             </div>
-            <div class="flex gap-2">
-                <button onclick="fetchData()" class="text-indigo-300 hover:text-white text-xs font-medium px-2">Refresh</button>
-                <a href="REGFORM.html" class="bg-indigo-600 text-white px-4 py-1.5 rounded-lg text-xs font-medium">Add</a>
+            <div class="flex gap-2 sm:gap-4">
+                <button onclick="fetchData()" class="text-indigo-300 hover:text-white text-xs font-medium transition-colors">Refresh</button>
+                <a href="javascript:void(0)" onclick="window.open(SHEET_URL, '_blank')" class="text-white bg-emerald-600 hover:bg-emerald-700 px-3 py-1 rounded text-xs font-medium flex items-center gap-2">
+                    <span class="hidden md:inline">View Sheets</span>
+                    <span class="md:hidden">Sheet</span>
+                </a>
+                <a href="REGFORM.html" class="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium">Add</a>
             </div>
         </div>
     </nav>
@@ -61,80 +79,88 @@
     <div class="relative max-w-[98%] mx-auto pt-24 px-2 sm:px-4">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4 px-2">
             <div>
-                <h1 class="text-2xl sm:text-3xl font-bold text-white uppercase tracking-tight">Member Database</h1>
-                <p class="text-indigo-200 text-xs sm:text-sm">Manage records and generate Member IDs</p>
+                <h1 class="text-2xl sm:text-3xl font-bold text-white uppercase tracking-tight">KKDAT II Currimao Member Database</h1>
+                <p class="text-indigo-200 text-xs sm:text-sm">Official Records - Synchronized with KKDAT database</p>
             </div>
             
             <div class="flex items-center gap-3 w-full md:w-auto no-print">
-                <div class="bg-white/10 border border-white/20 rounded-xl px-4 py-2 flex flex-col justify-center min-w-[100px]">
-                    <span class="text-[10px] text-indigo-300 uppercase font-bold">Total Members</span>
+                <div class="bg-white/10 border border-white/20 rounded-xl px-4 py-2 sm:py-3 flex flex-col justify-center min-w-[100px] shadow-lg">
+                    <span class="text-[10px] text-indigo-300 uppercase font-bold leading-none">Total Members</span>
                     <span id="memberCount" class="text-white text-lg font-bold">0</span>
                 </div>
-                <input type="text" id="searchInput" placeholder="Search members..." 
-                    class="px-4 py-3 rounded-xl w-full md:w-80 outline-none border-none shadow-xl text-sm" onkeyup="filterTable()">
+
+                <div class="relative w-full md:w-80">
+                    <input type="text" id="searchInput" placeholder="Search members..." 
+                        class="pl-10 pr-4 py-2 sm:py-3 rounded-xl w-full outline-none border-none shadow-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm" 
+                        onkeyup="filterTable()">
+                    <span class="absolute left-3 top-2.5 sm:top-3.5 text-slate-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="2"></path></svg>
+                    </span>
+                </div>
             </div>
         </div>
 
-        <div class="glass-panel rounded-2xl shadow-2xl overflow-hidden border border-white/10">
+        <div class="glass-panel rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border border-white/10">
             <div class="overflow-x-auto table-container">
-                <table class="w-full text-left border-collapse min-w-[1000px]">
+                <table class="w-full text-left border-collapse min-w-[900px]">
                     <thead>
-                        <tr class="bg-slate-50 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase">
-                            <th class="px-4 py-4">Name & Sex</th>
-                            <th class="px-4 py-4">Birth & Age</th>
-                            <th class="px-4 py-4">Contact</th>
-                            <th class="px-4 py-4">Address</th>
-                            <th class="px-4 py-4">Social Media</th>
-                            <th class="px-4 py-4 text-center view-col">ID Card</th>
-                            <th class="px-4 py-4 text-center del-col">Del</th>
+                        <tr class="bg-slate-50 border-b border-slate-200">
+                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Name & Sex</th>
+                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Birth & Age</th>
+                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Contact Info</th>
+                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Address</th>
+                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Social Media</th>
+                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase">Emergency</th>
+                            <th class="px-4 py-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase text-center del-col">Del</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody" class="divide-y divide-slate-100 bg-white">
-                        <tr><td colspan="7" class="px-6 py-20 text-center animate-pulse">Fetching records from KKDAT...</td></tr>
+                        <tr><td colspan="7" class="px-6 py-20 text-center"><p class="text-slate-500 animate-pulse text-lg font-medium">Please login to view data...</p></td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <div id="idModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" onclick="closeModal()"></div>
-        <div class="relative bg-white w-full max-w-sm rounded-[2.5rem] shadow-2xl overflow-hidden modal-content border border-slate-100">
-            <div class="bg-indigo-600 p-6 text-white text-center">
-                <div class="flex justify-center mb-2">
-                    <img src="CURRIMAO.PNG" class="w-16 h-16 bg-white rounded-2xl p-1 shadow-lg">
-                </div>
-                <h2 class="font-bold text-xl uppercase tracking-tight">KKDAT CURRIMAO</h2>
-                <p class="text-[9px] opacity-70 uppercase tracking-[0.2em] font-bold">Official Digital ID</p>
-            </div>
-
-            <div id="idDetails" class="p-8 space-y-4">
-                </div>
-
-            <div class="bg-slate-50 p-6 flex justify-center gap-3 no-print">
-                <button onclick="window.print()" class="bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider shadow-lg">Print ID</button>
-                <button onclick="closeModal()" class="bg-white border border-slate-200 text-slate-600 px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider">Close</button>
-            </div>
-        </div>
-    </div>
-
     <script>
+        const AUTHORIZED_PASSCODES = ["1980-01-01", "1985-05-15", "1990-12-25"]; // Replace with actual birthdays
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxZkFJL-fsBU8jLkAtLC0NP6dGiXLPWOJ9L6qFz3GnOGvrYN53iAES_PCrLw7Xy2BdN/exec";
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/1NFPsNXgObQUxNmPQkmzl_OSJGVwFvSF7pVlZxp1ASoQ/edit?usp=sharing";
+
         let allMembers = [];
         let isDeleting = false;
 
-        function formatFBLink(input) {
-            if (!input || input === '---' || input === 'No FB') return null;
-            let cleanInput = input.trim();
-            if (cleanInput.startsWith('http')) return cleanInput;
-            return `https://facebook.com/${cleanInput.replace('@', '')}`;
+        // Check Access on Load
+        function checkInitialAccess() {
+            if (sessionStorage.getItem('isAuthorized') === 'true') {
+                document.getElementById('loginModal').classList.add('hidden');
+                fetchData();
+            }
         }
 
+        // Validate the Modal Input
+        function validateAccess() {
+            const entry = document.getElementById('passcodeInput').value;
+            const errorElement = document.getElementById('errorMsg');
+            
+            if (AUTHORIZED_PASSCODES.includes(entry)) {
+                sessionStorage.setItem('isAuthorized', 'true');
+                document.getElementById('loginModal').classList.add('hidden');
+                fetchData();
+            } else {
+                errorElement.classList.remove('hidden');
+                document.getElementById('passcodeInput').value = '';
+            }
+        }
+
+        // --- FETCH AND RENDER LOGIC ---
         async function fetchData() {
-            if (isDeleting) return;
+            if (isDeleting || sessionStorage.getItem('isAuthorized') !== 'true') return;
             try {
                 const response = await fetch(SCRIPT_URL);
                 allMembers = await response.json();
-                if (!document.getElementById('searchInput').value) renderTable(allMembers);
+                const query = document.getElementById('searchInput').value;
+                if (!query) renderTable(allMembers);
             } catch (error) { console.error("Fetch Error:", error); }
         }
 
@@ -143,85 +169,44 @@
             document.getElementById('memberCount').innerText = data ? data.length : 0;
             tbody.innerHTML = '';
             
-            data.forEach((m, index) => {
-                const fbUrl = formatFBLink(m.facebook);
-                const fbDisplay = fbUrl ? 
-                    `<a href="${fbUrl}" target="_blank" class="text-blue-600 font-bold hover:underline">View FB</a>` : 
-                    '<span class="text-slate-300 italic text-[10px]">None</span>';
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-20 text-center text-slate-400 text-lg font-medium">No records found.</td></tr>';
+                return;
+            }
 
-                tbody.insertAdjacentHTML('beforeend', `
+            data.forEach(m => {
+                const fbUrl = (m.facebook && m.facebook !== '---') ? (m.facebook.startsWith('http') ? m.facebook : `https://facebook.com/${m.facebook}`) : null;
+                const fbDisplay = fbUrl ? `<a href="${fbUrl}" target="_blank" class="text-blue-600 font-medium hover:underline">View FB</a>` : '<span class="text-slate-400 text-xs italic">None</span>';
+
+                const row = `
                     <tr class="hover:bg-slate-50 transition-colors text-xs sm:text-sm">
                         <td class="px-4 py-4">
                             <div class="font-bold text-slate-800 uppercase">${m.fullName || '---'}</div>
-                            <div class="text-[9px] text-slate-400 font-bold">${m.sex || '---'}</div>
+                            <div class="text-[9px] text-slate-400 uppercase font-bold">${m.sex || '---'} | ${m.civilStatus || 'Single'}</div>
                         </td>
                         <td class="px-4 py-4">
-                            <div class="text-slate-600">${m.birthDate || '---'}</div>
-                            <span class="text-[9px] font-black text-indigo-500">${m.age || '0'} YRS</span>
+                            <div class="text-slate-600 text-[11px]">${m.birthDate || '---'}</div>
+                            <span class="text-[9px] font-bold px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-full">${m.age || '0'} YRS</span>
                         </td>
                         <td class="px-4 py-4">
-                            <div class="text-slate-700 font-medium">${m.mobileNumber || '---'}</div>
+                            <div class="text-slate-800 font-medium text-[11px]">${m.mobileNumber || 'No Phone'}</div>
+                            <div class="text-slate-500 text-[10px] truncate max-w-[120px]">${m.email || 'No Email'}</div>
                         </td>
                         <td class="px-4 py-4">
-                            <div class="max-w-[150px] truncate text-slate-500 uppercase text-[10px]">${m.address || '---'}</div>
+                            <div class="max-w-[180px] text-slate-600 text-[11px] line-clamp-2 uppercase">${m.address || '---'}</div>
                         </td>
                         <td class="px-4 py-4">${fbDisplay}</td>
-                        <td class="px-4 py-4 text-center view-col">
-                            <button onclick="showMemberID(${index})" class="bg-indigo-50 text-indigo-600 p-2 rounded-lg hover:bg-indigo-600 hover:text-white transition-all">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-width="2"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-width="2"/></svg>
+                        <td class="px-4 py-4"><div class="text-slate-700 font-semibold text-[11px]">${m.contactPerson || '---'}</div></td>
+                        <td class="px-4 py-4 text-center del-col">
+                            <button onclick="deleteMember(${m.rowId})" class="text-slate-300 hover:text-red-500 transition-colors p-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                             </button>
                         </td>
-                        <td class="px-4 py-4 text-center del-col">
-                            <button onclick="deleteMember(${m.rowId})" class="text-slate-300 hover:text-red-500 p-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2"></path></svg></button>
-                        </td>
-                    </tr>`);
+                    </tr>`;
+                tbody.insertAdjacentHTML('beforeend', row);
             });
         }
 
-        function showMemberID(index) {
-            const m = allMembers[index];
-            const qrData = encodeURIComponent(`KKDAT-ID:${m.fullName}:${m.rowId}`);
-            const qrUrl = `https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=${qrData}&choe=UTF-8`;
-
-            document.getElementById('idDetails').innerHTML = `
-                <div class="text-center">
-                    <h3 class="text-2xl font-black text-slate-900 uppercase leading-tight mb-1">${m.fullName}</h3>
-                    <p class="text-indigo-600 font-bold text-[10px] tracking-widest uppercase mb-4">${m.sex} • ${m.civilStatus || 'SINGLE'}</p>
-                </div>
-                
-                <div class="flex justify-center mb-4">
-                    <div class="p-2 bg-white border border-slate-100 rounded-2xl shadow-sm">
-                        <img src="${qrUrl}" alt="QR Code" class="w-28 h-28">
-                    </div>
-                </div>
-
-                <div class="space-y-3">
-                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 text-center">
-                        <p class="text-[8px] text-slate-400 font-bold uppercase mb-0.5">Address</p>
-                        <p class="text-slate-700 font-bold text-[10px] uppercase">${m.address || '---'}</p>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 text-center">
-                            <p class="text-[8px] text-slate-400 font-bold uppercase">Birth Date</p>
-                            <p class="text-slate-800 font-bold text-[10px]">${m.birthDate || '---'}</p>
-                        </div>
-                        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 text-center">
-                            <p class="text-[8px] text-slate-400 font-bold uppercase">Contact</p>
-                            <p class="text-slate-800 font-bold text-[10px]">${m.mobileNumber || '---'}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-center pt-3 border-t border-slate-100">
-                    <p class="text-[8px] text-slate-400 font-bold uppercase">Emergency Contact</p>
-                    <p class="text-indigo-900 font-black text-[11px] uppercase">${m.contactPerson || '---'}</p>
-                </div>
-            `;
-            document.getElementById('idModal').classList.remove('hidden');
-        }
-
-        function closeModal() { document.getElementById('idModal').classList.add('hidden'); }
-        
         function filterTable() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const filtered = allMembers.filter(m => 
@@ -232,16 +217,23 @@
         }
 
         async function deleteMember(rowId) {
-            if (!confirm("Delete permanently?")) return;
+            if (!confirm("Delete this entry permanently?")) return;
             isDeleting = true;
+            document.getElementById('tableBody').innerHTML = '<tr><td colspan="7" class="text-center py-10 font-bold text-red-500 animate-pulse">Deleting...</td></tr>';
             try {
                 await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', rowId: rowId }) });
-                setTimeout(() => { isDeleting = false; fetchData(); }, 1500);
-            } catch (error) { isDeleting = false; }
+                setTimeout(() => { isDeleting = false; fetchData(); }, 2000);
+            } catch (error) { isDeleting = false; fetchData(); }
         }
 
-        fetchData();
-        setInterval(fetchData, 10000);
+        // Initialize
+        checkInitialAccess();
+        setInterval(fetchData, 5000);
+
+        // Allow "Enter" key to submit passcode
+        document.getElementById('passcodeInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') validateAccess();
+        });
     </script>
 </body>
 </html>
