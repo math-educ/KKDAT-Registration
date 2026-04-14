@@ -5,26 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KKDAT Member Registry - Full View</title>
     <link rel="icon" type="image/png" href="CURRIMAO.PNG">
-    <script>
-        const ACCESS_PASSWORD = "Admin123";
-        // PASTE YOUR NEW DEPLOYMENT URL HERE
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxZkFJL-fsBU8jLkAtLC0NP6dGiXLPWOJ9L6qFz3GnOGvrYN53iAES_PCrLw7Xy2BdN/exec";
-        // PASTE YOUR GOOGLE SHEET LINK HERE
-        const SHEET_URL = "https://docs.google.com/spreadsheets/d/1NFPsNXgObQUxNmPQkmzl_OSJGVwFvSF7pVlZxp1ASoQ/edit?usp=sharing";
-
-        function checkAccess() {
-            if (sessionStorage.getItem('isAuthorized') !== 'true') {
-                const entry = prompt("Please enter the Admin Password:");
-                if (entry === ACCESS_PASSWORD) {
-                    sessionStorage.setItem('isAuthorized', 'true');
-                } else {
-                    alert("Unauthorized access.");
-                    window.location.href = "REGFORM.html";
-                }
-            }
-        }
-        checkAccess();
-    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
@@ -36,12 +16,43 @@
         .table-container::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
         
         @media print {
-            nav, .no-print, .del-col { display: none !important; }
+            nav, .no-print, .del-col, #loginModal { display: none !important; }
             body { background: white; color: black; }
+        }
+
+        /* Modal Blur Effect */
+        #loginModal {
+            backdrop-filter: blur(8px);
         }
     </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 pb-12">
+
+    <div id="loginModal" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/80 px-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 transform transition-all border border-white/20">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800">Admin Access</h2>
+                <p class="text-slate-500 text-sm mt-1">Please enter your passcode</p>
+            </div>
+            
+            <div class="space-y-4">
+                <input type="password" id="passcodeInput" placeholder="****" 
+                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-center text-lg tracking-widest">
+                
+                <button onclick="validateAccess()" 
+                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-indigo-200 transition-all">
+                    Unlock Registry
+                </button>
+                
+                <p id="errorMsg" class="text-red-500 text-xs text-center font-medium hidden">Invalid passcode. Access denied.</p>
+            </div>
+        </div>
+    </div>
 
     <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-white/10 no-print">
         <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
@@ -104,55 +115,58 @@
                         </tr>
                     </thead>
                     <tbody id="tableBody" class="divide-y divide-slate-100 bg-white">
-                        <tr>
-                            <td colspan="7" class="px-6 py-20 text-center">
-                                <p class="text-slate-500 animate-pulse text-lg font-medium">Fetching data from KKDAT database...</p>
-                            </td>
-                        </tr>
+                        <tr><td colspan="7" class="px-6 py-20 text-center"><p class="text-slate-500 animate-pulse text-lg font-medium">Please login to view data...</p></td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <p class="text-white/40 text-[10px] text-center mt-4 md:hidden">← Swipe left/right to view more info →</p>
     </div>
 
     <script>
+        const AUTHORIZED_PASSCODES = ["1996-11-06", "2006-01-24", "2006-11-13"];
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxZkFJL-fsBU8jLkAtLC0NP6dGiXLPWOJ9L6qFz3GnOGvrYN53iAES_PCrLw7Xy2BdN/exec";
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/1NFPsNXgObQUxNmPQkmzl_OSJGVwFvSF7pVlZxp1ASoQ/edit?usp=sharing";
+
         let allMembers = [];
         let isDeleting = false;
 
-        function formatFBLink(input) {
-            if (!input || input === '---' || input === 'No FB') return null;
-            let cleanInput = input.trim();
-            if (cleanInput.startsWith('http')) return cleanInput;
-            if (cleanInput.startsWith('facebook.com')) return `https://${cleanInput}`;
-            return `https://facebook.com/${cleanInput.replace('@', '')}`;
+        // Check Access on Load
+        function checkInitialAccess() {
+            if (sessionStorage.getItem('isAuthorized') === 'true') {
+                document.getElementById('loginModal').classList.add('hidden');
+                fetchData();
+            }
         }
 
-        async function fetchData() {
-            // Prevent auto-refresh from interrupting a deletion
-            if (isDeleting) return;
+        // Validate the Modal Input
+        function validateAccess() {
+            const entry = document.getElementById('passcodeInput').value;
+            const errorElement = document.getElementById('errorMsg');
+            
+            if (AUTHORIZED_PASSCODES.includes(entry)) {
+                sessionStorage.setItem('isAuthorized', 'true');
+                document.getElementById('loginModal').classList.add('hidden');
+                fetchData();
+            } else {
+                errorElement.classList.remove('hidden');
+                document.getElementById('passcodeInput').value = '';
+            }
+        }
 
+        // --- FETCH AND RENDER LOGIC ---
+        async function fetchData() {
+            if (isDeleting || sessionStorage.getItem('isAuthorized') !== 'true') return;
             try {
                 const response = await fetch(SCRIPT_URL);
                 allMembers = await response.json();
-                
-                // Only render if search bar is empty to prevent interrupting user typing
                 const query = document.getElementById('searchInput').value;
-                if (!query) {
-                    renderTable(allMembers);
-                }
-            } catch (error) {
-                console.error("Fetch Error:", error);
-            }
+                if (!query) renderTable(allMembers);
+            } catch (error) { console.error("Fetch Error:", error); }
         }
 
         function renderTable(data) {
             const tbody = document.getElementById('tableBody');
-            const countDisplay = document.getElementById('memberCount');
-            
-            // Update the member count badge
-            countDisplay.innerText = data ? data.length : 0;
-
+            document.getElementById('memberCount').innerText = data ? data.length : 0;
             tbody.innerHTML = '';
             
             if (!data || data.length === 0) {
@@ -161,10 +175,8 @@
             }
 
             data.forEach(m => {
-                const fbUrl = formatFBLink(m.facebook);
-                const fbDisplay = fbUrl ? 
-                    `<a href="${fbUrl}" target="_blank" class="text-blue-600 font-medium hover:underline">View FB</a>` : 
-                    '<span class="text-slate-400 text-xs italic">None</span>';
+                const fbUrl = (m.facebook && m.facebook !== '---') ? (m.facebook.startsWith('http') ? m.facebook : `https://facebook.com/${m.facebook}`) : null;
+                const fbDisplay = fbUrl ? `<a href="${fbUrl}" target="_blank" class="text-blue-600 font-medium hover:underline">View FB</a>` : '<span class="text-slate-400 text-xs italic">None</span>';
 
                 const row = `
                     <tr class="hover:bg-slate-50 transition-colors text-xs sm:text-sm">
@@ -183,14 +195,10 @@
                         <td class="px-4 py-4">
                             <div class="max-w-[180px] text-slate-600 text-[11px] line-clamp-2 uppercase">${m.address || '---'}</div>
                         </td>
-                        <td class="px-4 py-4">
-                            ${fbDisplay}
-                        </td>
-                        <td class="px-4 py-4">
-                            <div class="text-slate-700 font-semibold text-[11px]">${m.contactPerson || '---'}</div>
-                        </td>
+                        <td class="px-4 py-4">${fbDisplay}</td>
+                        <td class="px-4 py-4"><div class="text-slate-700 font-semibold text-[11px]">${m.contactPerson || '---'}</div></td>
                         <td class="px-4 py-4 text-center del-col">
-                            <button onclick="deleteMember(${m.rowId})" class="text-slate-300 hover:text-red-500 transition-colors no-print p-2">
+                            <button onclick="deleteMember(${m.rowId})" class="text-slate-300 hover:text-red-500 transition-colors p-2">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                             </button>
                         </td>
@@ -203,8 +211,7 @@
             const query = document.getElementById('searchInput').value.toLowerCase();
             const filtered = allMembers.filter(m => 
                 (m.fullName && m.fullName.toLowerCase().includes(query)) || 
-                (m.address && m.address.toLowerCase().includes(query)) ||
-                (m.email && m.email.toLowerCase().includes(query))
+                (m.address && m.address.toLowerCase().includes(query))
             );
             renderTable(filtered);
         }
@@ -212,30 +219,21 @@
         async function deleteMember(rowId) {
             if (!confirm("Delete this entry permanently?")) return;
             isDeleting = true;
-            document.getElementById('tableBody').innerHTML = '<tr><td colspan="7" class="text-center py-10 font-bold text-red-500 animate-pulse">Deleting from Sheet...</td></tr>';
+            document.getElementById('tableBody').innerHTML = '<tr><td colspan="7" class="text-center py-10 font-bold text-red-500 animate-pulse">Deleting...</td></tr>';
             try {
-                await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'delete', rowId: rowId })
-                });
-                setTimeout(() => {
-                    isDeleting = false;
-                    fetchData();
-                }, 2000);
-            } catch (error) {
-                alert("Error during deletion.");
-                isDeleting = false;
-                fetchData();
-            }
+                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', rowId: rowId }) });
+                setTimeout(() => { isDeleting = false; fetchData(); }, 2000);
+            } catch (error) { isDeleting = false; fetchData(); }
         }
 
-        // INITIAL FETCH
-        fetchData();
-
-        // AUTO-REFRESH EVERY 5 SECONDS (5000ms)
+        // Initialize
+        checkInitialAccess();
         setInterval(fetchData, 5000);
+
+        // Allow "Enter" key to submit passcode
+        document.getElementById('passcodeInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') validateAccess();
+        });
     </script>
 </body>
 </html>
