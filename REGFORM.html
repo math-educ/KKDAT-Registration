@@ -32,7 +32,6 @@
         .fade-in { animation: fadeIn 0.5s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Passcode Overlay Styles */
         #passcodeOverlay {
             position: fixed;
             inset: 0;
@@ -45,7 +44,6 @@
             padding: 1rem;
         }
 
-        /* Review Modal Styles */
         #reviewModal {
             position: fixed;
             inset: 0;
@@ -210,7 +208,20 @@
     </div>
 
     <script>
-        // --- NEW REVIEW FEATURE LOGIC ---
+        // --- NEW FULLSCREEN FUNCTION ---
+        function enterFullscreen() {
+            const doc = document.documentElement;
+            if (doc.requestFullscreen) {
+                doc.requestFullscreen();
+            } else if (doc.mozRequestFullScreen) { // Firefox
+                doc.mozRequestFullScreen();
+            } else if (doc.webkitRequestFullscreen) { // Chrome, Safari, Opera
+                doc.webkitRequestFullscreen();
+            } else if (doc.msRequestFullscreen) { // IE/Edge
+                doc.msRequestFullscreen();
+            }
+        }
+
         function openReview() {
             const form = document.getElementById('registrationForm');
             if(!form.checkValidity()) {
@@ -254,13 +265,12 @@
             document.getElementById('submitBtn').click();
         }
 
-        // Passcode Integration Logic
         function getDailyPasscode() {
             const now = new Date();
             const year = now.getFullYear();
             const month = (now.getMonth() + 1).toString().padStart(2, '0');
             const day = now.getDate().toString().padStart(2, '0');
-            return month + day + year; // MMDDYYYY
+            return month + day + year;
         }
 
         function checkPasscode() {
@@ -269,6 +279,9 @@
             const errorMsg = document.getElementById('passcodeError');
 
             if (input === daily) {
+                // Trigger Fullscreen on success (User Gesture requirement satisfied)
+                enterFullscreen();
+
                 document.getElementById('passcodeOverlay').style.display = 'none';
                 const main = document.getElementById('mainContent');
                 main.classList.remove('opacity-0', 'pointer-events-none');
@@ -282,7 +295,6 @@
             if (e.key === 'Enter') checkPasscode();
         });
 
-        // Original Registration Logic
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymx5klDjX_yTn59_VVzE1nOA8dEHUlFPfQD3FfJDR1ZRp62k0Wx-_2Ph-4zLTYCho5/exec";
 
         document.getElementById('birthDate').addEventListener('change', (e) => {
